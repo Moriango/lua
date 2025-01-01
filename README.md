@@ -45,13 +45,28 @@ This repository contains my personal configuration for NvChad, a Neovim framewor
   - Built-in terminal emulator for running shell commands within Neovim.
   - Split and toggle terminal windows easily.
 
-## Usage
+### Plugins
 
-Open Neovim and start using the custom configuration:
-```sh
-nvim
-```
-
----
+- **cd-project.lua**
+- **chat.lua**
+- **comment.lua**
+- **copilot.lua**
+- **diffview.lua**
+- **gitblame.lua**
+- **goto-preview.lua**
+- **hover.lua**
+- **lazygit.lua**
+- **live-server.lua**
+- **lsp-signature.lua**
+- **marks.lua**
+- **markview.lua**
+- **md-preview.lua**
+- **mini_surround.lua**
+- **screenkey.lua**
+- **undotree.lua**
+- **vim-illuminate.lua**
+- **vim-tmux-navigator.lua**
+- **which-key.lua**
+- **zen-mode.lua**
 
 Enjoy your personalized Neovim experience with NvChad!
