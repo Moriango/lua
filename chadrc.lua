@@ -31,7 +31,7 @@ local quotes = {
   "He who sacrifices freedom for security deserves neither. -Benjamin Franklin",
   "The most valuable education is the ability to make yourself do the thing you have to do whe it has to be done, whether you like it or not. -Aldous Huxley",
   "A wise man can learn more from a foolish question than a fool can learn from a wise answer. -Bruce Lee",
-  "Hitler never abandoned the cloak of legality, he recognizedthe enourmous psycho logical value of having the law on his side. Instead, he turned the law inside out and made illegality legal. -Robert Byrd",
+  "Hitler never abandoned the cloak of legality, he recognizedthe enourmous psychological value of having the law on his side. Instead, he turned the law inside out and made illegality legal. -Robert Byrd",
   "The future belongs to those who believe in their dreams. -Elanor Roosevelt",
   "The question isn't who is is going to let me; it's who is going to stop me. -Ayn Rand",
   "If they don't have what your want then don't listen to what they say. There is no greater waste of time then justifying your actions to people who have a life you don't want. -Chris Williamson",
@@ -40,6 +40,14 @@ local quotes = {
 
 math.randomseed(os.time())
 local random_quote = quotes[math.random(#quotes)]
+
+local part1 = random_quote
+local part2 = ""
+if #random_quote > 100 then
+  local space_index = random_quote:find(" ", 100)
+  part1 = random_quote:sub(1, space_index)
+  part2 = random_quote:sub(space_index + 1)
+end
 
 M.nvdash = {
   load_on_startup = true,
@@ -59,7 +67,8 @@ M.nvdash = {
    "                     ▀█▀                   ",
    "                                          ",
   "",
-  random_quote,
+  part1,
+  part2,
   "",
   }
 }
