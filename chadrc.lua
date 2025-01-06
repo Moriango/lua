@@ -5,7 +5,7 @@
 ---@type ChadrcConfig
 local M = {}
 M.base46 = {
-	theme = "chadracula",
+	theme = "chadracula-evondev",
    transparency = false,
 	-- hl_override = {
 	-- 	Comment = { italic = true },
@@ -40,11 +40,12 @@ local quotes = {
 
 math.randomseed(os.time())
 local random_quote = quotes[math.random(#quotes)]
+-- local random_quote = quotes[18]
 
 local part1 = random_quote
 local part2 = ""
-if #random_quote > 100 then
-  local space_index = random_quote:find(" ", 100)
+if #random_quote > 150 then
+  local space_index = random_quote:find(" ", 150)
   part1 = random_quote:sub(1, space_index)
   part2 = random_quote:sub(space_index + 1)
 end
