@@ -3,18 +3,13 @@ require "nvchad.mappings"
 -- add yours here
 
 local map = vim.keymap.set
-local opts = { noremap = true, silent = true}
+local opts = { noremap = false, silent = false}
 
 -- FullScreen
 map("n", "<leader>m", ":only<CR>", { desc = "Makes the current split screen fullscreen"})
 
--- Tmux Navigation
-map("n", "<C-h>", ":TmuxNavigateLeft<CR>", opts)
-map("n", "<C-j>", ":TmuxNavigateDown<CR>", opts)
-map("n", "<C-k>", ":TmuxNavigateUp<CR>", opts)
-map("n", "<C-l>", ":TmuxNavigateRight<CR>", opts)
-map("n", "<C-\\>", ":TmuxNavigatePrevious<CR>", opts)
-
+-- Toggle Transparency
+map("n", "<leader>tp", ":lua require('base46').toggle_transparency()<CR>", { noremap = true, silent = true, desc = "Toggle Background Transparency" })
 -- Exiting
 map("n", ";", ":", { desc = "CMD enter command mode" })
 map({"n","i","v"}, "jk", "<ESC>")
@@ -29,11 +24,9 @@ map({"n","v"}, "ee", "$", { desc = "Move cursor to the end of the current line",
 map({"n","v"}, "ba", "^", { desc = "Move cursor to the begginning of the current line", noremap = true, silent=true })
 map("n", "<C-A-j>", ":m .+1<CR>==", { desc = "Moves the current line down", noremap = true, silent=true })
 map("n", "<C-A-k>", ":m .-2<CR>==", { desc = "Moves the current line up", noremap = true, silent=true })
-map("n", "<leader>o", ":put _<CR>", { desc = "Add a new line below the cursor", noremap=true, silent=true})
-map("n", "<leader>O", ":put! _<CR>", { desc = "Add a new line above the cursor", noremap=true, silent=true})
 
 -- Lazy Git
-map({"n","i"}, "<leader>lz", ":LazyGit<CR>", { desc = "Opens Lazy git"})
+map({"n","i"}, "<leader>lz", ":Lazy<CR>", { desc = "Opens Lazy"})
 
 -- Moving Vertically
 map("n", "j", "jzz", { desc = "Moves the cursor down and centers the page", silent=true })
@@ -45,8 +38,6 @@ map("n", "gg", "ggzz", { desc = "Moves the cursor to the top of the page and cen
 
 -- Tabs
 map("n", "<leader>tt", ":tabnew | lcd %:p:h<CR>", { desc = "Opens a new tab", noremap = true, silent=true })
-map("n", "<S-Tab>", ":tabnext<Return>", { desc = "Switches to the next tab", noremap = true, silent=true })
-map("n", "<leader>tn", ":tabnext<Return>", { desc = "Switches to the next tab", noremap = true, silent=true })
 
 -- Buffers
 map("n", "<leader>c", ":close<CR>", { desc = "Closes the current split window", noremap = true, silent=true })
@@ -62,7 +53,7 @@ map("n", "<leader>x", "<C-w>c", { noremap=true, silent=true})
 
 -- Terminal
 map("n", "<leader>tm", ":split | resize 15 |terminal<CR>", { desc = "Opens a terminal Horizontally"})
-map("n", "st", ":vsplit | terminal<CR>", { desc = "Opens a terminal Horizontally"})
+map("n", "st", ":vsplit | terminal<CR>", { desc = "Opens a terminal Vertically"})
 
 -- Clear search highlighting
 map("n", "ff", ":nohlsearch<CR>", { desc = "Clear search highlight", noremap=true, silent=true})
@@ -74,12 +65,12 @@ map("n", "cdm", "<cmd>CdProjectManualAdd<CR>", { desc = "Cd Project, Manually ad
 
 -- Diagnostics
 map('n', 'td', function()
-  vim.diagnostic.enable(not vim.diagnostic.is_enabled())
-  if vim.diagnostic.is_enabled() then
-    print("Diagnostics Enabled")
-  else
-    print("Diagnostics Disabled")
-  end
+vim.diagnostic.enable(not vim.diagnostic.is_enabled())
+if vim.diagnostic.is_enabled() then
+  print("Diagnostics Enabled")
+else
+  print("Diagnostics Disabled")
+end
 end, { silent = true, noremap = true })
 
 -- Marking
@@ -103,15 +94,15 @@ map("n", "rr", ":reg<CR>")
 
 -- Function to toggle cmp for the current buffer
 function toggle_lsp()
-  local cmp = require('cmp')
-  local current_state = cmp.get_config().enabled
-  if current_state then
-    cmp.setup.buffer { enabled = false }
-    print("LSP and Autocompletions Disabled")
-  else
-    cmp.setup.buffer { enabled = true }
-    print("LSP and Autocompletions Enabled")
-  end
+local cmp = require('cmp')
+local current_state = cmp.get_config().enabled
+if current_state then
+  cmp.setup.buffer { enabled = false }
+  print("LSP and Autocompletions Disabled")
+else
+  cmp.setup.buffer { enabled = true }
+  print("LSP and Autocompletions Enabled")
+end
 end
 
 -- Key mapping to toggle cmp
@@ -130,12 +121,12 @@ map("n", "vv", ":silent !code %<CR>", { noremap = true, silent = true, desc = "O
 
 -- Delete Buffer
 function close_nvim_tree_and_buffer()
-  local nvim_tree_api = require('nvim-tree.api')
-  if nvim_tree_api.tree.is_visible() then
-    vim.cmd('wincmd l')
-    nvim_tree_api.tree.close()
-  end
-  vim.cmd('bd!')
+local nvim_tree_api = require('nvim-tree.api')
+if nvim_tree_api.tree.is_visible() then
+  vim.cmd('wincmd l')
+  nvim_tree_api.tree.close()
+end
+vim.cmd('bd!')
 end
 map({"n","t",}, "qq", ":lua close_nvim_tree_and_buffer()<CR>", { noremap = true, silent = true, desc = "Deletes/Closes buffer window"})
 
@@ -144,16 +135,13 @@ map("n", "gb", ":silent GitBlameToggle<CR>:echom 'Git Blame Toggle'<CR>", { desc
 
 -- Refresh current Burrer
 function refresh_buffer()
-  print("Refreshed Buffer")
-  vim.cmd('edit')
+print("Refreshed Buffer")
+vim.cmd('edit')
 end
 map("n", "<leader>r", ":lua refresh_buffer()<CR>",{ noremap = true, silent = true, desc = "Refreshes Current Buffer"})
-
-map("n", "mm", "m[",{ noremap = true, silent = true, desc = "Refreshes Current Buffer"})
 
 map("n", "<C-A>", "ggVG", { noremap = true, silent = true, desc = "Highligts the entire buffer."})
 
 map("n", "<leader>qa", ":bufdo bd |qa!<CR>",{ noremap = true, silent = true, desc = "Closes All Buffers"} )
 
 map("n", "zz", ":NvimTreeCollapse<CR>",{ noremap = true, silent = true, desc = "Closes File Tree"} )
-
