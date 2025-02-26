@@ -30,11 +30,10 @@ vim.opt.termguicolors = true
 vim.opt.linebreak = true
 
 -- Use system clipboard
-vim.opt.clipboard = "unnamedplus"
+vim.opt.clipboard = "unnamed"
 
 -- Enables persistent undo
 vim.opt.undofile = true
 
 -- Ignore case
 vim.opt.wildignorecase = true
-

@@ -18,6 +18,7 @@ map("t", "jk",[[<C-\><C-n>]], { desc = "Exit from terminal mode"})
 
 -- File Tree 
 map({"n","i","v"}, "<leader>ee", ":NvimTreeToggle<CR>", { desc = "Toggles the file tree", noremap = true, silent=true })
+map("n", "<leader>zz", ":NvimTreeCollapse<CR>",{ noremap = true, silent = true, desc = "Closes File Tree"} )
 
 -- Moving Horizontaly
 map({"n","v"}, "ee", "$", { desc = "Move cursor to the end of the current line", noremap = true, silent=true })
@@ -38,6 +39,7 @@ map("n", "gg", "ggzz", { desc = "Moves the cursor to the top of the page and cen
 
 -- Tabs
 map("n", "<leader>tt", ":tabnew | lcd %:p:h<CR>", { desc = "Opens a new tab", noremap = true, silent=true })
+map("n", "<leader>tn", ":tabNext <CR>", { desc = "Switches tab", noremap = true, silent=true })
 
 -- Buffers
 map("n", "<leader>c", ":close<CR>", { desc = "Closes the current split window", noremap = true, silent=true })
@@ -144,4 +146,3 @@ map("n", "<C-A>", "ggVG", { noremap = true, silent = true, desc = "Highligts the
 
 map("n", "<leader>qa", ":bufdo bd |qa!<CR>",{ noremap = true, silent = true, desc = "Closes All Buffers"} )
 
-map("n", "zz", ":NvimTreeCollapse<CR>",{ noremap = true, silent = true, desc = "Closes File Tree"} )
