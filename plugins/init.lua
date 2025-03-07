@@ -27,7 +27,7 @@ local plugins = {
       -- return config
     end,
   },
-  -- {
+   -- {
   -- 	"nvim-treesitter/nvim-treesitter",
   -- 	opts = {
   -- 		ensure_installed = {
@@ -38,24 +38,14 @@ local plugins = {
   -- },
   {import = "plugins.configs.zen-mode"},
   {import = "plugins.configs.diffview"},
-  {import = "plugins.configs.vim-illuminate"},
   {import = "plugins.configs.cd-project"},
-  {import = "plugins.configs.lsp-signature"},
-  {import = "plugins.configs.markview"},
   {import = "plugins.configs.md-preview"},
   {import = "plugins.configs.hover"},
-  {import = "plugins.configs.screenkey"},
   {import = "plugins.configs.undotree"},
-  {import = "plugins.configs.which-key"},
   {import = "plugins.configs.live-server"},
-  {import = "plugins.configs.vim-tmux-navigator"},
-  {import = "plugins.configs.marks"},
-  {import = "plugins.configs.mini_surround"},
-  {import = "plugins.configs.lazygit"},
   {import = "plugins.configs.gitblame"},
   {import = "plugins.configs.goto-preview"},
-  {import = "plugins.configs.copilot"},
-  {import = "plugins.configs.chat"},
+  {import = "plugins.configs.amazon-q"},
+  {import = "plugins.configs.mason_tool_installer"},
 }
 return plugins
-
