@@ -1,7 +1,5 @@
 require "nvchad.mappings"
 
--- add yours here
-
 local map = vim.keymap.set
 local opts = { noremap = false, silent = false}
 
@@ -39,7 +37,8 @@ map("n", "gg", "ggzz", { desc = "Moves the cursor to the top of the page and cen
 
 -- Tabs
 map("n", "<leader>tt", ":tabnew | lcd %:p:h<CR>", { desc = "Opens a new tab", noremap = true, silent=true })
-map("n", "<leader>tn", ":tabNext <CR>", { desc = "Switches tab", noremap = true, silent=true })
+map("n", "<A-Tab>", ":tabnext <CR>", { desc = "Switches tab", noremap = true, silent=true })
+map("n", "<A-S-Tab>", ":tabprevious <CR>", { desc = "Switches tab", noremap = true, silent=true })
 
 -- Buffers
 map("n", "<leader>c", ":close<CR>", { desc = "Closes the current split window", noremap = true, silent=true })
@@ -116,9 +115,11 @@ map("t", "<C-j>", "<DOWN>", { noremap = true, silent=true, desc = "Scroll down t
 map("t", "<C-l>", "<Right>", { noremap = true, silent=true, desc = "Autocompletes in terminal mode"})
 
 -- Simulate middle click
+-- Will not work in dev-desktop
 map({"n","i","t"}, "<leader>mm", '"+p', { noremap = true, silent=true, desc = "Simulate the middle click on the mouse"})
 
 -- Open current file in VS Code
+-- Will not work in dev-desktop
 map("n", "vv", ":silent !code %<CR>", { noremap = true, silent = true, desc = "Opens current buffer in VS Code" })
 
 -- Delete Buffer
@@ -146,3 +147,28 @@ map("n", "<C-A>", "ggVG", { noremap = true, silent = true, desc = "Highligts the
 
 map("n", "<leader>qa", ":bufdo bd |qa!<CR>",{ noremap = true, silent = true, desc = "Closes All Buffers"} )
 
+-- Amazon Q 
+map("n", "<leader>am", ":lua vim.lsp.start(require('amazonq.lsp').config)<CR>:'Starting Amazon Q Server'<CR>", { noremap = true, silent = true, desc = "Start Amazon Q LSP"} )
+map("n", "<leader>al", ":AmazonQ login<CR>:'Logging in to AmazonQ'<CR>", { noremap = true, silent = true, desc = "Start Amazon Q LSP"} )
+map("n", "<leader>af", ":.AmazonQ fix<CR>:echom 'Fixing current line'<CR>", { noremap = true, silent = true, desc = "Fix only the  current line"} )
+map("n", "<leader>ao", ":%AmazonQ fix<CR>:echom 'Optimizing the file.'<CR>", { noremap = true, silent = true, desc = "Optimize the entire content of the file"} )
+map("n", "<leader>ae", ":AmazonQ explain<CR>:echom 'Eplaining File'<CR>", { noremap = true, silent = true, desc = "Explain the current file"} )
+map("n", "ZZ", ":AmazonQ toggle<CR>:echom 'Toggling AmazonQ'<CR>", { noremap = true, silent = true, desc = "Toggles Amazon Q chat"} )
+
+-- Copy filename to clipboard
+map("n", "<leader>yn", function()
+   local filename = vim.fn.expand("%:t")
+    vim.fn.setreg('+', filename)
+    vim.fn.setreg('*', filename)
+    vim.fn.setreg('"', filename)
+    print("Filename '" .. filename .. "' copied to clipboard")
+end, { desc = "Copy filename to clipboard" })
+
+-- Copy full file path to clipboard
+map("n", "<leader>yp", function()
+    local filepath = vim.fn.expand("%:p")
+    vim.fn.setreg('+', filepath)
+    vim.fn.setreg('*', filepath)
+    vim.fn.setreg('"', filepath)
+    print("File path '" .. filepath .. "' copied to clipboard")
+end, { desc = "Copy full file path to clipboard" })

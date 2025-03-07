@@ -5,7 +5,7 @@
 ---@type ChadrcConfig
 local M = {}
 M.base46 = {
-	theme = "chadracula-evondev",
+	theme = "doomchad",
    transparency = false,
 	-- hl_override = {
 	-- 	Comment = { italic = true },
@@ -80,8 +80,43 @@ M.cheatsheet = {
 
 M.ui = {
   statusline = {
-    theme = "default"
+    theme = "default",
+    order = { "mode", "file", "git", "%=", "diagnostics", "lsp", "cwd", "cursor", "page_percent"},
+    modules = {
+        page_percent = function()
+        local current_line = vim.fn.line('.')
+        local total_lines = vim.fn.line('$')
+        
+        if current_line == 1 then
+          return "△ Top"
+        elseif current_line == total_lines then
+          return "▽ Bottom"
+        else
+          local percentage = math.floor((current_line / total_lines) * 100)
+          return string.format("◆ %d%%%%", percentage)
+        end
+      end,
+    }
   }
+}
+
+M.general = {
+  n = {
+    -- ...
+    ["<leader>tp"] = {
+      function()
+        require("base46").toggle_transparency()
+      end,
+      "Toggle transparency",
+    },
+  },
+}
+
+M.nvimtree = {
+  view = {
+    width = 170,
+    preserve_window_proportions = true,
+  },
 }
 
 return M
