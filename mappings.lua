@@ -208,6 +208,7 @@ map("n", "<leader>cf", function()
         print("Error counting files")
     end
 end, { desc = "Count files in current directory", noremap = true })
+
 -- Amazon Specific; finds the package name after the src file and copies the name to the clipboard
 map("n", "yp", function()
     local filepath = vim.fn.expand("%:p")  -- Get the full path of current file
