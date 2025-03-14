@@ -56,6 +56,10 @@ map("n", "<leader>x", "<C-w>c", { noremap=true, silent=true})
 map("n", "<leader>tm", ":split | resize 15 |terminal<CR>", { desc = "Opens a terminal Horizontally"})
 map("n", "st", ":vsplit | terminal<CR>", { desc = "Opens a terminal Vertically"})
 
+-- Searching
+map("n", "<C-n>", ";", {desc = "Find next occurence in the search"})
+map("n", "<C-p>", ",", {desc = "Find next previous in the search"})
+
 -- Clear search highlighting
 map("n", "ff", ":nohlsearch<CR>", { desc = "Clear search highlight", noremap=true, silent=true})
 
@@ -74,8 +78,9 @@ else
 end
 end, { silent = true, noremap = true })
 
--- Marking
-map("n", "<leader>fm", ":Telescope marks<CR>", { desc = "Go to all marked files"})
+-- Mark Navigation
+map("n", "fm", "]'", { desc = "Jump to next mark", noremap = true, silent = true })
+map("n", "pm", "['", { desc = "Jump to previous mark", noremap = true, silent = true })
 
 -- Indent
 map("n", "t", ">>", { noremap = true, silent=true })
@@ -148,15 +153,24 @@ map("n", "<C-A>", "ggVG", { noremap = true, silent = true, desc = "Highligts the
 map("n", "<leader>qa", ":bufdo bd |qa!<CR>",{ noremap = true, silent = true, desc = "Closes All Buffers"} )
 
 -- Amazon Q 
-map("n", "<leader>am", ":lua vim.lsp.start(require('amazonq.lsp').config)<CR>:'Starting Amazon Q Server'<CR>", { noremap = true, silent = true, desc = "Start Amazon Q LSP"} )
-map("n", "<leader>al", ":AmazonQ login<CR>:'Logging in to AmazonQ'<CR>", { noremap = true, silent = true, desc = "Start Amazon Q LSP"} )
+map("n", "<leader>al", function()
+    -- Start Amazon Q LSP
+    vim.lsp.start(require('amazonq.lsp').config)
+    -- Wait for 1 second
+    vim.defer_fn(function()
+        -- Execute login command
+        vim.cmd("AmazonQ login")
+        vim.notify("Logged in to Amazon Q")
+    end, 1000)  -- 1000ms = 1 second
+end, { noremap = true, silent = true, desc = "Start Amazon Q LSP and Login" })
+
 map("n", "<leader>af", ":.AmazonQ fix<CR>:echom 'Fixing current line'<CR>", { noremap = true, silent = true, desc = "Fix only the  current line"} )
 map("n", "<leader>ao", ":%AmazonQ fix<CR>:echom 'Optimizing the file.'<CR>", { noremap = true, silent = true, desc = "Optimize the entire content of the file"} )
 map("n", "<leader>ae", ":AmazonQ explain<CR>:echom 'Eplaining File'<CR>", { noremap = true, silent = true, desc = "Explain the current file"} )
 map("n", "ZZ", ":AmazonQ toggle<CR>:echom 'Toggling AmazonQ'<CR>", { noremap = true, silent = true, desc = "Toggles Amazon Q chat"} )
 
 -- Copy filename to clipboard
-map("n", "<leader>yn", function()
+map("n", "yn", function()
    local filename = vim.fn.expand("%:t")
     vim.fn.setreg('+', filename)
     vim.fn.setreg('*', filename)
@@ -165,10 +179,47 @@ map("n", "<leader>yn", function()
 end, { desc = "Copy filename to clipboard" })
 
 -- Copy full file path to clipboard
-map("n", "<leader>yp", function()
-    local filepath = vim.fn.expand("%:p")
+map("n", "yfp", function()
+    local filepath = vim.fn.expand("%:p:h")
     vim.fn.setreg('+', filepath)
     vim.fn.setreg('*', filepath)
     vim.fn.setreg('"', filepath)
     print("File path '" .. filepath .. "' copied to clipboard")
 end, { desc = "Copy full file path to clipboard" })
+
+map("n", "cn", ":cnext<CR>", { noremap = true, silent = true, desc = "Go to next item in quickfix list" })
+map("n", "cp", ":cprev<CR>", { noremap = true, silent = true, desc = "Go to previous item in quickfix list" })
+map("n", "cc", ":cclose<CR>", { noremap = true, silent = true, desc = "Go to previous item in quickfix list" })
+
+vim.keymap.set('n', 'bc', function()
+    print('Buffer count: ' .. #vim.fn.getbufinfo({buflisted=1}))
+end)
+
+-- Count files in current directory
+map("n", "<leader>cf", function()
+    local handle = io.popen('find . -maxdepth 1 -type f | wc -l')
+    if handle then
+        local result = handle:read("*a")
+        handle:close()
+        -- Remove trailing whitespace/newlines and convert to number
+        result = tonumber(result:match("^%s*(.-)%s*$"))
+        print("Files in current directory: " .. result)
+    else
+        print("Error counting files")
+    end
+end, { desc = "Count files in current directory", noremap = true })
+
+map("n", "yp", function()
+    local filepath = vim.fn.expand("%:p")  -- Get the full path of current file
+    local after_src = filepath:match("src/(.-)/")  -- Match the first folder after src/
+     if after_src then
+        -- Copy to multiple registers for compatibility
+        vim.fn.setreg('+', after_src)  -- System clipboard
+        vim.fn.setreg('*', after_src)  -- Selection clipboard
+        vim.fn.setreg('"', after_src)  -- Unnamed register
+        print("Folder name '" .. after_src .. "' copied to clipboard")
+    else
+        print("No folder found after 'src' in path")
+    end
+end, { desc = "Copy Project name to register", noremap = true })
+
