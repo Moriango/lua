@@ -2,8 +2,8 @@ require "nvchad.options"
 
 -- add yours here!
 
--- local o = vim.o
--- o.cursorlineopt ='both' -- to enable cursorline!
+local o = vim.o
+o.cursorlineopt ='both' -- to enable cursorline!
 vim.scriptencoding = "utf-8"
 vim.opt.encoding = "utf-8"
 -- vim.opt.fileencoding = "utf-8"
@@ -23,7 +23,7 @@ vim.opt.wrap = true
 vim.opt.foldmethod = "manual"
 vim.opt.foldlevelstart = 99
 -- Highlights the screen line of the cursor 
-vim.opt.cursorline = false
+vim.opt.cursorline = true
 
 -- Enables 24-bit RGB color in the TUI
 vim.opt.termguicolors = true

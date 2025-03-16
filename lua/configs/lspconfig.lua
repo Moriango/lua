@@ -26,6 +26,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
 
     -- Displays hover information about the symbol under the cursor
     bufmap('n', 'K', '<cmd>lua vim.lsp.buf.hover()<cr>')
+
  end
 })
 -- Specific JDTLS configuration
@@ -82,12 +83,11 @@ require('lspconfig').jdtls.setup({
   handlers = {
     ["textDocument/publishDiagnostics"] = function(_, result, ctx, config)
       local filtered_diagnostics = {}
-      
       for _, diagnostic in ipairs(result.diagnostics) do
         -- Only keep diagnostics with "syntax" in the message
         local message = diagnostic.message:lower()
         -- Keep syntax errors and filter common Java errors
-        local should_filter = 
+        local should_filter =
             -- message:find("cannot be resolved") or        -- Unresolved symbols
             -- message:find("cannot be resolved to a type") or -- Unknown types
             -- message:find("the import .* cannot be resolved") or -- Import errors

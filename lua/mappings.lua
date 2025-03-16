@@ -78,8 +78,8 @@ else
 end
 end, { silent = true, noremap = true })
 
--- Mark Navigation
-map("n", "fm", "]'", { desc = "Jump to next mark", noremap = true, silent = true })
+-- Mark Navigamtion
+map("n", "nm", "]'", { desc = "Jump to next mark", noremap = true, silent = true })
 map("n", "pm", "['", { desc = "Jump to previous mark", noremap = true, silent = true })
 
 -- Indent
@@ -187,9 +187,9 @@ map("n", "yfp", function()
     print("File path '" .. filepath .. "' copied to clipboard")
 end, { desc = "Copy full file path to clipboard" })
 
-map("n", "cn", ":cnext<CR>", { noremap = true, silent = true, desc = "Go to next item in quickfix list" })
-map("n", "cp", ":cprev<CR>", { noremap = true, silent = true, desc = "Go to previous item in quickfix list" })
-map("n", "cc", ":cclose<CR>", { noremap = true, silent = true, desc = "Go to previous item in quickfix list" })
+map("n", "cn", ":cnext<CR>", { noremap = true, silent = true, desc = "Go to next item in quickfix list"})
+map("n", "cp", ":cprev<CR>", { noremap = true, silent = true, desc = "Go to previous item in quickfix list"})
+map("n", "cc", ":cclose<CR>", { noremap = true, silent = true, desc = "Close the quickfix list"})
 
 vim.keymap.set('n', 'bc', function()
     print('Buffer count: ' .. #vim.fn.getbufinfo({buflisted=1}))
