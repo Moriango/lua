@@ -56,7 +56,7 @@ local plugins = {
   {import = "plugins.configs.live-server"},
   {import = "plugins.configs.gitblame"},
   {import = "plugins.configs.goto-preview"},
-  {import = "plugins.configs.amazon-q"},
+  {import = "plugins.configs.tmux-navigator"},
   {import = "configs.custom.configs.nvim-tree"},
   {import = "plugins.configs.mason_tool_installer"},
 }
