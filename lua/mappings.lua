@@ -189,7 +189,7 @@ end, { desc = "Copy full file path to clipboard" })
 
 map("n", "cn", ":cnext<CR>", { noremap = true, silent = true, desc = "Go to next item in quickfix list"})
 map("n", "cp", ":cprev<CR>", { noremap = true, silent = true, desc = "Go to previous item in quickfix list"})
-map("n", "cc", ":cclose<CR>", { noremap = true, silent = true, desc = "Close the quickfix list"})
+map("n", "CC", ":cclose<CR>", { noremap = true, silent = true, desc = "Close the quickfix list"})
 
 vim.keymap.set('n', 'bc', function()
     print('Buffer count: ' .. #vim.fn.getbufinfo({buflisted=1}))
