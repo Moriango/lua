@@ -31,7 +31,7 @@ return {
       { "<leader>cce", "<cmd>CopilotChatExplain<cr>", desc = "CopilotChat - Explain code" },
       { "<leader>cct", "<cmd>CopilotChatTests<cr>",   desc = "CopilotChat - Generate tests" },
       {
-        "<leader>tp",
+        "<leader>cp",
         ":CopilotChatToggle<CR>",
         mode = { "n", "x" },
         desc = "CopilotChat",
