@@ -42,6 +42,7 @@ vim.opt.autochdir = false
 
 vim.opt.wildmenu = true
 
+vim.opt.clipboard = "unnamedplus"
 -- Use system clipboard
 function no_paste(reg)
   return function(lines)
