@@ -150,7 +150,7 @@ map("n", "<leader>r", ":lua refresh_buffer()<CR>",{ noremap = true, silent = tru
 
 map("n", "<C-A>", "ggVG", { noremap = true, silent = true, desc = "Highligts the entire buffer."})
 
-map("n", "<leader>qa", ":bufdo bd |qa!<CR>",{ noremap = true, silent = true, desc = "Closes All Buffers"} )
+map("n", "<leader>qa", ":qa!<CR>",{ noremap = true, silent = true, desc = "Closes All Buffers"} )
 
 -- Amazon Q 
 map("n", "<leader>al", function()
