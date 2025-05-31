@@ -115,11 +115,4 @@ M.general = {
   },
 }
 
-M.nvimtree = {
-  view = {
-    width = 170,
-    preserve_window_proportions = true,
-  },
-}
-
 return M
