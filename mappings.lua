@@ -171,7 +171,16 @@ map("n", "cn", ":cnext<CR>", { noremap = true, silent = true, desc = "Go to next
 map("n", "cp", ":cprev<CR>", { noremap = true, silent = true, desc = "Go to previous item in quickfix list"})
 map("n", "CC", ":cclose<CR>", { noremap = true, silent = true, desc = "Close the quickfix list"})
 
-map("n", "yp", ":GBrowse<CR>", { noremap = true, silent = true, desc = "Open file in AWS Code Browser"})
+map("n", "yp", function()
+    -- Save current directory
+    local current_dir = vim.fn.getcwd()
+    -- Enable autochdir temporarily
+    vim.cmd("set autochdir")
+    -- Get the URL and open it
+    vim.cmd("GBrowse")
+    -- Return to original directory
+    vim.cmd("cd " .. current_dir)
+end, { desc = "Open file in AWS Code Browser" })
 
 -- Copy filename to clipboard
 map("n", "yn", function()
