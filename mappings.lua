@@ -218,3 +218,8 @@ map("n", "<leader>cf", function()
     end
 end, { desc = "Count files in current directory", noremap = true })
 
+map("n", "MM", function()
+  vim.cmd("set autochdir")
+  vim.cmd("set noautochdir")
+  print("Changed Directories")
+  end, { desc = "Autochdir setting", noremap = true })
