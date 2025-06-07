@@ -28,8 +28,6 @@ map("n", "<C-A-k>", ":m .-2<CR>==", { desc = "Moves the current line up", norema
 map({"n","i"}, "<leader>lz", ":Lazy<CR>", { desc = "Opens Lazy"})
 
 -- Moving Vertically
-map("n", "j", "jzz", { desc = "Moves the cursor down and centers the page", silent=true })
-map("n", "k", "kzz", { desc = "Moves the cursor up and centers the page", silent=true })
 map({"n","i"}, "<C-d>", "<C-d>zz", { desc = "Moves the cursor down half a page and centers it.", noremap = true, silent=true })
 map({"n","i"}, "<C-u>", "<C-u>zz", { desc = "Moves the cursor up half a page and centers it.", noremap = true, silent=true })
 map("n", "G", "Gzz", { desc = "Moves the cursor to the bottom of the page and centers the screen", noremap = true, silent=true })
@@ -169,6 +167,21 @@ map("n", "<leader>ao", ":%AmazonQ fix<CR>:echom 'Optimizing the file.'<CR>", { n
 map("n", "<leader>ae", ":AmazonQ explain<CR>:echom 'Eplaining File'<CR>", { noremap = true, silent = true, desc = "Explain the current file"} )
 map("n", "ZZ", ":AmazonQ toggle<CR>:echom 'Toggling AmazonQ'<CR>", { noremap = true, silent = true, desc = "Toggles Amazon Q chat"} )
 
+map("n", "cn", ":cnext<CR>", { noremap = true, silent = true, desc = "Go to next item in quickfix list"})
+map("n", "cp", ":cprev<CR>", { noremap = true, silent = true, desc = "Go to previous item in quickfix list"})
+map("n", "CC", ":cclose<CR>", { noremap = true, silent = true, desc = "Close the quickfix list"})
+
+map("n", "yp", function()
+    -- Save current directory
+    local current_dir = vim.fn.getcwd()
+    -- Enable autochdir temporarily
+    vim.cmd("set autochdir")
+    -- Get the URL and open it
+    vim.cmd("GBrowse")
+    -- Return to original directory
+    vim.cmd("cd " .. current_dir)
+end, { desc = "Open file in AWS Code Browser" })
+
 -- Copy filename to clipboard
 map("n", "yn", function()
    local filename = vim.fn.expand("%:t")
@@ -186,10 +199,6 @@ map("n", "yfp", function()
     vim.fn.setreg('"', filepath)
     print("File path '" .. filepath .. "' copied to clipboard")
 end, { desc = "Copy full file path to clipboard" })
-
-map("n", "cn", ":cnext<CR>", { noremap = true, silent = true, desc = "Go to next item in quickfix list"})
-map("n", "cp", ":cprev<CR>", { noremap = true, silent = true, desc = "Go to previous item in quickfix list"})
-map("n", "CC", ":cclose<CR>", { noremap = true, silent = true, desc = "Close the quickfix list"})
 
 vim.keymap.set('n', 'bc', function()
     print('Buffer count: ' .. #vim.fn.getbufinfo({buflisted=1}))
@@ -209,17 +218,14 @@ map("n", "<leader>cf", function()
     end
 end, { desc = "Count files in current directory", noremap = true })
 
-map("n", "yp", function()
-    local filepath = vim.fn.expand("%:p")  -- Get the full path of current file
-    local after_src = filepath:match("src/(.-)/")  -- Match the first folder after src/
-     if after_src then
-        -- Copy to multiple registers for compatibility
-        vim.fn.setreg('+', after_src)  -- System clipboard
-        vim.fn.setreg('*', after_src)  -- Selection clipboard
-        vim.fn.setreg('"', after_src)  -- Unnamed register
-        print("Folder name '" .. after_src .. "' copied to clipboard")
-    else
-        print("No folder found after 'src' in path")
-    end
-end, { desc = "Copy Project name to register", noremap = true })
+map("n", "MM", function()
+  vim.cmd("set autochdir")
+  vim.cmd("set noautochdir")
+  print("Changed Directories")
+  end, { desc = "Autochdir setting", noremap = true })
 
+map("n", "_", function()
+  vim.cmd("cd ../")
+  local cwd = vim.fn.getcwd()
+  print("Current directory: " .. cwd)
+  end, { desc = "Moving working directory up one level", noremap = true })
