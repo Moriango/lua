@@ -55,11 +55,56 @@ map("n", "<leader>tm", ":split | resize 15 |terminal<CR>", { desc = "Opens a ter
 map("n", "st", ":vsplit | terminal<CR>", { desc = "Opens a terminal Vertically"})
 
 -- Searching
-map("n", "<C-n>", ";", {desc = "Find next occurence in the search"})
-map("n", "<C-p>", ",", {desc = "Find next previous in the search"})
+-- Smart search function that checks if current word is already being searched
+function smart_search(direction)
+  local current_word = vim.fn.expand("<cword>")
+  local search_word = vim.fn.getreg("/")
+  
+  -- Check if there's an active search
+  if search_word == "" then
+    -- No active search, start a new one with case sensitivity
+    local word = vim.fn.escape(current_word, "\\[].*~")
+    vim.fn.setreg("/", "\\C\\<" .. word .. "\\>")
+    vim.cmd("normal! n")
+    return
+  end
+  
+  -- Check if this was a manual search (doesn't have word boundary markers)
+  local is_manual_search = not search_word:match("^\\<.*\\>$")
+  
+  if is_manual_search then
+    -- For manual searches, just navigate
+    if direction == "next" then
+      vim.cmd("normal! n")
+    else
+      vim.cmd("normal! N")
+    end
+  else
+    -- For word searches, check if it's the current word
+    local clean_search_word = search_word:gsub("\\<", ""):gsub("\\>", "")
+    
+    if clean_search_word == current_word then
+      -- Continue searching the current word
+      if direction == "next" then
+        vim.cmd("normal! n")
+      else
+        vim.cmd("normal! N")
+      end
+    else
+      -- Search for the new word under cursor
+      vim.cmd("normal! *")
+    end
+  end
+end
 
--- Clear search highlighting
-map("n", "ff", ":nohlsearch<CR>", { desc = "Clear search highlight", noremap=true, silent=true})
+map("n", "n", ":lua smart_search('next')<CR>", {desc = "Smart search next", noremap = true, silent = true})
+map("n", "N", ":lua smart_search('prev')<CR>", {desc = "Smart search previous", noremap = true, silent = true})
+
+-- Clear search highlighting and pattern
+map("n", "ff", function()
+  vim.fn.setreg("/", "")
+  vim.cmd("nohlsearch")
+end, { desc = "Clear search pattern and highlight", noremap=true, silent=true})
 
 -- Project
 map("n", "cd", "<cmd>CdProject<CR>", { desc = "Cd Project, Change working directory"})
