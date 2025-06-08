@@ -48,7 +48,7 @@ map("n", "<A-h>", ":vertical resize -2<Return>", { noremap=true, silent=true })
 map("n", "<A-j>", ":resize -2<Return>", { noremap=true, silent=true })
 map("n", "<A-k>", ":resize +2<Return>", { noremap=true, silent=true})
 map("n", "<A-l>", ":vertical resize +2<Return>", { noremap=true, silent=true})
-map("n", "<leader>x", "<C-w>c", { noremap=true, silent=true})
+map("n", "<leader>x", ":close<CR>", { noremap=true, silent=true})
 
 -- Terminal
 map("n", "<leader>tm", ":split | resize 15 |terminal<CR>", { desc = "Opens a terminal Horizontally"})
