@@ -5,7 +5,7 @@
 ---@type ChadrcConfig
 local M = {}
 M.base46 = {
-	theme = "chadracula",
+	theme = "aylin",
    transparency = false,
   hl_override = {
     St_file = { bold = true, fg = "sun"},     -- for the file name

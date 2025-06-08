@@ -31,7 +31,16 @@ local plugins = {
     "nvim-telescope/telescope.nvim",
     opts = {
       defaults = {
-        path_display={"smart"}
+        path_display={"absolute"},
+        layout_strategy="vertical",
+        layout_config = {
+          vertical = {
+            prompt_position = "top",
+            preview_cutoff = 0,
+            mirror = true,
+            preview_height = 0.7
+          }
+        }
       }
     },
     config = function(PluginSpec,opts)
