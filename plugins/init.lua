@@ -71,6 +71,7 @@ local plugins = {
   -- {import = "plugins.configs.mini-surround"},
   {import = "plugins.configs.screenkey"},
   {import = "plugins.configs.tmux-navigator"},
+  {import = "plugins.configs.todo"},
   {import = "plugins.configs.ufo"},
   {import = "plugins.configs.undotree"},
   {import = "plugins.configs.vim-illuminate"},
