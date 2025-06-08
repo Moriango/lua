@@ -63,6 +63,7 @@ function smart_search(direction)
   -- Check if there's an active search
   if search_word == "" then
     -- No active search, start a new one with case sensitivity
+    clear_search()
     local word = vim.fn.escape(current_word, "\\[].*~")
     vim.fn.setreg("/", "\\C\\<" .. word .. "\\>")
     vim.cmd("normal! n")
@@ -73,7 +74,6 @@ function smart_search(direction)
   local is_manual_search = not search_word:match("^\\<.*\\>$")
   
   if is_manual_search then
-    -- For manual searches, just navigate
     if direction == "next" then
       vim.cmd("normal! n")
     else
@@ -81,6 +81,7 @@ function smart_search(direction)
     end
   else
     -- For word searches, check if it's the current word
+    clear_search()
     local clean_search_word = search_word:gsub("\\<", ""):gsub("\\>", "")
     
     if clean_search_word == current_word then
@@ -101,10 +102,12 @@ map("n", "n", ":lua smart_search('next')<CR>", {desc = "Smart search next", nore
 map("n", "N", ":lua smart_search('prev')<CR>", {desc = "Smart search previous", noremap = true, silent = true})
 
 -- Clear search highlighting and pattern
-map("n", "ff", function()
+function clear_search()
   vim.fn.setreg("/", "")
   vim.cmd("nohlsearch")
-end, { desc = "Clear search pattern and highlight", noremap=true, silent=true})
+end
+
+map("n", "ff", ":lua clear_search()<CR>", { desc = "Clear search pattern and highlight"})
 
 -- Project
 map("n", "cd", "<cmd>CdProject<CR>", { desc = "Cd Project, Change working directory"})
