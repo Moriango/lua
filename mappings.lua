@@ -59,8 +59,8 @@ map("n", "<leader>tm", ":split | resize 15 |terminal<CR>", { desc = "Opens a ter
 map("n", "st", ":vsplit | terminal<CR>", { desc = "Opens a terminal Vertically"})
 
 -- Searching
-map("n", "<leader>s", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]], { desc = "Replace word under cursor globally"})
-map("n", "<leader>w", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gc<Left><Left><Left>]], { desc = "Replace word under cursor globally"})
+map("n", "<leader>r", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]], { desc = "Replace word under cursor globally"})
+map("n", "<leader>sw", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gc<Left><Left><Left>]], { desc = "Replace word under cursor globally and ask"})
 -- Smart search function that checks if current word is already being searched
 function smart_search(direction)
   local current_word = vim.fn.expand("<cword>")
@@ -198,7 +198,7 @@ function refresh_buffer()
 print("Refreshed Buffer")
 vim.cmd('edit')
 end
-map("n", "<leader>r", ":lua refresh_buffer()<CR>",{ noremap = true, silent = true, desc = "Refreshes Current Buffer"})
+map("n", "<leader>rb", ":lua refresh_buffer()<CR>",{ noremap = true, silent = true, desc = "Refreshes Current Buffer"})
 
 map("n", "<C-A>", "ggVG", { noremap = true, silent = true, desc = "Highligts the entire buffer."})
 
