@@ -46,6 +46,7 @@ map("n", "sv", ":split<Return>", { desc = "Splits tab Horizontally", noremap = t
 map("n", "sh", ":vsplit<CR>", { desc = "Splits tab Vertically", noremap = true, silent=true })
 map("n", "<leader>x", "<C-w>c", { noremap=true, silent=true})
 map("n", "<leader>q", ":bd!<CR>", { noremap=true, silent=true})
+map("n", "<leader>bb", "<C-w><C-r>", {noremap=true, silent=true})
 
 -- Resize window
 map("n", "<A-h>", ":vertical resize -2<Return>", { noremap=true, silent=true })
