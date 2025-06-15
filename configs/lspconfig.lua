@@ -25,13 +25,13 @@ vim.api.nvim_create_autocmd('LspAttach', {
     end
 
     -- Displays hover information about the symbol under the cursor
-    bufmap('n', 'K', '<cmd>lua vim.lsp.buf.hover()<cr>')
+    bufmap('n', 'I', '<cmd>lua vim.lsp.buf.hover()<cr>')
 
  end
 })
 -- Specific JDTLS configuration
 require('lspconfig').jdtls.setup({
-  cmd = { '/opt/homebrew/bin/jdtls' },  -- Add this line
+  cmd = { '/home/jericho/.local/share/nvim/mason/bin/jdtls' },  -- Add this line
   on_attach = require("nvchad.configs.lspconfig").on_attach,
   on_init = require("nvchad.configs.lspconfig").on_init,
   capabilities = require("nvchad.configs.lspconfig").capabilities,
