@@ -57,7 +57,7 @@ map("n", "<leader>tm", ":split | resize 15 |terminal<CR>", { desc = "Opens a ter
 map("n", "st", ":vsplit | terminal<CR>", { desc = "Opens a terminal Vertically"})
 
 -- Searching
-map("n", "<leader>r", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]], { desc = "Replace word under cursor globally"})
+map("n", "<leader>cw", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]], { desc = "Replace word under cursor globally"})
 map("n", "<leader>sw", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gc<Left><Left><Left>]], { desc = "Replace word under cursor globally and ask"})
 -- Smart search function that checks if current word is already being searched
 function smart_search(direction)
