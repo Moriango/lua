@@ -38,7 +38,7 @@ local plugins = {
             prompt_position = "top",
             preview_cutoff = 0,
             mirror = true,
-            preview_height = 0.7
+            preview_height = 0.6
           }
         }
       }
