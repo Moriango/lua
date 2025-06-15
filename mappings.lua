@@ -21,8 +21,6 @@ map("n", "<leader>zz", ":NvimTreeCollapse<CR>",{ noremap = true, silent = true, 
 -- Moving Horizontaly
 map({"n","v"}, "ee", "$", { desc = "Move cursor to the end of the current line", noremap = true, silent=true })
 map({"n","v"}, "ba", "^", { desc = "Move cursor to the begginning of the current line", noremap = true, silent=true })
-map("n", "J", ":m .+1<CR>==", { desc = "Moves the current line down", noremap = true, silent=true })
-map("n", "K", ":m .-2<CR>==", { desc = "Moves the current line up", noremap = true, silent=true })
 map("v", "J", ":m '>+1<CR>gv=gv", { desc = "Moves the current line up", noremap = true, silent=true })
 map("v", "K", ":m '<-2<CR>gv=gv", { desc = "Moves the current line up", noremap = true, silent=true })
 
