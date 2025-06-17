@@ -58,7 +58,7 @@ local plugins = {
   -- },
   -- {import = "plugins.configs.amazon-q"},
   {import = "plugins.configs.cd-project"},
-  -- {import = "plugins.configs.code-browse"},
+  {import = "plugins.configs.code-browse"},
   {import = "plugins.configs.comment"},
   {import = "plugins.configs.diffview"},
   {import = "plugins.configs.gitblame"},
