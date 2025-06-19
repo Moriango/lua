@@ -57,8 +57,8 @@ map("n", "<leader>tm", ":split | resize 15 |terminal<CR>", { desc = "Opens a ter
 map("n", "st", ":vsplit | terminal<CR>", { desc = "Opens a terminal Vertically"})
 
 -- Searching
-map("n", "<leader>caw", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]], { desc = "Replace word under cursor globally"})
-map("n", "<leader>cai", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gc<Left><Left><Left>]], { desc = "Replace word under cursor globally and ask"})
+map("n", "caw", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]], { desc = "Replace word under cursor globally"})
+map("n", "cwi", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gc<Left><Left><Left>]], { desc = "Replace word under cursor globally and ask"})
 -- Smart search function that checks if current word is already being searched
 function smart_search(direction)
   local current_word = vim.fn.expand("<cword>")
@@ -71,17 +71,19 @@ function smart_search(direction)
     local word = vim.fn.escape(current_word, "\\[].*~")
     vim.fn.setreg("/", "\\C\\<" .. word .. "\\>")
     vim.cmd("normal! n")
+    print("Searching: ", word)
     return
   end
   
   -- Check if this was a manual search (doesn't have word boundary markers)
   local is_manual_search = not search_word:match("^\\<.*\\>$")
-  
   if is_manual_search then
     if direction == "next" then
       vim.cmd("normal! n")
+      print("Searching: ", search_word)
     else
       vim.cmd("normal! N")
+      print("Searching: ", search_word)
     end
   else
     -- For word searches, check if it's the current word
@@ -92,12 +94,15 @@ function smart_search(direction)
       -- Continue searching the current word
       if direction == "next" then
         vim.cmd("normal! n")
+        print("Searching: ", search_word)
       else
         vim.cmd("normal! N")
+        print("Searching: ", search_word)
       end
     else
       -- Search for the new word under cursor
       vim.cmd("normal! *")
+      print("Searching: ", search_word)
     end
   end
 end
@@ -111,7 +116,7 @@ function clear_search()
   vim.cmd("nohlsearch")
 end
 
-map("n", "ff", ":lua clear_search()<CR>", { desc = "Clear search pattern and highlight"})
+map("n", "ff", ":lua clear_search()<CR>", { desc = "Clear search pattern and highlight", silent=true})
 
 -- Project
 map("n", "cd", "<cmd>CdProject<CR>", { desc = "Cd Project, Change working directory"})
@@ -173,9 +178,11 @@ map("t", "<C-l>", "<Right>", { noremap = true, silent=true, desc = "Autocomplete
 -- Will not work in dev-desktop
 map({"n","i","t"}, "<leader>mm", '"+p', { noremap = true, silent=true, desc = "Simulate the middle click on the mouse"})
 
--- Open current file in VS Code
+-- Open current working directory in VS Code
 -- Will not work in dev-desktop
-map("n", "vv", ":silent !code %<CR>", { noremap = true, silent = true, desc = "Opens current buffer in VS Code" })
+
+-- Open current working directory in VS Code
+map("n", "vv", ":silent !code .<CR>", { noremap = true, silent = true, desc = "Opens current working directory in VS Code" })
 
 -- Delete Buffer
 function close_nvim_tree_and_buffer()
