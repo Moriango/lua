@@ -235,8 +235,12 @@ map("n", "yp", function()
     local current_dir = vim.fn.getcwd()
     -- Enable autochdir temporarily
     vim.cmd("set autochdir")
-    -- Get the URL and open it
-    vim.cmd("GBrowse")
+    -- Get the URL and open it based on system
+    if vim.fn.has("mac") == 1 then
+        vim.cmd("GBrowse")
+    else
+        vim.cmd("GBrowse!")
+    end
     -- Return to original directory
     vim.cmd("cd " .. current_dir)
 end, { desc = "Open file in AWS Code Browser" })
