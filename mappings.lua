@@ -28,8 +28,8 @@ map("v", "K", ":m '<-2<CR>gv=gv", { desc = "Moves the current line up", noremap 
 map({"n","i"}, "<leader>lz", ":Lazy<CR>", { desc = "Opens Lazy"})
 
 -- Moving Vertically
-map({"n","i"}, "D", "<C-d>zz", { desc = "Moves the cursor down half a page and centers it.", noremap = true, silent=true })
-map({"n","i"}, "U", "<C-u>zz", { desc = "Moves the cursor up half a page and centers it.", noremap = true, silent=true })
+map({"n"}, "D", "<C-d>zz", { desc = "Moves the cursor down half a page and centers it.", noremap = true, silent=true })
+map({"n"}, "U", "<C-u>zz", { desc = "Moves the cursor up half a page and centers it.", noremap = true, silent=true })
 map("n", "G", "Gzz", { desc = "Moves the cursor to the bottom of the page and centers the screen", noremap = true, silent=true })
 map("n", "gg", "ggzz", { desc = "Moves the cursor to the top of the page and centers the screen", noremap = true, silent=true })
 
@@ -57,8 +57,8 @@ map("n", "<leader>tm", ":split | resize 15 |terminal<CR>", { desc = "Opens a ter
 map("n", "st", ":vsplit | terminal<CR>", { desc = "Opens a terminal Vertically"})
 
 -- Searching
-map("n", "caw", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]], { desc = "Replace word under cursor globally"})
-map("n", "cwi", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gc<Left><Left><Left>]], { desc = "Replace word under cursor globally and ask"})
+map("n", "<leader>ca", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]], { desc = "Replace word under cursor globally"})
+map("n", "<leader>cw", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gc<Left><Left><Left>]], { desc = "Replace word under cursor globally and ask"})
 -- Smart search function that checks if current word is already being searched
 function smart_search(direction)
   local current_word = vim.fn.expand("<cword>")
