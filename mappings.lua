@@ -71,7 +71,6 @@ function smart_search(direction)
     local word = vim.fn.escape(current_word, "\\[].*~")
     vim.fn.setreg("/", "\\C\\<" .. word .. "\\>")
     vim.cmd("normal! n")
-    print("Searching: ", word)
     return
   end
   
@@ -80,10 +79,8 @@ function smart_search(direction)
   if is_manual_search then
     if direction == "next" then
       vim.cmd("normal! n")
-      print("Searching: ", search_word)
     else
       vim.cmd("normal! N")
-      print("Searching: ", search_word)
     end
   else
     -- For word searches, check if it's the current word
@@ -94,15 +91,12 @@ function smart_search(direction)
       -- Continue searching the current word
       if direction == "next" then
         vim.cmd("normal! n")
-        print("Searching: ", search_word)
       else
         vim.cmd("normal! N")
-        print("Searching: ", search_word)
       end
     else
       -- Search for the new word under cursor
       vim.cmd("normal! *")
-      print("Searching: ", search_word)
     end
   end
 end
