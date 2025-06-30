@@ -57,6 +57,31 @@ map("n", "<leader>tm", ":split | resize 15 |terminal<CR>", { desc = "Opens a ter
 map("n", "st", ":vsplit | terminal<CR>", { desc = "Opens a terminal Vertically"})
 
 -- Searching
+
+-- Smart search function that checks if current word is already being searched
+function smart_search(direction)
+  local current_word = vim.fn.expand("<cword>")
+  local search_word = vim.fn.getreg("/")
+  
+  -- Check if there's an active search
+  if search_word == "" then
+    -- No active search, start a new one with case sensitivity
+    local word = vim.fn.escape(current_word, "\\[].*~")
+    vim.fn.setreg("/", "\\C\\<" .. word .. "\\>")
+    vim.cmd("normal! n")
+    return
+  end
+  
+  if direction == "next" then
+    vim.cmd("normal! n")
+  else
+    vim.cmd("normal! N")
+  end
+end
+
+map("n", "n", ":lua smart_search('next')<CR>", {desc = "Smart search next", noremap = true, silent = true})
+map("n", "N", ":lua smart_search('prev')<CR>", {desc = "Smart search previous", noremap = true, silent = true})
+
 map("n", "<leader>ca", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]], { desc = "Replace word under cursor globally"})
 map("n", "<leader>cw", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gc<Left><Left><Left>]], { desc = "Replace word under cursor globally and ask"})
 
@@ -64,6 +89,7 @@ map("n", "<leader>cw", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gc<Left><Left><Left>]], {
 function clear_search()
   vim.fn.setreg("/", "")
   vim.cmd("nohlsearch")
+  print('Search Cleared')
 end
 
 map("n", "ff", ":lua clear_search()<CR>", { desc = "Clear search pattern and highlight", silent=true})
