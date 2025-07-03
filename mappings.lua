@@ -53,8 +53,16 @@ map("n", "<A-k>", ":resize +2<Return>", { noremap=true, silent=true})
 map("n", "<A-l>", ":vertical resize +2<Return>", { noremap=true, silent=true})
 
 -- Terminal
-map("n", "<leader>tm", ":split | resize 15 |terminal<CR>", { desc = "Opens a terminal Horizontally"})
-map("n", "st", ":vsplit | terminal<CR>", { desc = "Opens a terminal Vertically"})
+map("n", "<leader>tm", function()
+    local cwd = vim.fn.getcwd()
+    vim.cmd("split | resize 15 | terminal")
+    vim.cmd("cd " .. cwd)
+end, { desc = "Opens a terminal Horizontally in current working directory"})
+map("n", "st", function()
+    local cwd = vim.fn.getcwd()
+    vim.cmd("vsplit | terminal")
+    vim.cmd("cd " .. cwd)
+end, { desc = "Opens a terminal Vertically in current working directory"})
 
 -- Searching
 
