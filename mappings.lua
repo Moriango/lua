@@ -53,12 +53,19 @@ map("n", "<A-k>", ":resize +2<Return>", { noremap=true, silent=true})
 map("n", "<A-l>", ":vertical resize +2<Return>", { noremap=true, silent=true})
 
 -- Terminal
-map("n", "<leader>tm", ":split | resize 15 |terminal<CR>", { desc = "Opens a terminal Horizontally"})
-map("n", "st", ":vsplit | terminal<CR>", { desc = "Opens a terminal Vertically"})
+map("n", "<leader>tm", function()
+    local cwd = vim.fn.getcwd()
+    vim.cmd("split | resize 15 | terminal")
+    vim.cmd("cd " .. cwd)
+end, { desc = "Opens a terminal Horizontally in current working directory"})
+map("n", "st", function()
+    local cwd = vim.fn.getcwd()
+    vim.cmd("vsplit | terminal")
+    vim.cmd("cd " .. cwd)
+end, { desc = "Opens a terminal Vertically in current working directory"})
 
 -- Searching
-map("n", "<leader>ca", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]], { desc = "Replace word under cursor globally"})
-map("n", "<leader>cw", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gc<Left><Left><Left>]], { desc = "Replace word under cursor globally and ask"})
+
 -- Smart search function that checks if current word is already being searched
 function smart_search(direction)
   local current_word = vim.fn.expand("<cword>")
@@ -67,47 +74,30 @@ function smart_search(direction)
   -- Check if there's an active search
   if search_word == "" then
     -- No active search, start a new one with case sensitivity
-    clear_search()
     local word = vim.fn.escape(current_word, "\\[].*~")
     vim.fn.setreg("/", "\\C\\<" .. word .. "\\>")
     vim.cmd("normal! n")
     return
   end
   
-  -- Check if this was a manual search (doesn't have word boundary markers)
-  local is_manual_search = not search_word:match("^\\<.*\\>$")
-  if is_manual_search then
-    if direction == "next" then
-      vim.cmd("normal! n")
-    else
-      vim.cmd("normal! N")
-    end
+  if direction == "next" then
+    vim.cmd("normal! n")
   else
-    -- For word searches, check if it's the current word
-    clear_search()
-    local clean_search_word = search_word:gsub("\\<", ""):gsub("\\>", "")
-    
-    if clean_search_word == current_word then
-      -- Continue searching the current word
-      if direction == "next" then
-        vim.cmd("normal! n")
-      else
-        vim.cmd("normal! N")
-      end
-    else
-      -- Search for the new word under cursor
-      vim.cmd("normal! *")
-    end
+    vim.cmd("normal! N")
   end
 end
 
 map("n", "n", ":lua smart_search('next')<CR>", {desc = "Smart search next", noremap = true, silent = true})
 map("n", "N", ":lua smart_search('prev')<CR>", {desc = "Smart search previous", noremap = true, silent = true})
 
+map("n", "<leader>ca", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]], { desc = "Replace word under cursor globally"})
+map("n", "<leader>cw", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gc<Left><Left><Left>]], { desc = "Replace word under cursor globally and ask"})
+
 -- Clear search highlighting and pattern
 function clear_search()
   vim.fn.setreg("/", "")
   vim.cmd("nohlsearch")
+  print('Search Cleared')
 end
 
 map("n", "ff", ":lua clear_search()<CR>", { desc = "Clear search pattern and highlight", silent=true})
