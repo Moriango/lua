@@ -255,7 +255,7 @@ vim.keymap.set('n', 'bc', function()
 end)
 
 -- Count files in current directory
-map("n", "<leader>cf", function()
+map("n", "fc", function()
     local handle = io.popen('find . -maxdepth 1 -type f | wc -l')
     if handle then
         local result = handle:read("*a")
