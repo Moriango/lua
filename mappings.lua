@@ -27,6 +27,9 @@ map("v", "K", ":m '<-2<CR>gv=gv", { desc = "Moves the current line up", noremap 
 -- Lazy Git
 map({"n","i"}, "<leader>lz", ":Lazy<CR>", { desc = "Opens Lazy"})
 
+--Word Wrapping
+map("n", "ZZ", ":set wrap!<CR>", { desc = "Toggles word wrap", noremap = true, silent=true })
+
 -- Moving Vertically
 map({"n"}, "D", "<C-d>zz", { desc = "Moves the cursor down half a page and centers it.", noremap = true, silent=true })
 map({"n"}, "U", "<C-u>zz", { desc = "Moves the cursor up half a page and centers it.", noremap = true, silent=true })
@@ -208,7 +211,7 @@ end, { noremap = true, silent = true, desc = "Start Amazon Q LSP and Login" })
 map("n", "<leader>af", ":.AmazonQ fix<CR>:echom 'Fixing current line'<CR>", { noremap = true, silent = true, desc = "Fix only the  current line"} )
 map("n", "<leader>ao", ":%AmazonQ fix<CR>:echom 'Optimizing the file.'<CR>", { noremap = true, silent = true, desc = "Optimize the entire content of the file"} )
 map("n", "<leader>ae", ":AmazonQ explain<CR>:echom 'Eplaining File'<CR>", { noremap = true, silent = true, desc = "Explain the current file"} )
-map("n", "ZZ", ":AmazonQ toggle<CR>:echom 'Toggling AmazonQ'<CR>", { noremap = true, silent = true, desc = "Toggles Amazon Q chat"} )
+-- map("n", "ZZ", ":AmazonQ toggle<CR>:echom 'Toggling AmazonQ'<CR>", { noremap = true, silent = true, desc = "Toggles Amazon Q chat"} )
 
 map("n", "cn", ":cnext<CR>", { noremap = true, silent = true, desc = "Go to next item in quickfix list"})
 map("n", "cp", ":cprev<CR>", { noremap = true, silent = true, desc = "Go to previous item in quickfix list"})
@@ -252,7 +255,7 @@ vim.keymap.set('n', 'bc', function()
 end)
 
 -- Count files in current directory
-map("n", "<leader>cf", function()
+map("n", "fc", function()
     local handle = io.popen('find . -maxdepth 1 -type f | wc -l')
     if handle then
         local result = handle:read("*a")
