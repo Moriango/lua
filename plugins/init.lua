@@ -69,6 +69,7 @@ local plugins = {
   {import = "plugins.configs.mason_tool_installer"},
   {import = "plugins.configs.md-preview"},
   -- {import = "plugins.configs.mini-surround"},
+  {import = "plugins.configs.render-markdown"},
   {import = "plugins.configs.screenkey"},
   {import = "plugins.configs.tmux-navigator"},
   {import = "plugins.configs.todo"},
