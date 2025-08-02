@@ -282,3 +282,30 @@ map("n", "_", function()
   local cwd = vim.fn.getcwd()
   print("Current directory: " .. cwd)
   end, { desc = "Moving working directory up one level", noremap = true })
+-- Toggle visual selection background
+local visual_bg_black = false
+local original_visual_bg = nil
+
+function toggle_visual_bg()
+  if visual_bg_black then
+    -- Restore original background
+    if original_visual_bg then
+      vim.cmd("hi Visual guibg=" .. original_visual_bg)
+    else
+      vim.cmd("hi Visual guibg=NONE")
+    end
+    print("Visual background: Restored")
+    visual_bg_black = false
+  else
+    -- Save current background and set to black
+    local visual_hl = vim.api.nvim_get_hl_by_name('Visual', true)
+    if visual_hl.background then
+      original_visual_bg = string.format("#%06x", visual_hl.background)
+    end
+    vim.cmd("hi Visual guibg=Black")
+    print("Visual background: Black")
+    visual_bg_black = true
+  end
+end
+
+map({"n","v",}, "<leader>tv", ":lua toggle_visual_bg()<CR>", { noremap = true, silent = true, desc = "Toggle visual selection background" })
