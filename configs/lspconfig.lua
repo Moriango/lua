@@ -1,19 +1,48 @@
 -- load defaults i.e lua_lsp
 require("nvchad.configs.lspconfig").defaults()
 
-local lspconfig = require "lspconfig"
-
--- EXAMPLE
-local servers = { "html", "cssls", "pylsp"}
 local nvlsp = require "nvchad.configs.lspconfig"
 
--- lsps with default config
-for _, lsp in ipairs(servers) do
-  lspconfig[lsp].setup {
-    on_attach = nvlsp.on_attach,
-    on_init = nvlsp.on_init,
-    capabilities = nvlsp.capabilities,
-  }
+-- LSP server configurations using vim.lsp.start (no deprecation warnings)
+local servers = {
+  {
+    name = "html",
+    cmd = { "vscode-html-language-server", "--stdio" },
+    filetypes = { "html" },
+    root_dir = vim.fs.dirname(vim.fs.find({ ".git", "package.json" }, { upward = true })[1]),
+  },
+  {
+    name = "cssls", 
+    cmd = { "vscode-css-language-server", "--stdio" },
+    filetypes = { "css", "scss", "less" },
+    root_dir = vim.fs.dirname(vim.fs.find({ ".git", "package.json" }, { upward = true })[1]),
+  },
+  {
+    name = "pylsp",
+    cmd = { "pylsp" },
+    filetypes = { "python" },
+    root_dir = vim.fs.dirname(vim.fs.find({ ".git", "pyproject.toml", "setup.py" }, { upward = true })[1]),
+  },
+  {
+    name = "denols",
+    cmd = { "deno", "lsp" },
+    filetypes = { "javascript", "javascriptreact", "typescript", "typescriptreact" },
+    root_dir = vim.fs.dirname(vim.fs.find({ "deno.json", "deno.jsonc" }, { upward = true })[1]),
+  },
+}
+
+-- Start LSP servers using vim.lsp.start
+for _, server in ipairs(servers) do
+  vim.api.nvim_create_autocmd("FileType", {
+    pattern = server.filetypes,
+    callback = function()
+      vim.lsp.start(vim.tbl_extend("force", server, {
+        on_attach = nvlsp.on_attach,
+        on_init = nvlsp.on_init,
+        capabilities = nvlsp.capabilities,
+      }))
+    end,
+  })
 end
 
 vim.api.nvim_create_autocmd('LspAttach', {
@@ -29,12 +58,17 @@ vim.api.nvim_create_autocmd('LspAttach', {
 
  end
 })
--- Specific JDTLS configuration
-require('lspconfig').jdtls.setup({
-  cmd = { '/opt/homebrew/bin/jdtls' },  -- Add this line
-  on_attach = require("nvchad.configs.lspconfig").on_attach,
-  on_init = require("nvchad.configs.lspconfig").on_init,
-  capabilities = require("nvchad.configs.lspconfig").capabilities,
+-- Specific JDTLS configuration using vim.lsp.start
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "java",
+  callback = function()
+    vim.lsp.start({
+      name = "jdtls",
+      cmd = { '/opt/homebrew/bin/jdtls' },
+      root_dir = vim.fs.dirname(vim.fs.find({ ".git", "mvnw", "gradlew", "pom.xml", "build.gradle" }, { upward = true })[1]),
+      on_attach = nvlsp.on_attach,
+      on_init = nvlsp.on_init,
+      capabilities = nvlsp.capabilities,
   settings = {
     java = {
       configuration = {
@@ -115,7 +149,9 @@ require('lspconfig').jdtls.setup({
       result.diagnostics = filtered_diagnostics
       vim.lsp.diagnostic.on_publish_diagnostics(_, result, ctx, config)
     end,
-  },
+      },
+    })
+  end,
 })
 
 --   -- Create commands to toggle diagnostics
