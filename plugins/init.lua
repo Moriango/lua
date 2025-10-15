@@ -58,7 +58,7 @@ local plugins = {
   -- },
   -- {import = "plugins.configs.amazon-q"},
   {import = "plugins.configs.cd-project"},
-  {import = "plugins.configs.code-browse"},
+  -- {import = "plugins.configs.code-browse"},
   {import = "plugins.configs.comment"},
   {import = "plugins.configs.diffview"},
   {import = "plugins.configs.gitblame"},
@@ -68,6 +68,7 @@ local plugins = {
   {import = "plugins.configs.live-server"},
   {import = "plugins.configs.mason_tool_installer"},
   {import = "plugins.configs.md-preview"},
+  {import = "plugins.configs.fugitive"},
   -- {import = "plugins.configs.mini-surround"},
   {import = "plugins.configs.render-markdown"},
   {import = "plugins.configs.screenkey"},
@@ -78,5 +79,6 @@ local plugins = {
   {import = "plugins.configs.vim-illuminate"},
   {import = "plugins.configs.zen-mode"},
   {import = "configs.custom.configs.nvim-tree"},
+  {import = "plugins.configs.gitsigns"},
 }
 return plugins

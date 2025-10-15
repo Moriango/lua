@@ -186,6 +186,8 @@ map({"n","t",}, "qq", ":lua close_nvim_tree_and_buffer()<CR>", { noremap = true,
 
 -- Git Blame Toggle 
 map("n", "gb", ":silent GitBlameToggle<CR>:echom 'Git Blame Toggle'<CR>", { desc = "Toggles GitBlame", noremap = true })
+map("n", "gp", ":Gitsigns preview_hunk<CR>")
+
 
 -- Refresh current Burrer
 function refresh_buffer()
