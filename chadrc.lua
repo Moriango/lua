@@ -9,7 +9,7 @@ M.base46 = {
    transparency = false,
   hl_override = {
     St_file = { bold = true, fg = "sun"},     -- for the file name
-    St_gitIcons = { fg = "green", bold = true }, -- for the git branch
+    St_gitIcons = { fg = "orange", bold = true}, -- for the git branch - bright orange with background
     GitSignsAdd = { fg = "green" },
     GitSignsChange = { fg = "yellow" },
     GitSignsDelete = { fg = "red" },
