@@ -9,6 +9,10 @@ M.base46 = {
    transparency = false,
   hl_override = {
     St_file = { bold = true, fg = "sun"},     -- for the file name
+    St_gitIcons = { fg = "green", bold = true }, -- for the git branch
+    GitSignsAdd = { fg = "green" },
+    GitSignsChange = { fg = "yellow" },
+    GitSignsDelete = { fg = "red" },
   },
 	-- hl_override = {
 	-- 	Comment = { italic = true },
