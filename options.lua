@@ -44,20 +44,5 @@ vim.opt.autochdir = false
 vim.opt.wildmenu = true
 
 -- Use system clipboard
-function no_paste(reg)
-  return function(lines)
-    -- Do nothing! We can't paste with osc52
-  end
-end
-vim.g.clipboard = {
-      name = 'OSC 52',
-      copy = {
-        ['+'] = require('vim.ui.clipboard.osc52').copy('+'),
-        ['*'] = require('vim.ui.clipboard.osc52').copy('*'),
-      },
-      paste = {
-        ['+'] = no_paste('+'), -- Pasting disabled
-        ['*'] = no_paste('*'), -- Pasting disabled
-      },
-    }
+vim.opt.clipboard = "unnamedplus"
 

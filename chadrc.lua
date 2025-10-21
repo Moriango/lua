@@ -5,7 +5,7 @@
 ---@type ChadrcConfig
 local M = {}
 M.base46 = {
-	theme = "github_dark",
+	theme = "bearded-arc",
    transparency = false,
   hl_override = {
     St_file = { bold = true, fg = "sun"},     -- for the file name
