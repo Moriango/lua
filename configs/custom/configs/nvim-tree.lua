@@ -6,7 +6,7 @@ return {
     require('nvim-tree').setup({
       view = {
         side = 'left',
-        width = 40,
+        width = 30,
       },
       sync_root_with_cwd = true,  -- Sync with current working directory
       respect_buf_cwd = true,     -- Change working directory when opening a file

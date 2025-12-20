@@ -28,7 +28,7 @@ map("v", "K", ":m '<-2<CR>gv=gv", { desc = "Moves the current line up", noremap 
 map({"n","i"}, "<leader>lz", ":Lazy<CR>", { desc = "Opens Lazy"})
 
 --Word Wrapping
-map("n", "ZZ", ":set wrap!<CR>", { desc = "Toggles word wrap", noremap = true, silent=true })
+map("n", "ZZ", ":set wrap!<CR>:echom 'Word Wrap Toggle'<CR>", { desc = "Toggles word wrap", noremap = true, silent=false })
 
 -- Moving Vertically
 map({"n"}, "D", "<C-d>zz", { desc = "Moves the cursor down half a page and centers it.", noremap = true, silent=true })
@@ -48,12 +48,6 @@ map("n", "sh", ":vsplit<CR>", { desc = "Splits tab Vertically", noremap = true, 
 map("n", "<leader>x", "<C-w>c", { noremap=true, silent=true})
 map("n", "<leader>q", ":bd!<CR>", { noremap=true, silent=true})
 map("n", "<leader>bb", "<C-w><C-r>", {noremap=true, silent=true})
-
--- Resize window
-map("n", "<A-h>", ":vertical resize -2<Return>", { noremap=true, silent=true })
-map("n", "<A-j>", ":resize -2<Return>", { noremap=true, silent=true })
-map("n", "<A-k>", ":resize +2<Return>", { noremap=true, silent=true})
-map("n", "<A-l>", ":vertical resize +2<Return>", { noremap=true, silent=true})
 
 -- Terminal
 map("n", "<leader>tm", function()
@@ -311,3 +305,9 @@ function toggle_visual_bg()
 end
 
 map({"n","v",}, "<leader>tv", ":lua toggle_visual_bg()<CR>", { noremap = true, silent = true, desc = "Toggle visual selection background" })
+
+-- Window resize keymaps (Alt + hjkl) - Native Neovim commands
+vim.keymap.set("n", "<A-h>", ":vertical resize -5<CR>", { noremap = true, silent = true, desc = "Decrease window width" })
+vim.keymap.set("n", "<A-j>", ":resize -5<CR>", { noremap = true, silent = true, desc = "Decrease window height" })
+vim.keymap.set("n", "<A-k>", ":resize +5<CR>", { noremap = true, silent = true, desc = "Increase window height" })
+vim.keymap.set("n", "<A-l>", ":vertical resize +5<CR>", { noremap = true, silent = true, desc = "Increase window width" })

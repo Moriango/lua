@@ -73,6 +73,7 @@ local plugins = {
   {import = "plugins.configs.render-markdown"},
   {import = "plugins.configs.screenkey"},
   {import = "plugins.configs.tmux-navigator"},
+  -- {import = "plugins.configs.wezterm-navigation"},
   {import = "plugins.configs.todo"},
   {import = "plugins.configs.ufo"},
   {import = "plugins.configs.undotree"},
