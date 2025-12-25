@@ -164,8 +164,11 @@ map({"n","i","t"}, "<leader>mm", '"+p', { noremap = true, silent=true, desc = "S
 -- Open current working directory in VS Code
 -- Will not work in dev-desktop
 
+-- Open current file in VS Code
+map("n", "vv", ":silent !code %<CR>", { noremap = true, silent = true, desc = "Opens current file in VS Code" })
+
 -- Open current working directory in VS Code
-map("n", "vv", ":silent !code .<CR>", { noremap = true, silent = true, desc = "Opens current working directory in VS Code" })
+map("n", "<leader>vv", ":silent !code .<CR>", { noremap = true, silent = true, desc = "Opens current working directory in VS Code" })
 
 -- Delete Buffer
 function close_nvim_tree_and_buffer()
