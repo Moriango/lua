@@ -3,31 +3,57 @@ require("nvchad.configs.lspconfig").defaults()
 
 local nvlsp = require "nvchad.configs.lspconfig"
 
+-- Helper function to find root directory with caching
+local root_cache = {}
+local function find_root(patterns, bufnr)
+  bufnr = bufnr or vim.api.nvim_get_current_buf()
+  local bufname = vim.api.nvim_buf_get_name(bufnr)
+  
+  -- Check cache first
+  if root_cache[bufname] then
+    return root_cache[bufname]
+  end
+  
+  -- Find root directory
+  local root = vim.fs.dirname(vim.fs.find(patterns, { 
+    upward = true, 
+    path = vim.fs.dirname(bufname),
+    limit = 1  -- Stop at first match for speed
+  })[1])
+  
+  -- Fallback to current directory if no root found
+  root = root or vim.fs.dirname(bufname)
+  
+  -- Cache the result
+  root_cache[bufname] = root
+  return root
+end
+
 -- LSP server configurations using vim.lsp.start (no deprecation warnings)
 local servers = {
   {
     name = "html",
     cmd = { "vscode-html-language-server", "--stdio" },
     filetypes = { "html" },
-    root_dir = vim.fs.dirname(vim.fs.find({ ".git", "package.json" }, { upward = true })[1]),
+    root_patterns = { ".git", "package.json" },
   },
   {
     name = "cssls", 
     cmd = { "vscode-css-language-server", "--stdio" },
     filetypes = { "css", "scss", "less" },
-    root_dir = vim.fs.dirname(vim.fs.find({ ".git", "package.json" }, { upward = true })[1]),
+    root_patterns = { ".git", "package.json" },
   },
   {
     name = "pylsp",
     cmd = { "pylsp" },
     filetypes = { "python" },
-    root_dir = vim.fs.dirname(vim.fs.find({ ".git", "pyproject.toml", "setup.py" }, { upward = true })[1]),
+    root_patterns = { ".git", "pyproject.toml", "setup.py" },  -- Reduced to most common patterns
   },
   {
     name = "denols",
     cmd = { "deno", "lsp" },
     filetypes = { "javascript", "javascriptreact", "typescript", "typescriptreact" },
-    root_dir = vim.fs.dirname(vim.fs.find({ "deno.json", "deno.jsonc" }, { upward = true })[1]),
+    root_patterns = { "deno.json", "deno.jsonc" },
   },
 }
 
@@ -35,8 +61,12 @@ local servers = {
 for _, server in ipairs(servers) do
   vim.api.nvim_create_autocmd("FileType", {
     pattern = server.filetypes,
-    callback = function()
+    callback = function(args)
+      -- Calculate root_dir only when needed
+      local root_dir = find_root(server.root_patterns, args.buf)
+      
       vim.lsp.start(vim.tbl_extend("force", server, {
+        root_dir = root_dir,
         on_attach = nvlsp.on_attach,
         on_init = nvlsp.on_init,
         capabilities = nvlsp.capabilities,
@@ -54,7 +84,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
     end
 
     -- Displays hover information about the symbol under the cursor
-    bufmap('n', 'I', '<cmd>lua vim.lsp.buf.hover()<cr>')
+    -- bufmap('n', 'I', '<cmd>lua vim.lsp.buf.hover()<cr>')
 
  end
 })

@@ -193,7 +193,7 @@ vim.cmd('edit')
 end
 map("n", "<leader>rb", ":lua refresh_buffer()<CR>",{ noremap = true, silent = true, desc = "Refreshes Current Buffer"})
 
-map("n", "<C-A>", "ggVG", { noremap = true, silent = true, desc = "Highligts the entire buffer."})
+map("n", "<C-A-h>", "ggVG", { noremap = true, silent = true, desc = "Highligts the entire buffer."})
 
 map("n", "<leader>qa", ":qa!<CR>",{ noremap = true, silent = true, desc = "Closes All Buffers"} )
 

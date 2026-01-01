@@ -8,6 +8,7 @@ local plugins = {
   -- These are some examples, uncomment them if you want to see them work!
   {
     "neovim/nvim-lspconfig",
+    event = "BufReadPre",
     config = function()
       require "configs.lspconfig"
     end,
@@ -56,30 +57,28 @@ local plugins = {
   -- 		},
   -- 	},
   -- },
-  -- {import = "plugins.configs.amazon-q"},
+  {import = "configs.custom.configs.nvim-tree"},
+  {import = "plugins.configs.chat"},
   {import = "plugins.configs.cd-project"},
-  -- {import = "plugins.configs.code-browse"},
   {import = "plugins.configs.comment"},
   {import = "plugins.configs.diffview"},
+  {import = "plugins.configs.fugitive"},
   {import = "plugins.configs.gitblame"},
+  {import = "plugins.configs.gitsigns"},
   {import = "plugins.configs.goto-preview"},
   {import = "plugins.configs.hover"},
   {import = "plugins.configs.lazygit"},
   {import = "plugins.configs.live-server"},
+  -- {import = "plugins.configs.lsp-signature"},
   {import = "plugins.configs.mason_tool_installer"},
   {import = "plugins.configs.md-preview"},
-  {import = "plugins.configs.fugitive"},
-  -- {import = "plugins.configs.mini-surround"},
   {import = "plugins.configs.render-markdown"},
   {import = "plugins.configs.screenkey"},
   {import = "plugins.configs.tmux-navigator"},
-  -- {import = "plugins.configs.wezterm-navigation"},
   {import = "plugins.configs.todo"},
   {import = "plugins.configs.ufo"},
   {import = "plugins.configs.undotree"},
   {import = "plugins.configs.vim-illuminate"},
   {import = "plugins.configs.zen-mode"},
-  {import = "configs.custom.configs.nvim-tree"},
-  {import = "plugins.configs.gitsigns"},
 }
 return plugins
