@@ -42,7 +42,12 @@ local plugins = {
             preview_height = 0.6
           }
         }
-      }
+      },
+      pickers = {
+        find_files = {
+          hidden = true,
+        },
+      },
     },
     config = function(PluginSpec,opts)
       require('telescope').setup(opts)

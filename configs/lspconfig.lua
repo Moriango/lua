@@ -47,7 +47,25 @@ local servers = {
     name = "pylsp",
     cmd = { "pylsp" },
     filetypes = { "python" },
-    root_patterns = { ".git", "pyproject.toml", "setup.py" },  -- Reduced to most common patterns
+    root_patterns = { ".git", "pyproject.toml", "setup.py" },
+    settings = {
+      pylsp = {
+        plugins = {
+          -- Enable better code completion and hover
+          jedi_completion = { enabled = true, fuzzy = true },
+          jedi_hover = { enabled = true },
+          jedi_references = { enabled = true },
+          jedi_signature_help = { enabled = true },
+          jedi_symbols = { enabled = true, all_scopes = true },
+          -- Disable formatters/linters (use conform.nvim instead)
+          autopep8 = { enabled = false },
+          yapf = { enabled = false },
+          pylint = { enabled = false },
+          pycodestyle = { enabled = false },
+          flake8 = { enabled = false },
+        },
+      },
+    },
   },
   {
     name = "denols",
@@ -77,17 +95,18 @@ end
 
 vim.api.nvim_create_autocmd('LspAttach', {
   desc = 'LSP actions',
-  callback = function()
-    local bufmap = function(mode, lhs, rhs)
-      local opts = {buffer = true}
+  callback = function(args)
+    local bufmap = function(mode, lhs, rhs, desc)
+      local opts = {buffer = args.buf, desc = desc}
       vim.keymap.set(mode, lhs, rhs, opts)
     end
 
-    -- Displays hover information about the symbol under the cursor
-    -- bufmap('n', 'I', '<cmd>lua vim.lsp.buf.hover()<cr>')
-
- end
+    -- Signature help - shows function parameters and usage
+    bufmap('n', '<C-k>', vim.lsp.buf.signature_help, 'Show signature help')
+    bufmap('i', '<C-k>', vim.lsp.buf.signature_help, 'Show signature help')
+  end
 })
+
 -- Specific JDTLS configuration using vim.lsp.start
 vim.api.nvim_create_autocmd("FileType", {
   pattern = "java",
