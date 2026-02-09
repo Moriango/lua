@@ -6,7 +6,7 @@
 local M = {}
 M.base46 = {
 	theme = "chocolate",
-   transparency = false,
+   transparency = true,
   hl_override = {
     St_file = { bold = true, fg = "sun"},     -- for the file name
     St_gitIcons = { fg = "orange", bold = true }, -- for the git branch

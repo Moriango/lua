@@ -6,9 +6,9 @@ config.leader = { key = 'w', mods = 'CTRL'}
 
 config.color_scheme = 'LiquidCarbon'
 
-config.font_size = 12.0
+config.font_size = 13.0
 
-config.window_decorations = "RESIZE"
+config.window_decorations = "NONE"
 
 config.window_background_opacity = 0.8
 
