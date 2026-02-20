@@ -108,7 +108,8 @@ vim.api.nvim_create_autocmd('LspAttach', {
     end
 
     -- Signature help - shows function parameters and usage
-    bufmap('n', '<C-K>', vim.lsp.buf.signature_help, 'Show signature help')
+    -- Note: <C-K> and <C-k> are the same key in Neovim, so do not use Ctrl+k here.
+    bufmap('n', '<leader>K', vim.lsp.buf.signature_help, 'Show signature help')
   end
 })
 
