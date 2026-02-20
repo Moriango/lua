@@ -5,7 +5,7 @@
 ---@type ChadrcConfig
 local M = {}
 M.base46 = {
-	theme = "chocolate",
+	theme = "vscode_dark",
    transparency = true,
   hl_override = {
     St_file = { bold = true, fg = "sun"},     -- for the file name

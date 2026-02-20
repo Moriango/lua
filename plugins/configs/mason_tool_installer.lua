@@ -7,6 +7,10 @@ return {
   config = function()
     require("mason-tool-installer").setup({
       ensure_installed = {
+        -- C++ debug and test tools
+        "clangd",
+        "clang-format",
+        "codelldb",
         -- Java debug and test tools
         "java-debug-adapter",
         "java-test",

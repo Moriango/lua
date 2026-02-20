@@ -77,6 +77,7 @@ local plugins = {
   -- {import = "plugins.configs.lsp-signature"},
   {import = "plugins.configs.mason_tool_installer"},
   {import = "plugins.configs.md-preview"},
+  {import = "plugins.configs.nvim-dap"},
   {import = "plugins.configs.render-markdown"},
   {import = "plugins.configs.screenkey"},
   {import = "plugins.configs.tmux-navigator"},

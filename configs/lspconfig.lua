@@ -73,6 +73,12 @@ local servers = {
     filetypes = { "javascript", "javascriptreact", "typescript", "typescriptreact" },
     root_patterns = { "deno.json", "deno.jsonc" },
   },
+  {
+    name = "clangd",
+    cmd = { "clangd" },
+    filetypes = { "c", "cpp", "objc", "objcpp" },
+    root_patterns = { ".git", "compile_commands.json", "compile_flags.txt" },
+  },
 }
 
 -- Start LSP servers using vim.lsp.start
@@ -102,8 +108,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
     end
 
     -- Signature help - shows function parameters and usage
-    bufmap('n', '<C-k>', vim.lsp.buf.signature_help, 'Show signature help')
-    bufmap('i', '<C-k>', vim.lsp.buf.signature_help, 'Show signature help')
+    bufmap('n', '<C-K>', vim.lsp.buf.signature_help, 'Show signature help')
   end
 })
 

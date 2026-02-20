@@ -32,3 +32,7 @@ fi
 if [ -z "$TMUX" ]; then
   tmux attach-session -t Workplace
 fi
+
+if [[ -z "$TMUX" ]]; then
+  
+fi
