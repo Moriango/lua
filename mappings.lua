@@ -8,6 +8,7 @@ map("n", "<leader>m", ":only<CR>", { desc = "Makes the current split screen full
 
 -- Toggle Transparency
 map("n", "<leader>tp", ":lua require('base46').toggle_transparency()<CR>", { noremap = true, silent = true, desc = "Toggle Background Transparency" })
+
 -- Exiting
 map("n", ";", ":", { desc = "CMD enter command mode" })
 map({"n","i","v"}, "jk", "<ESC>")
@@ -24,7 +25,7 @@ map({"n","v"}, "ba", "^", { desc = "Move cursor to the begginning of the current
 map("v", "J", ":m '>+1<CR>gv=gv", { desc = "Moves the current line up", noremap = true, silent=true })
 map("v", "K", ":m '<-2<CR>gv=gv", { desc = "Moves the current line up", noremap = true, silent=true })
 
--- Lazy Git
+-- Mason Git
 map({"n","i"}, "<leader>lz", ":Lazy<CR>", { desc = "Opens Lazy"})
 
 --Word Wrapping
@@ -183,7 +184,9 @@ map({"n","t",}, "qq", ":lua close_nvim_tree_and_buffer()<CR>", { noremap = true,
 
 -- Git Blame Toggle 
 map("n", "gb", ":silent GitBlameToggle<CR>:echom 'Git Blame Toggle'<CR>", { desc = "Toggles GitBlame", noremap = true })
-map("n", "gp", ":Gitsigns preview_hunk<CR>")
+map("n", "gs", ":Gitsigns preview_hunk<CR>")
+map("n", "gn", ":Gitsigns next_hunk<CR>")
+map("n", "gp", ":Gitsigns prev_hunk<CR>")
 
 
 -- Refresh current Burrer

@@ -5,8 +5,8 @@
 ---@type ChadrcConfig
 local M = {}
 M.base46 = {
-	theme = "vscode_dark",
-   transparency = true,
+	theme = "chocolate",
+   transparency = false,
   hl_override = {
     St_file = { bold = true, fg = "sun"},     -- for the file name
     St_gitIcons = { fg = "orange", bold = true }, -- for the git branch
