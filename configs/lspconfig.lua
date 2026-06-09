@@ -8,22 +8,22 @@ local root_cache = {}
 local function find_root(patterns, bufnr)
   bufnr = bufnr or vim.api.nvim_get_current_buf()
   local bufname = vim.api.nvim_buf_get_name(bufnr)
-  
+
   -- Check cache first
   if root_cache[bufname] then
     return root_cache[bufname]
   end
-  
+
   -- Find root directory
-  local root = vim.fs.dirname(vim.fs.find(patterns, { 
-    upward = true, 
+  local root = vim.fs.dirname(vim.fs.find(patterns, {
+    upward = true,
     path = vim.fs.dirname(bufname),
     limit = 1  -- Stop at first match for speed
   })[1])
-  
+
   -- Fallback to current directory if no root found
   root = root or vim.fs.dirname(bufname)
-  
+
   -- Cache the result
   root_cache[bufname] = root
   return root
@@ -38,7 +38,7 @@ local servers = {
     root_patterns = { ".git", "package.json" },
   },
   {
-    name = "cssls", 
+    name = "cssls",
     cmd = { "vscode-css-language-server", "--stdio" },
     filetypes = { "css", "scss", "less" },
     root_patterns = { ".git", "package.json" },
@@ -88,7 +88,7 @@ for _, server in ipairs(servers) do
     callback = function(args)
       -- Calculate root_dir only when needed
       local root_dir = find_root(server.root_patterns, args.buf)
-      
+
       vim.lsp.start(vim.tbl_extend("force", server, {
         root_dir = root_dir,
         on_attach = nvlsp.on_attach,
