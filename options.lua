@@ -18,7 +18,7 @@ vim.opt.ignorecase = true
 vim.opt.smarttab = true
 vim.opt.breakindent = true
 vim.opt.shiftwidth = 2
-vim.opt.tabstop = 4     
+vim.opt.tabstop = 4
 vim.opt.wrap = true
 
 vim.opt.foldmethod = "manual"
@@ -37,6 +37,12 @@ vim.opt.undofile = true
 
 -- Ignore case
 vim.opt.wildignorecase = true
+
+-- Enable list mode to show whitespace characters
+vim.o.list = true
+
+-- Define what characters to display
+vim.o.listchars = "tab:▸ ,trail:·,extends:»,precedes:«,eol:↵"
 
 -- Set Aut Change Dir
 vim.opt.autochdir = false
