@@ -70,14 +70,14 @@ function smart_search(direction)
   local search_word = vim.fn.getreg("/")
   
   -- Check if there's an active search
-  if search_word == "" then
+  if search_word == "" or search_word ~= current_word then
     -- No active search, start a new one with case sensitivity
     local word = vim.fn.escape(current_word, "\\[].*~")
     vim.fn.setreg("/", "\\C\\<" .. word .. "\\>")
     vim.cmd("normal! n")
     return
   end
-  
+
   if direction == "next" then
     vim.cmd("normal! n")
   else
@@ -318,3 +318,13 @@ vim.keymap.set("n", "<A-h>", ":vertical resize -5<CR>", { noremap = true, silent
 vim.keymap.set("n", "<A-j>", ":resize -5<CR>", { noremap = true, silent = true, desc = "Decrease window height" })
 vim.keymap.set("n", "<A-k>", ":resize +5<CR>", { noremap = true, silent = true, desc = "Increase window height" })
 vim.keymap.set("n", "<A-l>", ":vertical resize +5<CR>", { noremap = true, silent = true, desc = "Increase window width" })
+
+vim.schedule(function()
+  require "mappings"
+  if type(_G.clear_search) == "function" then
+    pcall(_G.clear_search)
+  else
+    vim.fn.setreg("/", "")
+    vim.cmd("nohlsearch")
+  end
+end)
