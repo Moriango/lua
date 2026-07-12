@@ -97,7 +97,6 @@ map("n", "<leader>cab", [[:cfdo %s/\<<C-r><C-w>\>/<C-r><C-w>/g | update | bd]], 
 function clear_search()
   vim.fn.setreg("/", "")
   vim.cmd("nohlsearch")
-  print('Search Cleared')
 end
 
 map("n", "ff", ":lua clear_search()<CR>", { desc = "Clear search pattern and highlight", silent=true})
