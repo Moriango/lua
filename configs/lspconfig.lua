@@ -209,6 +209,15 @@ vim.api.nvim_create_autocmd("FileType", {
   end,
 })
 
+-- Set foldmethod to 'indent' for Python files
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "python",
+  callback = function(args)
+    -- buffer-local fold settings for Python
+      vim.opt.foldmethod = "indent"
+      vim.opt.foldendable = true
+  end,
+})
 --   -- Create commands to toggle diagnostics
 -- configuring single server, example: typescript
 -- lspconfig.ts_ls.setup {
