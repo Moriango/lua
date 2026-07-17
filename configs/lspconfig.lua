@@ -215,7 +215,7 @@ vim.api.nvim_create_autocmd("FileType", {
   callback = function(args)
     -- buffer-local fold settings for Python
       vim.opt.foldmethod = "indent"
-      vim.opt.foldendable = true
+      vim.opt.foldenable = true
   end,
 })
 --   -- Create commands to toggle diagnostics

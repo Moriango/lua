@@ -66,4 +66,3 @@ vim.g.clipboard = {
         ['*'] = no_paste('*'), -- Pasting disabled
       },
     }
-

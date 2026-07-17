@@ -66,23 +66,29 @@ end, { desc = "Opens a terminal Vertically in current working directory"})
 
 -- Smart search function that checks if current word is already being searched
 function smart_search(direction)
-  local current_word = vim.fn.expand("<cword>")
-  local search_word = vim.fn.getreg("/")
-  
-  -- Check if there's an active search
-  if search_word == "" or search_word ~= current_word then
-    -- No active search, start a new one with case sensitivity
-    local word = vim.fn.escape(current_word, "\\[].*~")
-    vim.fn.setreg("/", "\\C\\<" .. word .. "\\>")
-    vim.cmd("normal! n")
+  -- Read current context
+  local cursor_word = vim.fn.expand("<cword>")
+  local search_register = vim.fn.getreg("/")
+  local last_smart_search = vim.g.last_smart_search or ""
+
+  -- Decide movement command once
+  local move_cmd = (direction == "next") and "normal! n" or "normal! N"
+
+  -- If a manual search is active (wasn't set by smart_search), just continue it.
+  local manual_search_active = search_register ~= "" and search_register ~= last_smart_search
+  if manual_search_active then
+    vim.cmd(move_cmd)
     return
   end
 
-  if direction == "next" then
-    vim.cmd("normal! n")
-  else
-    vim.cmd("normal! N")
-  end
+  -- Otherwise set a whole-word, case-sensitive search for the word under cursor
+  local escaped = vim.fn.escape(cursor_word, "\\[].*~")
+  local pattern = "\\C\\<" .. escaped .. "\\>"
+  vim.fn.setreg("/", pattern)
+  vim.g.last_smart_search = pattern
+
+  -- Move to the next/previous match
+  vim.cmd(move_cmd)
 end
 
 map("n", "n", ":lua smart_search('next')<CR>", {desc = "Smart search next", noremap = true, silent = true})
