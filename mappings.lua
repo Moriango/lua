@@ -113,7 +113,7 @@ map("n", "cda", "<cmd>CdProjectAdd<CR>", { desc = "Cd Project, add current proje
 map("n", "cdm", "<cmd>CdProjectManualAdd<CR>", { desc = "Cd Project, Manually add project's directory to the databse(json file)"})
 
 -- Diagnostics
-map('n', 'td', function()
+map('n', '<leader>td', function()
 vim.diagnostic.enable(not vim.diagnostic.is_enabled())
 if vim.diagnostic.is_enabled() then
   print("Diagnostics Enabled")
@@ -156,7 +156,7 @@ end
 end
 
 -- Key mapping to toggle cmp
-vim.api.nvim_set_keymap('n', 'tl', ':lua toggle_lsp()<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<leader>tl', ':lua toggle_lsp()<CR>', { noremap = true, silent = true })
 
 -- Scroll through preious input/commands in the terminal using Tab key
 map("t", "<C-k>", "<UP>", { noremap = true, silent=true, desc = "Scroll up through previous inputs/commands"})
