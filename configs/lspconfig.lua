@@ -2,7 +2,6 @@
 require("nvchad.configs.lspconfig").defaults()
 
 local nvlsp = require "nvchad.configs.lspconfig"
-
 -- Helper function to find root directory with caching
 local root_cache = {}
 local function find_root(patterns, bufnr)
