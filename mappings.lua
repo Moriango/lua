@@ -113,14 +113,17 @@ map("n", "cda", "<cmd>CdProjectAdd<CR>", { desc = "Cd Project, add current proje
 map("n", "cdm", "<cmd>CdProjectManualAdd<CR>", { desc = "Cd Project, Manually add project's directory to the databse(json file)"})
 
 -- Diagnostics
-map('n', '<leader>td', function()
-vim.diagnostic.enable(not vim.diagnostic.is_enabled())
-if vim.diagnostic.is_enabled() then
-  print("Diagnostics Enabled")
-else
-  print("Diagnostics Disabled")
+function toggle_diagnostic()
+  if vim.diagnostic.is_enabled() then
+    vim.diagnostic.enable(false)
+    print("Diagnostics Enabled")
+  else
+    vim.diagnostic.enable()
+    print("Diagnostics Disabled")
+  end
 end
-end, { silent = true, noremap = true })
+
+map("n", "<leader>td", ":lua toggle_diagnostic()<CR>", { desc = "Toggle the diagnostics on and off", noremap = true, silent = true})
 
 -- Mark Navigamtion
 map("n", "nm", "]'", { desc = "Jump to next mark", noremap = true, silent = true })

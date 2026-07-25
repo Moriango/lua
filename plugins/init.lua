@@ -23,8 +23,7 @@ local plugins = {
       table.insert(config.filters.custom, "__pycache__")
 
       --This is to change the side of of the nvim tree
-      -- config.view = config.view or {}
-      -- config.view.side = "left"
+      -- config.view = config.view or {} config.view.side = "left"
       -- return config
     end,
   },
@@ -62,9 +61,10 @@ local plugins = {
   -- 		},
   -- 	},
   -- },
+  -- {import = "plugins.configs.lsp-signature"},
   {import = "configs.custom.configs.nvim-tree"},
-  {import = "plugins.configs.chat"},
   {import = "plugins.configs.cd-project"},
+  {import = "plugins.configs.chat"},
   {import = "plugins.configs.comment"},
   {import = "plugins.configs.diffview"},
   {import = "plugins.configs.fugitive"},
@@ -74,12 +74,11 @@ local plugins = {
   {import = "plugins.configs.hover"},
   {import = "plugins.configs.lazygit"},
   {import = "plugins.configs.live-server"},
-  -- {import = "plugins.configs.lsp-signature"},
   {import = "plugins.configs.mason_tool_installer"},
-  {import = "plugins.configs.mini-surround"},
   {import = "plugins.configs.md-preview"},
+  {import = "plugins.configs.mini-surround"},
   {import = "plugins.configs.noice"},
-  {import = "plugins.configs.nvim-dap"},
+  -- {import = "plugins.configs.nvim-dap"},
   {import = "plugins.configs.render-markdown"},
   {import = "plugins.configs.screenkey"},
   {import = "plugins.configs.tmux-navigator"},

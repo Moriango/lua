@@ -15,6 +15,7 @@ return {
         add = 'ca',  -- Add surrounding in Normal and Visual modes
         delete = 'ds', -- Delete surrounding
         replace = 'cs', -- Replace surrounding
+        highlight = '', -- disable default 'sh' mapping so it doesn't shadow your keymap
       },
 
       -- Number of lines within which surrounding is searched
