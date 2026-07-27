@@ -116,10 +116,10 @@ map("n", "cdm", "<cmd>CdProjectManualAdd<CR>", { desc = "Cd Project, Manually ad
 function toggle_diagnostic()
   if vim.diagnostic.is_enabled() then
     vim.diagnostic.enable(false)
-    print("Diagnostics Enabled")
+    print("Diagnostics Disabled")
   else
     vim.diagnostic.enable()
-    print("Diagnostics Disabled")
+    print("Diagnostics Enabled")
   end
 end
 
