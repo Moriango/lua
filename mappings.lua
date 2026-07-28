@@ -103,6 +103,15 @@ map("n", "<leader>cab", [[:cfdo %s/\<<C-r><C-w>\>/<C-r><C-w>/g | update | bd]], 
 function clear_search()
   vim.fn.setreg("/", "")
   vim.cmd("nohlsearch")
+  -- Dismiss nvim-notify notifications if available
+  local ok, notify = pcall(require, "notify")
+  if ok and notify.dismiss then pcall(notify.dismiss) end
+  -- Close floating windows (LSP/other plugin floats)
+  for _, w in ipairs(vim.api.nvim_list_wins()) do
+    local cfg = vim.api.nvim_win_get_config(w)
+    if cfg.relative ~= "" then pcall(vim.api.nvim_win_close, w, true) end
+  end
+  vim.cmd("redraw!")
   print("Search Cleared")
 end
 
