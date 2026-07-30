@@ -11,6 +11,16 @@ local plugins = {
     event = "BufReadPre",
     config = function()
       require "configs.lspconfig"
+      -- make all LSP floating windows non-focusable so they don't steal the cursor
+      local orig_open_floating_preview = vim.lsp.util.open_floating_preview
+      vim.lsp.util.open_floating_preview = function(contents, syntax, opts, ...)
+        opts = opts or {}
+        opts.focusable = opts.focusable == nil and false or opts.focusable
+        opts.border = opts.border or "rounded"
+        return orig_open_floating_preview(contents, syntax, opts, ...)
+      end
+      -- keep diagnostic floats non-focusable as well
+      vim.diagnostic.config({ float = { border = "rounded", focusable = false } })
     end,
   },
   {

@@ -1,6 +1,7 @@
 ---@type NvPluginSpec
 return {
   "lewis6991/hover.nvim",
+  enabled = false,
   config = function()
     require('hover').config({
       --- List of modules names to load as providers.

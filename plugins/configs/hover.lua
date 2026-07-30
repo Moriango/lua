@@ -13,7 +13,6 @@ return {
         "hover.providers.lsp",
         "hover.providers.diagnostic",
         "hover.providers.dictionary",
-        "hover.providers.man",
         "hover.providers.dap",
         "hover.providers.highlight",
         -- "hover.providers.gh",
@@ -34,10 +33,7 @@ return {
       },
       preview_window = false,
       title = true,
-      mouse_providers = {
-        "hover.providers.lsp",
-      },
-      mouse_delay = 1000,
+      mouse_providers = {},
     })
 
     -- Keymaps
@@ -77,9 +73,9 @@ return {
     end, { desc = "hover.nvim (open)" })
     
     -- Enter hover window (allows using j/k to navigate)
-    vim.keymap.set("n", "KK", function()
-      hover.enter()
-    end, { desc = "hover.nvim (enter)" })
+    -- vim.keymap.set("n", "KK", function()
+    --   hover.enter()
+    -- end, { desc = "hover.nvim (enter)" })
 
     -- Primary keybindings for switching sources
     vim.keymap.set("n", "KN", function()
@@ -89,9 +85,5 @@ return {
       ensure_open_and_switch("previous")
     end, { desc = "hover.nvim (previous source)" })
     
-    vim.keymap.set("n", "<MouseMove>", function()
-      hover.mouse()
-    end, { desc = "hover.nvim (mouse)" })
-    vim.o.mousemoveevent = true
   end,
 }
