@@ -136,8 +136,8 @@ end
 map("n", "<leader>td", ":lua toggle_diagnostic()<CR>", { desc = "Toggle the diagnostics on and off", noremap = true, silent = true})
 
 -- Mark Navigamtion
-map("n", "nm", "]'", { desc = "Jump to next mark", noremap = true, silent = true })
-map("n", "pm", "['", { desc = "Jump to previous mark", noremap = true, silent = true })
+-- map("n", "gtm", "]'", { desc = "Jump to next mark", noremap = true, silent = true })
+-- map("n", "gtpm", "['", { desc = "Jump to previous mark", noremap = true, silent = true })
 
 -- Indent
 map("n", "t", ">>", { noremap = true, silent=true })

@@ -23,8 +23,8 @@ return {
 
     -- Optional: Set up custom key mappings
     vim.api.nvim_set_keymap('n', '<leader>gpd', "<cmd>lua require('goto-preview').goto_preview_definition()<CR>", { desc = "Go to Preview Definition", noremap = true, silent = true })
-    vim.api.nvim_set_keymap('n', '<leader>gpi', "<cmd>lua require('goto-preview').goto_preview_implementation()<CR>", { desc = "Go to Preview Implementation", noremap = true, silent = true })
-    vim.api.nvim_set_keymap('n', '<leader>gpr', "<cmd>lua require('goto-preview').goto_preview_references()<CR>", { desc = "Go to Preview References", noremap = true, silent = true })
+    vim.api.nvim_set_keymap('n', 'gi', "<cmd>lua require('goto-preview').goto_preview_implementation()<CR>", { desc = "Go to Preview Implementation", noremap = true, silent = true })
+    vim.api.nvim_set_keymap('n', 'gr', "<cmd>lua require('goto-preview').goto_preview_references()<CR>", { desc = "Go to Preview References", noremap = true, silent = true })
     vim.api.nvim_set_keymap('n', 'px', "<cmd>lua require('goto-preview').close_all_win()<CR>", { desc = "Close preview window", noremap = true, silent = true })
   end,
 }
