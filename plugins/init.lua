@@ -66,6 +66,7 @@ local plugins = {
   {import = "plugins.configs.cd-project"},
   {import = "plugins.configs.chat"},
   {import = "plugins.configs.comment"},
+  {import = "plugins.configs.copilot"},
   {import = "plugins.configs.diffview"},
   {import = "plugins.configs.fugitive"},
   {import = "plugins.configs.gitblame"},

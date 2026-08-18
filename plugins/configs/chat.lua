@@ -27,18 +27,17 @@ return {
       show_help = "no",
       prompts = prompts,
     },
+    config = function(_, _)
+      -- Create a user command that sends the static message to CopilotChat.
+      vim.api.nvim_create_user_command('CopilotChatAddContext', function()
+        vim.cmd([[CopilotChat #buffer:active]])
+      end, { desc = "Add context to CopilotChat (static message)" })
+    end,
     keys = {
       { "<leader>ae", "<cmd>CopilotChatExplain<cr>", desc = "CopilotChat - Explain code" },
       { "<leader>cct", "<cmd>CopilotChatTests<cr>",   desc = "CopilotChat - Generate tests" },
-      {
-        "<leader>cp",
-        ":CopilotChatToggle<CR>",
-        mode = { "n", "x" },
-        desc = "CopilotChat",
-      },
-      {
-        "<leader>ccf",
-        "<cmd>CopilotChatFixDiagnostic<cr>", -- Get a fix for the diagnostic message under the cursor.
+      { "<leader>cp", ":CopilotChatToggle<CR>", mode = { "n", "x" }, desc = "CopilotChat", },
+      { "<leader>ccf", "<cmd>CopilotChatFixDiagnostic<cr>", -- Get a fix for the diagnostic message under the cursor.
         desc = "CopilotChat Fix Diagnostic",
       },
     }

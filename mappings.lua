@@ -37,11 +37,6 @@ map({"n"}, "U", "<C-u>zz", { desc = "Moves the cursor up half a page and centers
 map("n", "G", "Gzz", { desc = "Moves the cursor to the bottom of the page and centers the screen", noremap = true, silent=true })
 map("n", "gg", "ggzz", { desc = "Moves the cursor to the top of the page and centers the screen", noremap = true, silent=true })
 
--- Tabs
-map("n", "<leader>tt", ":tabnew | lcd %:p:h<CR>", { desc = "Opens a new tab", noremap = true, silent=true })
-map("n", "<A-Tab>", ":tabnext <CR>", { desc = "Switches tab", noremap = true, silent=true })
-map("n", "<A-S-Tab>", ":tabprevious <CR>", { desc = "Switches tab", noremap = true, silent=true })
-
 -- Buffers
 map("n", "<leader>c", ":close<CR>", { desc = "Closes the current split window", noremap = true, silent=true })
 map("n", "sv", ":split<Return>", { desc = "Splits tab Horizontally", noremap = true, silent=true })
@@ -346,3 +341,11 @@ vim.schedule(function()
     vim.cmd("nohlsearch")
   end
 end)
+
+-- Visual block in nvim
+vim.keymap.set({'n','v','o'}, '<C-v>', '<C-q>', {noremap=true, silent=true})
+
+-- Goto 
+map("n", "gn", "g;", { noremap = true, silent = true, desc = "Go to next edit"} )
+map("n", "gN", "g,", { noremap = true, silent = true, desc = "Go to previous edit"} )
+map("n", "gm", "`a", { noremap = true, silent = true, desc = "Go to previous edit"} )
