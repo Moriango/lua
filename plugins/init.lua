@@ -81,6 +81,7 @@ local plugins = {
   {import = "plugins.configs.noice"},
   -- {import = "plugins.configs.nvim-dap"},
   {import = "plugins.configs.render-markdown"},
+  {import = "plugins.configs.quickfix"},
   {import = "plugins.configs.screenkey"},
   {import = "plugins.configs.tmux-navigator"},
   {import = "plugins.configs.todo"},

@@ -144,6 +144,14 @@ map("v", "T", "<gv", { noremap = true, silent=true })
 map("n", "de", "D", opts)
 map("n", "db", "d0", opts)
 
+-- Yanking
+map("n", "ye", "y$", { noremap = true, silent = true, desc = "Yank to end of the line"} )
+
+-- Goto 
+map("n", ">>", "g;", { noremap = true, silent = true, desc = "Go to next edit"} )
+map("n", "<<", "g,", { noremap = true, silent = true, desc = "Go to previous edit"} )
+map("n", "gm", "`a", { noremap = true, silent = true, desc = "Go to previous edit"} )
+
 -- Open terminal with Ipython
 map("n", "<leader>p", ":vsplit | terminal ipython<CR>", { desc = "Open a terminal with Ipython", noremap=true, silent=true})
 
@@ -252,12 +260,21 @@ end, { desc = "Open file in AWS Code Browser" })
 
 -- Copy filename to clipboard
 map("n", "yn", function()
+   local filename = vim.fn.expand("%:t:r")
+    vim.fn.setreg('+', filename)
+    vim.fn.setreg('*', filename)
+    vim.fn.setreg('"', filename)
+    print("Filename '" .. filename .. "' copied to clipboard")
+end, { desc = "Copy filename to clipboard" })
+
+map("n", "yfn", function()
    local filename = vim.fn.expand("%:t")
     vim.fn.setreg('+', filename)
     vim.fn.setreg('*', filename)
     vim.fn.setreg('"', filename)
     print("Filename '" .. filename .. "' copied to clipboard")
 end, { desc = "Copy filename to clipboard" })
+
 
 -- Copy full file path to clipboard
 map("n", "yfp", function()
@@ -344,8 +361,3 @@ end)
 
 -- Visual block in nvim
 vim.keymap.set({'n','v','o'}, '<C-v>', '<C-q>', {noremap=true, silent=true})
-
--- Goto 
-map("n", "gn", "g;", { noremap = true, silent = true, desc = "Go to next edit"} )
-map("n", "gN", "g,", { noremap = true, silent = true, desc = "Go to previous edit"} )
-map("n", "gm", "`a", { noremap = true, silent = true, desc = "Go to previous edit"} )
