@@ -365,5 +365,11 @@ vim.keymap.set({'n','v','o'}, '<C-v>', '<C-q>', {noremap=true, silent=true})
 -- Command to highlight the entire page/buffer (visual select whole buffer)
 vim.api.nvim_create_user_command('HighlightPage', function()
   vim.cmd('normal! ggVG')
+  vim.cmd('echo "Entire buffer highlighted"')
 end, { desc = "Highlight the entire page/buffer (select all)" })
 
+
+vim.api.nvim_create_user_command('WordWrapToggle', function()
+  vim.cmd('set wrap!')
+  vim.cmd('echo "WordWrapToggle"')
+end, { desc = "Toggle word Wrap"})
