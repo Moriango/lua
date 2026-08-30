@@ -361,3 +361,9 @@ end)
 
 -- Visual block in nvim
 vim.keymap.set({'n','v','o'}, '<C-v>', '<C-q>', {noremap=true, silent=true})
+
+-- Command to highlight the entire page/buffer (visual select whole buffer)
+vim.api.nvim_create_user_command('HighlightPage', function()
+  vim.cmd('normal! ggVG')
+end, { desc = "Highlight the entire page/buffer (select all)" })
+
