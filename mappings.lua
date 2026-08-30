@@ -130,6 +130,22 @@ end
 
 map("n", "<leader>td", ":lua toggle_diagnostic()<CR>", { desc = "Toggle the diagnostics on and off", noremap = true, silent = true})
 
+-- Diagnostic jump with "no more errors/warnings" notification when it wraps
+local function diagnostic_jump(direction)
+  local target = direction == "next" and vim.diagnostic.get_next({}) or vim.diagnostic.get_prev({})
+  if not target then
+    vim.notify("No more " .. direction .. " diagnostics, wrapping around", vim.log.levels.WARN)
+  end
+  if direction == "next" then
+    vim.diagnostic.goto_next({ float = true })
+  else
+    vim.diagnostic.goto_prev({ float = true })
+  end
+end
+
+map("n", "]d", function() diagnostic_jump("next") end, { desc = "Go to next diagnostic", noremap = true, silent = true })
+map("n", "[d", function() diagnostic_jump("prev") end, { desc = "Go to previous diagnostic", noremap = true, silent = true })
+
 -- Mark Navigamtion
 -- map("n", "gtm", "]'", { desc = "Jump to next mark", noremap = true, silent = true })
 -- map("n", "gtpm", "['", { desc = "Jump to previous mark", noremap = true, silent = true })
