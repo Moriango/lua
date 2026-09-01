@@ -147,8 +147,8 @@ map("n", "]d", function() diagnostic_jump("next") end, { desc = "Go to next diag
 map("n", "[d", function() diagnostic_jump("prev") end, { desc = "Go to previous diagnostic", noremap = true, silent = true })
 
 -- Mark Navigamtion
--- map("n", "gtm", "]'", { desc = "Jump to next mark", noremap = true, silent = true })
--- map("n", "gtpm", "['", { desc = "Jump to previous mark", noremap = true, silent = true })
+map("n", "]m", "]'", { desc = "Jump to next mark", noremap = true, silent = true })
+map("n", "[m", "['", { desc = "Jump to previous mark", noremap = true, silent = true })
 
 -- Indent
 map("n", "t", ">>", { noremap = true, silent=true })
@@ -221,9 +221,11 @@ map({"n","t",}, "qq", ":lua close_nvim_tree_and_buffer()<CR>", { noremap = true,
 
 -- Git Blame Toggle 
 map("n", "gb", ":silent GitBlameToggle<CR>:echom 'Git Blame Toggle'<CR>", { desc = "Toggles GitBlame", noremap = true })
+
+-- Git Signs
 map("n", "gs", ":Gitsigns preview_hunk<CR>")
-map("n", "gn", ":Gitsigns next_hunk<CR>")
-map("n", "gp", ":Gitsigns prev_hunk<CR>")
+map("n", "]g", ":Gitsigns next_hunk<CR>")
+map("n", "[g", ":Gitsigns prev_hunk<CR>")
 
 
 -- Refresh current Burrer
@@ -239,24 +241,24 @@ map("n", "<leader>h", "ggVG", { noremap = true, silent = true, desc = "Highligts
 map("n", "<leader>qa", ":qa!<CR>",{ noremap = true, silent = true, desc = "Closes All Buffers"} )
 
 -- Amazon Q 
-map("n", "<leader>al", function()
-    -- Start Amazon Q LSP
-    vim.lsp.start(require('amazonq.lsp').config)
-    -- Wait for 1 second
-    vim.defer_fn(function()
-        -- Execute login command
-        vim.cmd("AmazonQ login")
-        vim.notify("Logged in to Amazon Q")
-    end, 1000)  -- 1000ms = 1 second
-end, { noremap = true, silent = true, desc = "Start Amazon Q LSP and Login" })
+-- map("n", "<leader>al", function()
+--     -- Start Amazon Q LSP
+--     vim.lsp.start(require('amazonq.lsp').config)
+--     -- Wait for 1 second
+--     vim.defer_fn(function()
+--         -- Execute login command
+--         vim.cmd("AmazonQ login")
+--         vim.notify("Logged in to Amazon Q")
+--     end, 1000)  -- 1000ms = 1 second
+-- end, { noremap = true, silent = true, desc = "Start Amazon Q LSP and Login" })
 
-map("n", "<leader>af", ":.AmazonQ fix<CR>:echom 'Fixing current line'<CR>", { noremap = true, silent = true, desc = "Fix only the  current line"} )
-map("n", "<leader>ao", ":%AmazonQ fix<CR>:echom 'Optimizing the file.'<CR>", { noremap = true, silent = true, desc = "Optimize the entire content of the file"} )
-map("n", "<leader>ae", ":AmazonQ explain<CR>:echom 'Eplaining File'<CR>", { noremap = true, silent = true, desc = "Explain the current file"} )
+-- map("n", "<leader>af", ":.AmazonQ fix<CR>:echom 'Fixing current line'<CR>", { noremap = true, silent = true, desc = "Fix only the  current line"} )
+-- map("n", "<leader>ao", ":%AmazonQ fix<CR>:echom 'Optimizing the file.'<CR>", { noremap = true, silent = true, desc = "Optimize the entire content of the file"} )
+-- map("n", "<leader>ae", ":AmazonQ explain<CR>:echom 'Eplaining File'<CR>", { noremap = true, silent = true, desc = "Explain the current file"} )
 -- map("n", "ZZ", ":AmazonQ toggle<CR>:echom 'Toggling AmazonQ'<CR>", { noremap = true, silent = true, desc = "Toggles Amazon Q chat"} )
 
-map("n", "cn", ":cnext<CR>", { noremap = true, silent = true, desc = "Go to next item in quickfix list"})
-map("n", "cp", ":cprev<CR>", { noremap = true, silent = true, desc = "Go to previous item in quickfix list"})
+map("n", "]c", ":cnext<CR>", { noremap = true, silent = true, desc = "Go to next item in quickfix list"})
+map("n", "[c", ":cprev<CR>", { noremap = true, silent = true, desc = "Go to previous item in quickfix list"})
 map("n", "CC", ":cclose<CR>", { noremap = true, silent = true, desc = "Close the quickfix list"})
 
 map("n", "yp", function()
