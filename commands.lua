@@ -12,6 +12,7 @@ function M.setup()
     end
 
     if #windows < 2 then
+      vim.notify("Nothing to rotate", vim.log.levels.INFO)
       return
     end
 

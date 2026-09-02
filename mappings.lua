@@ -138,7 +138,7 @@ map("n", "CC", ":cclose<CR>", { noremap = true, silent = true, desc = "Close the
 -- File information shortcuts: copy the current filename, full filename, or directory path.
 map("n", "yn", ":lua copy_filename_without_extension()<CR>", { desc = "Copy filename to clipboard" })
 map("n", "yfn", ":lua copy_filename()<CR>", { desc = "Copy filename to clipboard" })
-map("n", "yfp", ":lua copy_file_directory()<CR>", { desc = "Copy full file path to clipboard" })
+map("n", "yp", ":lua copy_file_directory()<CR>", { desc = "Copy full file path to clipboard" })
 
 -- Buffer count shortcut: report the number of listed buffers.
 map("n", "bc", ":lua print_buffer_count()<CR>")
@@ -337,21 +337,6 @@ function toggle_diagnostic()
     print("Diagnostics Enabled")
   end
 end
-
--- Move to the next or previous diagnostic and show it in a floating window.
-local function diagnostic_jump(direction)
-  local target = direction == "next" and vim.diagnostic.get_next({}) or vim.diagnostic.get_prev({})
-  if not target then
-    vim.notify("No more " .. direction .. " diagnostics, wrapping around", vim.log.levels.WARN)
-  end
-  if direction == "next" then
-    vim.diagnostic.jump({ count = 1, float = true })
-  else
-    vim.diagnostic.jump({ count = -1, float = true })
-  end
-end
-
-
 
 vim.schedule(function()
   require("commands").setup()
