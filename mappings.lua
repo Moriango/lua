@@ -3,121 +3,200 @@ require "nvchad.mappings"
 local map = vim.keymap.set
 local opts = { noremap = false, silent = false}
 
--- FullScreen
+-- MAPPINGS --
+
+-- Window shortcuts: change layouts, create splits, close windows, and rotate buffers.
 map("n", "<leader>m", ":only<CR>", { desc = "Makes the current split screen fullscreen"})
 
--- Toggle Transparency
+-- Appearance shortcuts: toggle transparency and word wrapping.
 map("n", "<leader>tp", ":lua require('base46').toggle_transparency()<CR>", { noremap = true, silent = true, desc = "Toggle Background Transparency" })
+map("n", "ZZ", "<cmd>WordWrapToggle<CR>", { desc = "Toggles word wrap", noremap = true, silent=false })
 
--- Exiting
-map("n", ";", ":", { desc = "CMD enter command mode" })
+-- Mode shortcuts: enter command mode and leave insert or terminal mode.
+map({"n", "v"}, ";", ":", { desc = "CMD enter command mode" })
 map({"n","i","v"}, "jk", "<ESC>")
 map("t", "<Esc>",[[<C-\><C-n>]], { desc = "Exit from terminal mode"})
 map("t", "jk",[[<C-\><C-n>]], { desc = "Exit from terminal mode"})
 
--- File Tree 
+-- File navigation shortcuts: open, close, and manage the file tree.
 map({"n","i","v"}, "<leader>ee", ":NvimTreeToggle<CR>", { desc = "Toggles the file tree", noremap = true, silent=true })
 map("n", "<leader>zz", ":NvimTreeCollapse<CR>",{ noremap = true, silent = true, desc = "Closes File Tree"} )
 
--- Moving Horizontaly
+-- Cursor movement shortcuts: move within lines, scroll, center, and reorder visual lines.
 map({"n","v"}, "ee", "$", { desc = "Move cursor to the end of the current line", noremap = true, silent=true })
 map({"n","v"}, "ba", "^", { desc = "Move cursor to the begginning of the current line", noremap = true, silent=true })
 map("v", "J", ":m '>+1<CR>gv=gv", { desc = "Moves the current line up", noremap = true, silent=true })
 map("v", "K", ":m '<-2<CR>gv=gv", { desc = "Moves the current line up", noremap = true, silent=true })
 
--- Mason Git
+-- Plugin management shortcuts: open the Lazy plugin manager.
 map({"n","i"}, "<leader>lz", ":Lazy<CR>", { desc = "Opens Lazy"})
 
---Word Wrapping
-map("n", "ZZ", ":set wrap!<CR>:echom 'Word Wrap Toggle'<CR>", { desc = "Toggles word wrap", noremap = true, silent=false })
-
--- Moving Vertically
+-- Page movement shortcuts: move by pages or jump to the top and bottom of a buffer.
 map({"n"}, "D", "<C-d>zz", { desc = "Moves the cursor down half a page and centers it.", noremap = true, silent=true })
 map({"n"}, "U", "<C-u>zz", { desc = "Moves the cursor up half a page and centers it.", noremap = true, silent=true })
 map("n", "G", "Gzz", { desc = "Moves the cursor to the bottom of the page and centers the screen", noremap = true, silent=true })
 map("n", "gg", "ggzz", { desc = "Moves the cursor to the top of the page and centers the screen", noremap = true, silent=true })
 
--- Buffers
+-- Window and buffer shortcuts: create, close, rotate, and switch split windows or buffers.
 map("n", "<leader>c", ":close<CR>", { desc = "Closes the current split window", noremap = true, silent=true })
 map("n", "sv", ":split<Return>", { desc = "Splits tab Horizontally", noremap = true, silent=true })
 map("n", "sh", ":vsplit<CR>", { desc = "Splits tab Vertically", noremap = true, silent=true })
 map("n", "<leader>x", "<C-w>c", { noremap=true, silent=true})
 map("n", "<leader>q", ":bd!<CR>", { noremap=true, silent=true})
-map("n", "<leader>bb", "<C-w><C-r>", {noremap=true, silent=true})
+map("n", ",", "<cmd>RotateSplitScreens<CR>", {
+  noremap = true,
+  silent = true,
+  desc = "Rotate all split screens",
+})
 
--- Terminal
-map("n", "<leader>tm", function()
-    local cwd = vim.fn.getcwd()
-    vim.cmd("split | resize 15 | terminal")
-    vim.cmd("cd " .. cwd)
-end, { desc = "Opens a terminal Horizontally in current working directory"})
-map("n", "<leader>st", function()
-    local cwd = vim.fn.getcwd()
-    vim.cmd("vsplit | terminal")
-    vim.cmd("cd " .. cwd)
-end, { desc = "Opens a terminal Vertically in current working directory"})
+-- Terminal shortcuts: open a shell in a vertical split.
+map("n", "<leader>ts", "<cmd>SplitToTerminalVertically<CR>", { desc = "Opens a terminal Vertically in current working directory"})
 
--- Searching
+-- Search shortcuts: search intelligently, replace the word under the cursor, and rename symbols.
+map("n", "n", ":lua smart_search('next')<CR>", {desc = "Smart search next", noremap = true, silent = true})
+map("n", "N", ":lua smart_search('prev')<CR>", {desc = "Smart search previous", noremap = true, silent = true})
 
--- Smart search function that checks if current word is already being searched
+-- Replace words
+map("n", "<leader>cw", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gc<Left><Left><Left>]], { desc = "Replace word under cursor globally and ask"})
+map("n", "<leader>ra", vim.lsp.buf.rename, { desc = "LSP: Rename"})
+
+-- Clear search results
+map("n", "ff", ":lua clear_search()<CR>", { desc = "Clear search pattern and highlight", silent=true})
+
+-- Project shortcuts: change to a project and add project directories to the project database.
+map("n", "cd", "<cmd>CdProject<CR>", { desc = "Cd Project, Change working directory"})
+map("n", "cda", "<cmd>CdProjectAdd<CR>", { desc = "Cd Project, add current project's directory to the databse(json file)"})
+map("n", "cdm", "<cmd>CdProjectManualAdd<CR>", { desc = "Cd Project, Manually add project's directory to the databse(json file)"})
+
+-- Diagnostic shortcuts: toggle diagnostics and navigate to the next or previous diagnostic.
+map("n", "<leader>td", ":lua toggle_diagnostic()<CR>", { desc = "Toggle the diagnostics on and off", noremap = true, silent = true})
+
+-- Diagnostic jumps notify when the list wraps around.
+map("n", "]d", ":lua diagnostic_jump('next')<CR>", { desc = "Go to next diagnostic", noremap = true, silent = true })
+map("n", "[d", ":lua diagnostic_jump('prev')<CR>", { desc = "Go to previous diagnostic", noremap = true, silent = true })
+
+-- Mark shortcuts: jump to the next or previous mark.
+map("n", "]m", "]'", { desc = "Jump to next mark", noremap = true, silent = true })
+map("n", "[m", "['", { desc = "Jump to previous mark", noremap = true, silent = true })
+
+-- Editing shortcuts: indent, unindent, delete, and yank text with shorter key sequences.
+map("n", "t", ">>", { noremap = true, silent=true })
+map("n", "T", "<<", { noremap = true, silent=true })
+map("v", "t", ">gv", { noremap = true, silent=true })
+map("v", "T", "<gv", { noremap = true, silent=true })
+
+
+map("n", "de", "D", opts)
+map("n", "db", "d0", opts)
+
+map("n", "ye", "y$", { noremap = true, silent = true, desc = "Yank to end of the line"} )
+
+-- History and register shortcuts: navigate the change list and inspect registers.
+map("n", ">>", "g;", { noremap = true, silent = true, desc = "Go to next edit"} )
+map("n", "<<", "g,", { noremap = true, silent = true, desc = "Go to previous edit"} )
+map("n", "gm", "`a", { noremap = true, silent = true, desc = "Go to previous edit"} )
+
+-- Python shortcut: open an IPython terminal in a vertical split.
+map("n", "<leader>p", ":vsplit | terminal ipython<CR>", { desc = "Open a terminal with Ipython", noremap=true, silent=true})
+
+map("n", "rr", ":reg<CR>")
+
+-- Completion and LSP shortcuts: toggle completion and rename the symbol under the cursor.
+vim.api.nvim_set_keymap('n', '<leader>tl', ':lua toggle_lsp()<CR>', { noremap = true, silent = true })
+
+-- Terminal input shortcuts: navigate command history and complete terminal input.
+map("t", "<C-k>", "<UP>", { noremap = true, silent=true, desc = "Scroll up through previous inputs/commands"})
+map("t", "<C-j>", "<DOWN>", { noremap = true, silent=true, desc = "Scroll down through previous inputs/commands"})
+map("t", "<C-l>", "<Right>", { noremap = true, silent=true, desc = "Autocompletes in terminal mode"})
+
+-- Clipboard and external tool shortcuts: paste from the system clipboard and open files in VS Code.
+map({"n","i","t"}, "<leader>mm", '"+p', { noremap = true, silent=true, desc = "Simulate the middle click on the mouse"})
+
+map("n", "vv", ":silent !code %<CR>", { noremap = true, silent = true, desc = "Opens current file in VS Code" })
+map("n", "<leader>vv", ":silent !code .<CR>", { noremap = true, silent = true, desc = "Opens current working directory in VS Code" })
+
+-- Buffer shortcuts: close the current buffer and refresh or exit Neovim.
+map({"n","t",}, "qq", ":lua close_nvim_tree_and_buffer()<CR>", { noremap = true, silent = true, desc = "Deletes/Closes buffer window"})
+map("n", "<leader>rb", ":lua refresh_buffer()<CR>",{ noremap = true, silent = true, desc = "Refreshes Current Buffer"})
+map("n", "<leader>qa", ":qa!<CR>",{ noremap = true, silent = true, desc = "Closes All Buffers"} )
+
+-- Git shortcuts: toggle blame and inspect or navigate hunks.
+map("n", "gb", ":silent GitBlameToggle<CR>:echom 'Git Blame Toggle'<CR>", { desc = "Toggles GitBlame", noremap = true })
+
+map("n", "gs", ":Gitsigns preview_hunk<CR>")
+map("n", "]g", ":Gitsigns next_hunk<CR>")
+map("n", "[g", ":Gitsigns prev_hunk<CR>")
+
+-- Buffer and workspace utility shortcuts: select the whole buffer and count buffers.
+map("n", "<leader>h", "<cmd>HighlightPage<CR>", { noremap = true, silent = true, desc = "Highlight the entire buffer"})
+
+-- Quickfix shortcuts: navigate through and close the quickfix list.
+map("n", "]c", ":cnext<CR>", { noremap = true, silent = true, desc = "Go to next item in quickfix list"})
+map("n", "[c", ":cprev<CR>", { noremap = true, silent = true, desc = "Go to previous item in quickfix list"})
+map("n", "CC", ":cclose<CR>", { noremap = true, silent = true, desc = "Close the quickfix list"})
+
+-- File information shortcuts: copy the current filename, full filename, or directory path.
+map("n", "yn", ":lua copy_filename_without_extension()<CR>", { desc = "Copy filename to clipboard" })
+map("n", "yfn", ":lua copy_filename()<CR>", { desc = "Copy filename to clipboard" })
+map("n", "yfp", ":lua copy_file_directory()<CR>", { desc = "Copy full file path to clipboard" })
+
+-- Buffer count shortcut: report the number of listed buffers.
+map("n", "bc", ":lua print_buffer_count()<CR>")
+
+-- Directory shortcuts: count files, show the working directory, and move to its parent.
+map("n", "fc", ":lua count_files_in_directory()<CR>", { desc = "Count files in current directory", noremap = true })
+map("n", "MM", ":lua show_current_directory()<CR>", { desc = "Autochdir setting", noremap = true })
+map("n", "_", ":lua move_to_parent_directory()<CR>", { desc = "Moving working directory up one level", noremap = true })
+-- Visual selection shortcuts: toggle the visual selection background color.
+map({"n","v",}, "<leader>tv", ":lua toggle_visual_bg()<CR>", { noremap = true, silent = true, desc = "Toggle visual selection background" })
+
+-- Window resizing shortcuts: adjust split dimensions with Alt plus H, J, K, or L.
+vim.keymap.set("n", "<A-h>", ":vertical resize -5<CR>", { noremap = true, silent = true, desc = "Decrease window width" })
+vim.keymap.set("n", "<A-j>", ":resize -5<CR>", { noremap = true, silent = true, desc = "Decrease window height" })
+vim.keymap.set("n", "<A-k>", ":resize +5<CR>", { noremap = true, silent = true, desc = "Increase window height" })
+vim.keymap.set("n", "<A-l>", ":vertical resize +5<CR>", { noremap = true, silent = true, desc = "Increase window width" })
+
+-- Visual mode shortcut: use Ctrl-V as the blockwise visual-mode command.
+vim.keymap.set({'n','v','o'}, '<C-v>', '<C-q>', {noremap=true, silent=true})
+
+-- FUNCTIONS -- 
+
+-- Helper functions used by the shortcut declarations above.
+
+-- Search for the word under the cursor and move to the next or previous match.
 function smart_search(direction)
-  -- Read current context
   local cursor_word = vim.fn.expand("<cword>")
   local search_register = vim.fn.getreg("/")
   local last_smart_search = vim.g.last_smart_search or ""
-
-  -- Decide movement command once
   local move_cmd = (direction == "next") and "normal! n" or "normal! N"
 
-  -- If a manual search is active (wasn't set by smart_search), just continue it.
-  local manual_search_active = search_register ~= "" and search_register ~= last_smart_search
-  if manual_search_active then
+  if search_register ~= "" and search_register ~= last_smart_search then
     vim.cmd(move_cmd)
     return
   end
 
-  -- Otherwise set a whole-word, case-sensitive search for the word under cursor
   local escaped = vim.fn.escape(cursor_word, "\\[].*~")
   local pattern = "\\C\\<" .. escaped .. "\\>"
   vim.fn.setreg("/", pattern)
   vim.g.last_smart_search = pattern
-
-  -- Move to the next/previous match
   vim.cmd(move_cmd)
 end
 
-map("n", "n", ":lua smart_search('next')<CR>", {desc = "Smart search next", noremap = true, silent = true})
-map("n", "N", ":lua smart_search('prev')<CR>", {desc = "Smart search previous", noremap = true, silent = true})
-
-map("n", "<leader>cw", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gc<Left><Left><Left>]], { desc = "Replace word under cursor globally and ask"})
-map("n", "<leader>ra", vim.lsp.buf.rename, { desc = "LSP: Rename"})
-
-map("n", "<leader>cab", [[:cfdo %s/\<<C-r><C-w>\>/<C-r><C-w>/g | update | bd]], { desc = "Change across the entire project"})
-
--- Clear search highlighting and pattern
+-- Clear the search state, notifications, highlights, and floating windows.
 function clear_search()
   vim.fn.setreg("/", "")
   vim.cmd("nohlsearch")
-  -- Dismiss nvim-notify notifications if available
   local ok, notify = pcall(require, "notify")
   if ok and notify.dismiss then pcall(notify.dismiss) end
-  -- Close floating windows (LSP/other plugin floats)
-  for _, w in ipairs(vim.api.nvim_list_wins()) do
-    local cfg = vim.api.nvim_win_get_config(w)
-    if cfg.relative ~= "" then pcall(vim.api.nvim_win_close, w, true) end
+  for _, window in ipairs(vim.api.nvim_list_wins()) do
+    local config = vim.api.nvim_win_get_config(window)
+    if config.relative ~= "" then pcall(vim.api.nvim_win_close, window, true) end
   end
   vim.cmd("redraw!")
   print("Search Cleared")
 end
 
-map("n", "ff", ":lua clear_search()<CR>", { desc = "Clear search pattern and highlight", silent=true})
-
--- Project
-map("n", "cd", "<cmd>CdProject<CR>", { desc = "Cd Project, Change working directory"})
-map("n", "cda", "<cmd>CdProjectAdd<CR>", { desc = "Cd Project, add current project's directory to the databse(json file)"})
-map("n", "cdm", "<cmd>CdProjectManualAdd<CR>", { desc = "Cd Project, Manually add project's directory to the databse(json file)"})
-
--- Diagnostics
+-- Enable or disable diagnostics for the current Neovim session.
 function toggle_diagnostic()
   if vim.diagnostic.is_enabled() then
     vim.diagnostic.enable(false)
@@ -128,218 +207,108 @@ function toggle_diagnostic()
   end
 end
 
-map("n", "<leader>td", ":lua toggle_diagnostic()<CR>", { desc = "Toggle the diagnostics on and off", noremap = true, silent = true})
-
--- Diagnostic jump with "no more errors/warnings" notification when it wraps
-local function diagnostic_jump(direction)
+-- Move to the next or previous diagnostic and show it in a floating window.
+function diagnostic_jump(direction)
   local target = direction == "next" and vim.diagnostic.get_next({}) or vim.diagnostic.get_prev({})
   if not target then
     vim.notify("No more " .. direction .. " diagnostics, wrapping around", vim.log.levels.WARN)
   end
   if direction == "next" then
-    vim.diagnostic.goto_next({ float = true })
+    vim.diagnostic.jump({ count = 1, float = true })
   else
-    vim.diagnostic.goto_prev({ float = true })
+    vim.diagnostic.jump({ count = -1, float = true })
   end
 end
 
-map("n", "]d", function() diagnostic_jump("next") end, { desc = "Go to next diagnostic", noremap = true, silent = true })
-map("n", "[d", function() diagnostic_jump("prev") end, { desc = "Go to previous diagnostic", noremap = true, silent = true })
-
--- Mark Navigamtion
-map("n", "]m", "]'", { desc = "Jump to next mark", noremap = true, silent = true })
-map("n", "[m", "['", { desc = "Jump to previous mark", noremap = true, silent = true })
-
--- Indent
-map("n", "t", ">>", { noremap = true, silent=true })
-map("n", "T", "<<", { noremap = true, silent=true })
-map("v", "t", ">gv", { noremap = true, silent=true })
-map("v", "T", "<gv", { noremap = true, silent=true })
-
--- Deleting
-map("n", "de", "D", opts)
-map("n", "db", "d0", opts)
-
--- Yanking
-map("n", "ye", "y$", { noremap = true, silent = true, desc = "Yank to end of the line"} )
-
--- Goto 
-map("n", ">>", "g;", { noremap = true, silent = true, desc = "Go to next edit"} )
-map("n", "<<", "g,", { noremap = true, silent = true, desc = "Go to previous edit"} )
-map("n", "gm", "`a", { noremap = true, silent = true, desc = "Go to previous edit"} )
-
--- Open terminal with Ipython
-map("n", "<leader>p", ":vsplit | terminal ipython<CR>", { desc = "Open a terminal with Ipython", noremap=true, silent=true})
-
--- Registers
-map("n", "rr", ":reg<CR>")
-
--- Function to toggle cmp for the current buffer
+-- Enable or disable completion for the current buffer.
 function toggle_lsp()
-local cmp = require('cmp')
-local current_state = cmp.get_config().enabled
-if current_state then
-  cmp.setup.buffer { enabled = false }
-  print("LSP and Autocompletions Disabled")
-else
-  cmp.setup.buffer { enabled = true }
-  print("LSP and Autocompletions Enabled")
+  local cmp = require('cmp')
+  local current_state = cmp.get_config().enabled
+  if current_state then
+    cmp.setup.buffer { enabled = false }
+    print("LSP and Autocompletions Disabled")
+  else
+    cmp.setup.buffer { enabled = true }
+    print("LSP and Autocompletions Enabled")
+  end
 end
-end
 
--- Key mapping to toggle cmp
-vim.api.nvim_set_keymap('n', '<leader>tl', ':lua toggle_lsp()<CR>', { noremap = true, silent = true })
-
--- Scroll through preious input/commands in the terminal using Tab key
-map("t", "<C-k>", "<UP>", { noremap = true, silent=true, desc = "Scroll up through previous inputs/commands"})
-map("t", "<C-j>", "<DOWN>", { noremap = true, silent=true, desc = "Scroll down through previous inputs/commands"})
-map("t", "<C-l>", "<Right>", { noremap = true, silent=true, desc = "Autocompletes in terminal mode"})
-
--- Simulate middle click
--- Will not work in dev-desktop
-map({"n","i","t"}, "<leader>mm", '"+p', { noremap = true, silent=true, desc = "Simulate the middle click on the mouse"})
-
--- Open current working directory in VS Code
--- Will not work in dev-desktop
-
--- Open current file in VS Code
-map("n", "vv", ":silent !code %<CR>", { noremap = true, silent = true, desc = "Opens current file in VS Code" })
-
--- Open current working directory in VS Code
-map("n", "<leader>vv", ":silent !code .<CR>", { noremap = true, silent = true, desc = "Opens current working directory in VS Code" })
-
--- Delete Buffer
+-- Close the file tree and delete the current buffer.
 function close_nvim_tree_and_buffer()
-local nvim_tree_api = require('nvim-tree.api')
-if nvim_tree_api.tree.is_visible() then
-  vim.cmd('wincmd l')
-  nvim_tree_api.tree.close()
+  local nvim_tree_api = require('nvim-tree.api')
+  if nvim_tree_api.tree.is_visible() then
+    vim.cmd('wincmd l')
+    nvim_tree_api.tree.close()
+  end
+  vim.cmd('bd!')
 end
-vim.cmd('bd!')
-end
-map({"n","t",}, "qq", ":lua close_nvim_tree_and_buffer()<CR>", { noremap = true, silent = true, desc = "Deletes/Closes buffer window"})
 
--- Git Blame Toggle 
-map("n", "gb", ":silent GitBlameToggle<CR>:echom 'Git Blame Toggle'<CR>", { desc = "Toggles GitBlame", noremap = true })
-
--- Git Signs
-map("n", "gs", ":Gitsigns preview_hunk<CR>")
-map("n", "]g", ":Gitsigns next_hunk<CR>")
-map("n", "[g", ":Gitsigns prev_hunk<CR>")
-
-
--- Refresh current Burrer
+-- Reload the current buffer from disk.
 function refresh_buffer()
-print("Refreshed Buffer")
-vim.cmd('edit')
+  print("Refreshed Buffer")
+  vim.cmd('edit')
 end
-map("n", "<leader>rb", ":lua refresh_buffer()<CR>",{ noremap = true, silent = true, desc = "Refreshes Current Buffer"})
 
--- Highligts the entire buffer
-map("n", "<leader>h", "ggVG", { noremap = true, silent = true, desc = "Highligts the entire buffer."})
+-- Copy a value to the system clipboards and report what was copied.
+local function copy_to_clipboard(value, label)
+  vim.fn.setreg('+', value)
+  vim.fn.setreg('*', value)
+  vim.fn.setreg('"', value)
+  print(label .. " '" .. value .. "' copied to clipboard")
+end
 
-map("n", "<leader>qa", ":qa!<CR>",{ noremap = true, silent = true, desc = "Closes All Buffers"} )
+-- Copy the current filename without its extension.
+function copy_filename_without_extension()
+  copy_to_clipboard(vim.fn.expand("%:t:r"), "Filename")
+end
 
--- Amazon Q 
--- map("n", "<leader>al", function()
---     -- Start Amazon Q LSP
---     vim.lsp.start(require('amazonq.lsp').config)
---     -- Wait for 1 second
---     vim.defer_fn(function()
---         -- Execute login command
---         vim.cmd("AmazonQ login")
---         vim.notify("Logged in to Amazon Q")
---     end, 1000)  -- 1000ms = 1 second
--- end, { noremap = true, silent = true, desc = "Start Amazon Q LSP and Login" })
+-- Copy the current filename with its extension.
+function copy_filename()
+  copy_to_clipboard(vim.fn.expand("%:t"), "Filename")
+end
 
--- map("n", "<leader>af", ":.AmazonQ fix<CR>:echom 'Fixing current line'<CR>", { noremap = true, silent = true, desc = "Fix only the  current line"} )
--- map("n", "<leader>ao", ":%AmazonQ fix<CR>:echom 'Optimizing the file.'<CR>", { noremap = true, silent = true, desc = "Optimize the entire content of the file"} )
--- map("n", "<leader>ae", ":AmazonQ explain<CR>:echom 'Eplaining File'<CR>", { noremap = true, silent = true, desc = "Explain the current file"} )
--- map("n", "ZZ", ":AmazonQ toggle<CR>:echom 'Toggling AmazonQ'<CR>", { noremap = true, silent = true, desc = "Toggles Amazon Q chat"} )
+-- Copy the directory containing the current file.
+function copy_file_directory()
+  copy_to_clipboard(vim.fn.expand("%:p:h"), "File path")
+end
 
-map("n", "]c", ":cnext<CR>", { noremap = true, silent = true, desc = "Go to next item in quickfix list"})
-map("n", "[c", ":cprev<CR>", { noremap = true, silent = true, desc = "Go to previous item in quickfix list"})
-map("n", "CC", ":cclose<CR>", { noremap = true, silent = true, desc = "Close the quickfix list"})
+-- Print the number of listed buffers.
+function print_buffer_count()
+  print('Buffer count: ' .. #vim.fn.getbufinfo({buflisted=1}))
+end
 
-map("n", "yp", function()
-    -- Save current directory
-    local current_dir = vim.fn.getcwd()
-    -- Enable autochdir temporarily
-    vim.cmd("set autochdir")
-    -- Get the URL and open it based on system
-    if vim.fn.has("mac") == 1 then
-        vim.cmd("GBrowse")
-    else
-        vim.cmd("GBrowse!")
-    end
-    -- Return to original directory
-    vim.cmd("cd " .. current_dir)
-end, { desc = "Open file in AWS Code Browser" })
+-- Count regular files in the current directory.
+function count_files_in_directory()
+  local handle = io.popen('find . -maxdepth 1 -type f | wc -l')
+  if handle then
+    local result = tonumber(handle:read("*a"):match("^%s*(.-)%s*$"))
+    handle:close()
+    print("Files in current directory: " .. result)
+  else
+    print("Error counting files")
+  end
+end
 
--- Copy filename to clipboard
-map("n", "yn", function()
-   local filename = vim.fn.expand("%:t:r")
-    vim.fn.setreg('+', filename)
-    vim.fn.setreg('*', filename)
-    vim.fn.setreg('"', filename)
-    print("Filename '" .. filename .. "' copied to clipboard")
-end, { desc = "Copy filename to clipboard" })
-
-map("n", "yfn", function()
-   local filename = vim.fn.expand("%:t")
-    vim.fn.setreg('+', filename)
-    vim.fn.setreg('*', filename)
-    vim.fn.setreg('"', filename)
-    print("Filename '" .. filename .. "' copied to clipboard")
-end, { desc = "Copy filename to clipboard" })
-
-
--- Copy full file path to clipboard
-map("n", "yfp", function()
-    local filepath = vim.fn.expand("%:p:h")
-    vim.fn.setreg('+', filepath)
-    vim.fn.setreg('*', filepath)
-    vim.fn.setreg('"', filepath)
-    print("File path '" .. filepath .. "' copied to clipboard")
-end, { desc = "Copy full file path to clipboard" })
-
-vim.keymap.set('n', 'bc', function()
-    print('Buffer count: ' .. #vim.fn.getbufinfo({buflisted=1}))
-end)
-
--- Count files in current directory
-map("n", "fc", function()
-    local handle = io.popen('find . -maxdepth 1 -type f | wc -l')
-    if handle then
-        local result = handle:read("*a")
-        handle:close()
-        -- Remove trailing whitespace/newlines and convert to number
-        result = tonumber(result:match("^%s*(.-)%s*$"))
-        print("Files in current directory: " .. result)
-    else
-        print("Error counting files")
-    end
-end, { desc = "Count files in current directory", noremap = true })
-
-map("n", "MM", function()
+-- Print the current working directory after refreshing autochdir.
+function show_current_directory()
   vim.cmd("set autochdir")
   vim.cmd("set noautochdir")
-  local cwd = vim.fn.getcwd()
-  print("Changed Directories: " .. cwd)
-  end, { desc = "Autochdir setting", noremap = true })
+  print("Changed Directories: " .. vim.fn.getcwd())
+end
 
-map("n", "_", function()
+-- Change to the parent of the current working directory.
+function move_to_parent_directory()
   vim.cmd("cd ../")
-  local cwd = vim.fn.getcwd()
-  print("Current directory: " .. cwd)
-  end, { desc = "Moving working directory up one level", noremap = true })
--- Toggle visual selection background
+  print("Current directory: " .. vim.fn.getcwd())
+end
+
+-- Track the original Visual highlight while toggling its background.
 local visual_bg_black = false
 local original_visual_bg = nil
 
+-- Toggle the background color of visual selections.
 function toggle_visual_bg()
   if visual_bg_black then
-    -- Restore original background
     if original_visual_bg then
       vim.cmd("hi Visual guibg=" .. original_visual_bg)
     else
@@ -348,7 +317,6 @@ function toggle_visual_bg()
     print("Visual background: Restored")
     visual_bg_black = false
   else
-    -- Save current background and set to black
     local visual_hl = vim.api.nvim_get_hl_by_name('Visual', true)
     if visual_hl.background then
       original_visual_bg = string.format("#%06x", visual_hl.background)
@@ -359,15 +327,34 @@ function toggle_visual_bg()
   end
 end
 
-map({"n","v",}, "<leader>tv", ":lua toggle_visual_bg()<CR>", { noremap = true, silent = true, desc = "Toggle visual selection background" })
+-- Enable or disable diagnostics for the current Neovim session.
+function toggle_diagnostic()
+  if vim.diagnostic.is_enabled() then
+    vim.diagnostic.enable(false)
+    print("Diagnostics Disabled")
+  else
+    vim.diagnostic.enable()
+    print("Diagnostics Enabled")
+  end
+end
 
--- Window resize keymaps (Alt + hjkl) - Native Neovim commands
-vim.keymap.set("n", "<A-h>", ":vertical resize -5<CR>", { noremap = true, silent = true, desc = "Decrease window width" })
-vim.keymap.set("n", "<A-j>", ":resize -5<CR>", { noremap = true, silent = true, desc = "Decrease window height" })
-vim.keymap.set("n", "<A-k>", ":resize +5<CR>", { noremap = true, silent = true, desc = "Increase window height" })
-vim.keymap.set("n", "<A-l>", ":vertical resize +5<CR>", { noremap = true, silent = true, desc = "Increase window width" })
+-- Move to the next or previous diagnostic and show it in a floating window.
+local function diagnostic_jump(direction)
+  local target = direction == "next" and vim.diagnostic.get_next({}) or vim.diagnostic.get_prev({})
+  if not target then
+    vim.notify("No more " .. direction .. " diagnostics, wrapping around", vim.log.levels.WARN)
+  end
+  if direction == "next" then
+    vim.diagnostic.jump({ count = 1, float = true })
+  else
+    vim.diagnostic.jump({ count = -1, float = true })
+  end
+end
+
+
 
 vim.schedule(function()
+  require("commands").setup()
   require "mappings"
   if type(_G.clear_search) == "function" then
     pcall(_G.clear_search)
@@ -377,17 +364,3 @@ vim.schedule(function()
   end
 end)
 
--- Visual block in nvim
-vim.keymap.set({'n','v','o'}, '<C-v>', '<C-q>', {noremap=true, silent=true})
-
--- Command to highlight the entire page/buffer (visual select whole buffer)
-vim.api.nvim_create_user_command('HighlightPage', function()
-  vim.cmd('normal! ggVG')
-  vim.cmd('echo "Entire buffer highlighted"')
-end, { desc = "Highlight the entire page/buffer (select all)" })
-
-
-vim.api.nvim_create_user_command('WordWrapToggle', function()
-  vim.cmd('set wrap!')
-  vim.cmd('echo "WordWrapToggle"')
-end, { desc = "Toggle word Wrap"})
