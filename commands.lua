@@ -60,16 +60,24 @@ function M.setup()
   vim.api.nvim_create_user_command("ToggleMarks", function()
     require("marks").toggle_signs()
   end, { desc = "Toggle mark signs" })
-end
 
-vim.api.nvim_create_user_command("ToggleDiagnostic", function()
-    if vim.diagnostic.is_enabled() then
-    vim.diagnostic.enable(false)
-    print("Diagnostics Disabled")
-    else
-      vim.diagnostic.enable()
-      print("Diagnostics Enabled")
-    end
-end, { desc = "Toggles the diagnostic"})
+  vim.api.nvim_create_user_command("ToggleDiagnostic", function()
+     if vim.diagnostic.is_enabled() then
+     vim.diagnostic.enable(false)
+     print("Diagnostics Disabled")
+     else
+       vim.diagnostic.enable()
+       print("Diagnostics Enabled")
+     end
+  end, { desc = "Toggles the diagnostic"})
+
+  vim.api.nvim_create_user_command("FoldAllClose", function()
+     vim.cmd("normal! zM")
+  end, { desc = "Closes all folds"})
+
+  vim.api.nvim_create_user_command("FoldAllOpen", function()
+   vim.cmd("normal! zR")
+  end, { desc = "Opens all folds"})
+end
 
 return M
