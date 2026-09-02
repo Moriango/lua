@@ -48,6 +48,10 @@ function M.setup()
     vim.cmd("set wrap!")
     vim.cmd('echo "WordWrapToggle"')
   end, { desc = "Toggle word wrap" })
+
+  vim.api.nvim_create_user_command("ToggleMarks", function()
+    require("marks").toggle_signs()
+  end, { desc = "Toggle mark signs" })
 end
 
 return M

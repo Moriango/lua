@@ -2,25 +2,21 @@
 return {
   "chentoast/marks.nvim",
   event = "VeryLazy",
-  opts = {},
+  opts = {
+    -- Disable the plugin's default mappings so gm and gM can navigate marks.
+    default_mappings = false,
+    cyclic = true,
+    mappings = {
+      -- Press <leader>m followed by a letter to set that mark.
+      set = "M",
+    },
+  },
 }
---[[
-    mx              Set mark x
-    m,              Set the next available alphabetical (lowercase) mark
-    m;              Toggle the next available mark at the current line
-    dmx             Delete mark x
-    dm-             Delete all marks on the current line
-    dm<space>       Delete all marks in the current buffer
-    m]              Move to next mark
-    m[              Move to previous mark
-    m:              Preview mark. This will prompt you for a specific mark to
-                    preview; press <cr> to preview the next mark.
-                    
-    m[0-9]          Add a bookmark from bookmark group[0-9].
-    dm[0-9]         Delete all bookmarks from bookmark group[0-9].
-    m}              Move to the next bookmark having the same type as the bookmark under
-                    the cursor. Works across buffers.
-    m{              Move to the previous bookmark having the same type as the bookmark under
-                    the cursor. Works across buffers.
-    dm=             Delete the bookmark under the cursor.
-]]
+
+-- Native Vim mark commands remain available:
+--   mx       Set mark x
+--   m,       Set the next available lowercase mark
+--   m;       Toggle the next available mark on the current line
+--   dmx      Delete mark x
+--   dm-      Delete marks on the current line
+--   dm<Space> Delete marks in the current buffer

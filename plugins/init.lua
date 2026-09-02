@@ -75,6 +75,7 @@ local plugins = {
   {import = "plugins.configs.hover"},
   {import = "plugins.configs.lazygit"},
   {import = "plugins.configs.live-server"},
+  {import = "plugins.configs.marks"},
   -- {import = "plugins.configs.lsp-signature"},
   {import = "plugins.configs.mason_tool_installer"},
   {import = "plugins.configs.md-preview"},

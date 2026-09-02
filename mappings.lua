@@ -75,9 +75,11 @@ map("n", "<leader>td", ":lua toggle_diagnostic()<CR>", { desc = "Toggle the diag
 map("n", "]d", ":lua diagnostic_jump('next')<CR>", { desc = "Go to next diagnostic", noremap = true, silent = true })
 map("n", "[d", ":lua diagnostic_jump('prev')<CR>", { desc = "Go to previous diagnostic", noremap = true, silent = true })
 
--- Mark shortcuts: jump to the next or previous mark.
-map("n", "]m", "]'", { desc = "Jump to next mark", noremap = true, silent = true })
-map("n", "[m", "['", { desc = "Jump to previous mark", noremap = true, silent = true })
+-- Marks shortcuts: jump to the next or previous mark.
+map("n", "m", "<cmd>lua require('marks').next()<CR>", { desc = "Jump to next mark", noremap = true, silent = true })
+map("n", "m,", "<cmd>lua require('marks').prev()<CR>", { desc = "Jump to previous mark", noremap = true, silent = true })
+map("n", "dm", ":lua delete_mark()<CR>", { desc = "Delete a mark" })
+map("n", "dM", ":lua delete_all_marks()<CR>", { desc = "Delete all marks in the current buffer" })
 
 -- Editing shortcuts: indent, unindent, delete, and yank text with shorter key sequences.
 map("n", "t", ">>", { noremap = true, silent=true })
@@ -94,7 +96,6 @@ map("n", "ye", "y$", { noremap = true, silent = true, desc = "Yank to end of the
 -- History and register shortcuts: navigate the change list and inspect registers.
 map("n", ">>", "g;", { noremap = true, silent = true, desc = "Go to next edit"} )
 map("n", "<<", "g,", { noremap = true, silent = true, desc = "Go to previous edit"} )
-map("n", "gm", "`a", { noremap = true, silent = true, desc = "Go to previous edit"} )
 
 -- Python shortcut: open an IPython terminal in a vertical split.
 map("n", "<leader>p", ":vsplit | terminal ipython<CR>", { desc = "Open a terminal with Ipython", noremap=true, silent=true})
@@ -109,9 +110,7 @@ map("t", "<C-k>", "<UP>", { noremap = true, silent=true, desc = "Scroll up throu
 map("t", "<C-j>", "<DOWN>", { noremap = true, silent=true, desc = "Scroll down through previous inputs/commands"})
 map("t", "<C-l>", "<Right>", { noremap = true, silent=true, desc = "Autocompletes in terminal mode"})
 
--- Clipboard and external tool shortcuts: paste from the system clipboard and open files in VS Code.
-map({"n","i","t"}, "<leader>mm", '"+p', { noremap = true, silent=true, desc = "Simulate the middle click on the mouse"})
-
+-- Open in VSCode
 map("n", "vv", ":silent !code %<CR>", { noremap = true, silent = true, desc = "Opens current file in VS Code" })
 map("n", "<leader>vv", ":silent !code .<CR>", { noremap = true, silent = true, desc = "Opens current working directory in VS Code" })
 
@@ -145,7 +144,7 @@ map("n", "bc", ":lua print_buffer_count()<CR>")
 
 -- Directory shortcuts: count files, show the working directory, and move to its parent.
 map("n", "fc", ":lua count_files_in_directory()<CR>", { desc = "Count files in current directory", noremap = true })
-map("n", "MM", ":lua show_current_directory()<CR>", { desc = "Autochdir setting", noremap = true })
+map("n", "MM", ":lua change_current_directory()<CR>", { desc = "Autochdir setting", noremap = true })
 map("n", "_", ":lua move_to_parent_directory()<CR>", { desc = "Moving working directory up one level", noremap = true })
 -- Visual selection shortcuts: toggle the visual selection background color.
 map({"n","v",}, "<leader>tv", ":lua toggle_visual_bg()<CR>", { noremap = true, silent = true, desc = "Toggle visual selection background" })
@@ -162,6 +161,27 @@ vim.keymap.set({'n','v','o'}, '<C-v>', '<C-q>', {noremap=true, silent=true})
 -- FUNCTIONS -- 
 
 -- Helper functions used by the shortcut declarations above.
+
+-- Prompt for and delete one mark.
+function delete_mark()
+  vim.ui.input({ prompt = "Delete mark: " }, function(mark)
+    if not mark or mark == "" then
+      return
+    end
+
+    if not mark:match("^[A-Za-z]$") then
+      vim.notify("Enter one letter mark", vim.log.levels.WARN)
+      return
+    end
+
+    require("marks").mark_state:delete_mark(mark)
+  end)
+end
+
+-- Delete every mark in the current buffer.
+function delete_all_marks()
+  require("marks").delete_buf()
+end
 
 -- Search for the word under the cursor and move to the next or previous match.
 function smart_search(direction)
@@ -290,7 +310,7 @@ function count_files_in_directory()
 end
 
 -- Print the current working directory after refreshing autochdir.
-function show_current_directory()
+function change_current_directory()
   vim.cmd("set autochdir")
   vim.cmd("set noautochdir")
   print("Changed Directories: " .. vim.fn.getcwd())
