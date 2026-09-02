@@ -8,7 +8,7 @@ return {
     cyclic = true,
     mappings = {
       -- Press <leader>m followed by a letter to set that mark.
-      set = "M",
+      set_next = "M",
     },
   },
 }
