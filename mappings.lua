@@ -38,16 +38,11 @@ map("n", "G", "Gzz", { desc = "Moves the cursor to the bottom of the page and ce
 map("n", "gg", "ggzz", { desc = "Moves the cursor to the top of the page and centers the screen", noremap = true, silent=true })
 
 -- Window and buffer shortcuts: create, close, rotate, and switch split windows or buffers.
-map("n", "<leader>c", ":close<CR>", { desc = "Closes the current split window", noremap = true, silent=true })
 map("n", "sv", ":split<Return>", { desc = "Splits tab Horizontally", noremap = true, silent=true })
 map("n", "sh", ":vsplit<CR>", { desc = "Splits tab Vertically", noremap = true, silent=true })
-map("n", "<leader>x", "<C-w>c", { noremap=true, silent=true})
+map("n", "<leader>x", "<C-w>c", { desc =  "Closes the current split window", noremap=true, silent=true})
 map("n", "<leader>q", ":bd!<CR>", { noremap=true, silent=true})
-map("n", ",", "<cmd>RotateSplitScreens<CR>", {
-  noremap = true,
-  silent = true,
-  desc = "Rotate all split screens",
-})
+map("n", ",", "<cmd>RotateSplitScreens<CR>", { noremap = true, silent = true, desc = "Rotate all split screens" })
 
 -- Terminal shortcuts: open a shell in a vertical split.
 map("n", "<leader>ts", "<cmd>SplitToTerminalVertically<CR>", { desc = "Opens a terminal Vertically in current working directory"})
@@ -67,9 +62,6 @@ map("n", "ff", ":lua clear_search()<CR>", { desc = "Clear search pattern and hig
 map("n", "cd", "<cmd>CdProject<CR>", { desc = "Cd Project, Change working directory"})
 map("n", "cda", "<cmd>CdProjectAdd<CR>", { desc = "Cd Project, add current project's directory to the databse(json file)"})
 map("n", "cdm", "<cmd>CdProjectManualAdd<CR>", { desc = "Cd Project, Manually add project's directory to the databse(json file)"})
-
--- Diagnostic shortcuts: toggle diagnostics and navigate to the next or previous diagnostic.
-map("n", "<leader>td", ":lua toggle_diagnostic()<CR>", { desc = "Toggle the diagnostics on and off", noremap = true, silent = true})
 
 -- Diagnostic jumps notify when the list wraps around.
 map("n", "]d", ":lua diagnostic_jump('next')<CR>", { desc = "Go to next diagnostic", noremap = true, silent = true })
@@ -214,17 +206,6 @@ function clear_search()
   end
   vim.cmd("redraw!")
   print("Search Cleared")
-end
-
--- Enable or disable diagnostics for the current Neovim session.
-function toggle_diagnostic()
-  if vim.diagnostic.is_enabled() then
-    vim.diagnostic.enable(false)
-    print("Diagnostics Disabled")
-  else
-    vim.diagnostic.enable()
-    print("Diagnostics Enabled")
-  end
 end
 
 -- Move to the next or previous diagnostic and show it in a floating window.

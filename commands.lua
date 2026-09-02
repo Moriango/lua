@@ -54,4 +54,14 @@ function M.setup()
   end, { desc = "Toggle mark signs" })
 end
 
+vim.api.nvim_create_user_command("ToggleDiagnostic", function()
+    if vim.diagnostic.is_enabled() then
+    vim.diagnostic.enable(false)
+    print("Diagnostics Disabled")
+    else
+      vim.diagnostic.enable()
+      print("Diagnostics Enabled")
+    end
+end, { desc = "Toggles the diagnostic"})
+
 return M
