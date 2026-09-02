@@ -44,6 +44,14 @@ function M.setup()
     vim.cmd('echo "Entire buffer highlighted"')
   end, { desc = "Highlight the entire page/buffer (select all)" })
 
+  vim.api.nvim_create_user_command("MoveLineTop", function()
+    vim.cmd("normal! zt")
+  end, { desc = "Move the current line to the top of the screen" })
+
+  vim.api.nvim_create_user_command("MoveLineBottom", function()
+    vim.cmd("normal! zb")
+  end, { desc = "Move the current line to the bottom of the screen" })
+
   vim.api.nvim_create_user_command("WordWrapToggle", function()
     vim.cmd("set wrap!")
     vim.cmd('echo "WordWrapToggle"')
