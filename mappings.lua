@@ -113,10 +113,8 @@ map("n", "<leader>qa", ":qa!<CR>",{ noremap = true, silent = true, desc = "Close
 
 -- Git shortcuts: toggle blame and inspect or navigate hunks.
 map("n", "gb", ":silent GitBlameToggle<CR>:echom 'Git Blame Toggle'<CR>", { desc = "Toggles GitBlame", noremap = true })
-
-map("n", "gs", ":Gitsigns preview_hunk<CR>")
-map("n", "]g", ":Gitsigns next_hunk<CR>")
-map("n", "[g", ":Gitsigns prev_hunk<CR>")
+map("n", "gn", ":lua gitsigns_preview()<CR>", { desc = "Opens git signs and jumps to next hunk", noremap = true})
+map("n", "gp", ":lua gitsigns_previous_hunk()<CR>", { desc = "Jump to previous hunk and center", noremap = true, silent = true })
 
 -- Buffer and workspace utility shortcuts: select the whole buffer and count buffers.
 map("n", "<leader>h", "<cmd>HighlightPage<CR>", { noremap = true, silent = true, desc = "Highlight the entire buffer"})
@@ -147,8 +145,9 @@ vim.keymap.set("n", "<A-j>", ":resize -5<CR>", { noremap = true, silent = true, 
 vim.keymap.set("n", "<A-k>", ":resize +5<CR>", { noremap = true, silent = true, desc = "Increase window height" })
 vim.keymap.set("n", "<A-l>", ":vertical resize +5<CR>", { noremap = true, silent = true, desc = "Increase window width" })
 
--- Visual mode shortcut: use Ctrl-V as the blockwise visual-mode command.
-vim.keymap.set({'n','v','o'}, '<C-v>', '<C-q>', {noremap=true, silent=true})
+-- Swap the default visual-line and visual-block commands.
+vim.keymap.set({'n','v','o'}, 'V', '<C-q>', { noremap = true, silent = true })
+vim.keymap.set({'n','v','o'}, '<C-v>', 'V', { noremap = true, silent = true })
 
 -- FUNCTIONS -- 
 
@@ -172,7 +171,9 @@ end
 
 -- Delete every mark in the current buffer.
 function delete_all_marks()
-  require("marks").delete_buf()
+  vim.cmd("delmarks!")
+  vim.cmd("delmarks A-Z")
+  require("marks").refresh(true)
 end
 
 -- Search for the word under the cursor and move to the next or previous match.
@@ -337,6 +338,35 @@ function toggle_diagnostic()
     vim.diagnostic.enable()
     print("Diagnostics Enabled")
   end
+end
+
+-- Tracks the last real editing window so navigation doesn't get stuck
+-- if focus ends up in the gitsigns preview popup (e.g. after a delay).
+local gitsigns_last_win = nil
+
+local function gitsigns_restore_main_win()
+  local cur = vim.api.nvim_get_current_win()
+  if vim.api.nvim_win_get_config(cur).relative == "" then
+    gitsigns_last_win = cur
+  elseif gitsigns_last_win and vim.api.nvim_win_is_valid(gitsigns_last_win) then
+    vim.api.nvim_set_current_win(gitsigns_last_win)
+  end
+end
+
+function gitsigns_preview()
+  gitsigns_restore_main_win()
+  require("gitsigns").next_hunk({}, function()
+    vim.cmd("normal! zz")
+    require("gitsigns").preview_hunk()
+  end)
+end
+
+function gitsigns_previous_hunk()
+  gitsigns_restore_main_win()
+  require("gitsigns").prev_hunk({}, function()
+    vim.cmd("normal! zz")
+    require("gitsigns").preview_hunk()
+  end)
 end
 
 vim.schedule(function()
