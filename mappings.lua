@@ -104,7 +104,7 @@ map("t", "<C-l>", "<Right>", { noremap = true, silent=true, desc = "Autocomplete
 
 -- Open in VSCode
 map("n", "vv", ":silent !code %<CR>", { noremap = true, silent = true, desc = "Opens current file in VS Code" })
-map("n", "<leader>vv", ":silent !code .<CR>", { noremap = true, silent = true, desc = "Opens current working directory in VS Code" })
+map("n", "<leader>vv", ":silent !code . %<CR>", { noremap = true, silent = true, desc = "Opens current working directory and file in VS Code" })
 
 -- Buffer shortcuts: close the current buffer and refresh or exit Neovim.
 map({"n","t",}, "qq", ":lua close_nvim_tree_and_buffer()<CR>", { noremap = true, silent = true, desc = "Deletes/Closes buffer window"})
@@ -113,8 +113,8 @@ map("n", "<leader>qa", ":qa!<CR>",{ noremap = true, silent = true, desc = "Close
 
 -- Git shortcuts: toggle blame and inspect or navigate hunks.
 map("n", "gb", ":silent GitBlameToggle<CR>:echom 'Git Blame Toggle'<CR>", { desc = "Toggles GitBlame", noremap = true })
-map("n", "gn", ":lua gitsigns_preview()<CR>", { desc = "Opens git signs and jumps to next hunk", noremap = true})
-map("n", "gp", ":lua gitsigns_previous_hunk()<CR>", { desc = "Jump to previous hunk and center", noremap = true, silent = true })
+map("n", "[g", ":lua gitsigns_preview()<CR>", { desc = "Opens git signs and jumps to next hunk", noremap = true})
+map("n", "]g", ":lua gitsigns_previous_hunk()<CR>", { desc = "Jump to previous hunk and center", noremap = true, silent = true })
 
 -- Buffer and workspace utility shortcuts: select the whole buffer and count buffers.
 map("n", "<leader>h", "<cmd>HighlightPage<CR>", { noremap = true, silent = true, desc = "Highlight the entire buffer"})
