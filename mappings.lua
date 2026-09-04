@@ -79,6 +79,8 @@ map("n", "T", "<<", { noremap = true, silent=true })
 map("v", "t", ">gv", { noremap = true, silent=true })
 map("v", "T", "<gv", { noremap = true, silent=true })
 
+-- Replace surrounding quotes
+map("n", "<leader>a", function() change_surrounding_word() end, { desc = "Surround word under cursor" })
 
 map("n", "de", "D", opts)
 map("n", "db", "d0", opts)
@@ -369,6 +371,11 @@ function gitsigns_previous_hunk()
   end)
 end
 
+function change_surrounding_word()
+  local keys = vim.api.nvim_replace_termcodes("viwsa", true, false, true)
+  vim.api.nvim_feedkeys(keys, "m", false)
+end
+
 vim.schedule(function()
   require("commands").setup()
   require "mappings"
@@ -379,4 +386,3 @@ vim.schedule(function()
     vim.cmd("nohlsearch")
   end
 end)
-

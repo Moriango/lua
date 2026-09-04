@@ -1,6 +1,7 @@
 ---@type NvPluginSpec
 return {
   'echasnovski/mini.nvim',
+  lazy = false, -- no event/cmd trigger exists, so force eager load or config() never runs
   config = function()
     require('mini.surround').setup({
       -- Add custom surroundings to be used on top of builtin ones. For more
@@ -12,10 +13,10 @@ return {
 
       -- Module mappings. Use `''` (empty string) to disable one.
       mappings = {
-        add = 'ca',  -- Add surrounding in Normal and Visual modes
+        add = 'sa',  -- Add surrounding in Normal and Visual modes
         delete = 'ds', -- Delete surrounding
         replace = 'cs', -- Replace surrounding
-        highlight = '', -- disable default 'sh' mapping so it doesn't shadow your keymap
+        highlight = 'hs', -- disable default 'sh' mapping so it doesn't shadow your keymap
       },
 
       -- Number of lines within which surrounding is searched
