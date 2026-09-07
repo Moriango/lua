@@ -31,6 +31,12 @@ map("v", "K", ":m '<-2<CR>gv=gv", { desc = "Moves the current line up", noremap 
 -- Plugin management shortcuts: open the Lazy plugin manager.
 map({"n","i"}, "<leader>lz", ":Lazy<CR>", { desc = "Opens Lazy"})
 
+-- Tmux Navigation
+map("n", "<C-h>", ":TmuxNavigateLeft<CR>", { noremap = true, silent = false, desc = "Move left" })
+map("n", "<C-j>", ":TmuxNavigateDown<CR>", { noremap = true, silent = false, desc = "Move down" })
+map("n", "<C-k>", ":TmuxNavigateUp<CR>", { noremap = true, silent = false, desc = "Move up" })
+map("n", "<C-l>", ":TmuxNavigateRight<CR>", { noremap = true, silent = false, desc = "Move right" })
+
 -- Page movement shortcuts: move by pages or jump to the top and bottom of a buffer.
 map({"n"}, "D", "<C-d>zz", { desc = "Moves the cursor down half a page and centers it.", noremap = true, silent=true })
 map({"n"}, "U", "<C-u>zz", { desc = "Moves the cursor up half a page and centers it.", noremap = true, silent=true })
@@ -45,7 +51,7 @@ map("n", "<leader>q", ":bd!<CR>", { noremap=true, silent=true})
 map("n", ",", "<cmd>RotateSplitScreens<CR>", { noremap = true, silent = true, desc = "Rotate all split screens" })
 
 -- Terminal shortcuts: open a shell in a vertical split.
-map("n", "<leader>ts", "<cmd>SplitToTerminalVertically<CR>", { desc = "Opens a terminal Vertically in current working directory"})
+map("n", "<leader>st", ":SplitToTerminalVertically<CR>", { desc = "Opens a terminal Vertically in current working directory"})
 
 -- Search shortcuts: search intelligently, replace the word under the cursor, and rename symbols.
 map("n", "n", ":lua smart_search('next')<CR>", {desc = "Smart search next", noremap = true, silent = true})
@@ -115,8 +121,9 @@ map("n", "<leader>qa", ":qa!<CR>",{ noremap = true, silent = true, desc = "Close
 
 -- Git shortcuts: toggle blame and inspect or navigate hunks.
 map("n", "gb", ":silent GitBlameToggle<CR>:echom 'Git Blame Toggle'<CR>", { desc = "Toggles GitBlame", noremap = true })
-map("n", "[g", ":lua gitsigns_preview()<CR>", { desc = "Opens git signs and jumps to next hunk", noremap = true})
-map("n", "]g", ":lua gitsigns_previous_hunk()<CR>", { desc = "Jump to previous hunk and center", noremap = true, silent = true })
+map("n", "gs", ":lua gitsigns_preview()<CR>", { desc = "Opens git signs and jumps to next hunk", noremap = true})
+map("n", "g[", ":lua gitsigns_preview()<CR>", { desc = "Opens git signs and jumps to next hunk", noremap = true})
+map("n", "g]", ":lua gitsigns_previous_hunk()<CR>", { desc = "Jump to previous hunk and center", noremap = true, silent = true })
 
 -- Buffer and workspace utility shortcuts: select the whole buffer and count buffers.
 map("n", "<leader>h", "<cmd>HighlightPage<CR>", { noremap = true, silent = true, desc = "Highlight the entire buffer"})
