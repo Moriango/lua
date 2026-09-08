@@ -91,6 +91,7 @@ local plugins = {
   {import = "plugins.configs.ufo"},
   {import = "plugins.configs.undotree"},
   {import = "plugins.configs.vim-illuminate"},
+  {import = "plugins.configs.textobject"},
   {import = "plugins.configs.zen-mode"},
 }
 return plugins

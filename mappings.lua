@@ -121,9 +121,8 @@ map("n", "<leader>qa", ":qa!<CR>",{ noremap = true, silent = true, desc = "Close
 
 -- Git shortcuts: toggle blame and inspect or navigate hunks.
 map("n", "gb", ":silent GitBlameToggle<CR>:echom 'Git Blame Toggle'<CR>", { desc = "Toggles GitBlame", noremap = true })
-map("n", "gs", ":lua gitsigns_preview()<CR>", { desc = "Opens git signs and jumps to next hunk", noremap = true})
-map("n", "g[", ":lua gitsigns_preview()<CR>", { desc = "Opens git signs and jumps to next hunk", noremap = true})
-map("n", "g]", ":lua gitsigns_previous_hunk()<CR>", { desc = "Jump to previous hunk and center", noremap = true, silent = true })
+map("n", "[g", ":lua gitsigns_preview()<CR>", { desc = "Opens git signs and jumps to next hunk", noremap = true})
+map("n", "]g", ":lua gitsigns_previous_hunk()<CR>", { desc = "Jump to previous hunk and center", noremap = true, silent = true })
 
 -- Buffer and workspace utility shortcuts: select the whole buffer and count buffers.
 map("n", "<leader>h", "<cmd>HighlightPage<CR>", { noremap = true, silent = true, desc = "Highlight the entire buffer"})
@@ -270,17 +269,21 @@ end
 
 -- Copy the current filename without its extension.
 function copy_filename_without_extension()
-  copy_to_clipboard(vim.fn.expand("%:t:r"), "Filename")
+  vim.fn.setreg("a", vim.fn.expand("%:t:r"))
+  print("Copied filename to \"a\" register")
 end
 
 -- Copy the current filename with its extension.
 function copy_filename()
-  copy_to_clipboard(vim.fn.expand("%:t"), "Filename")
+  vim.fn.setreg("a", vim.fn.expand("%:t"))
+  print("Copied file to \"a\" register")
 end
 
 -- Copy the directory containing the current file.
 function copy_file_directory()
-  copy_to_clipboard(vim.fn.expand("%:p:h"), "File path")
+  vim.fn.setreg("a", vim.fn.expand("%:p:h"))
+  print("Copied filename to \"a\" register")
+
 end
 
 -- Print the number of listed buffers.

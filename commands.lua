@@ -80,4 +80,16 @@ function M.setup()
   end, { desc = "Opens all folds"})
 end
 
+-- Separate yank from delete by sending all yanks to register 'a'
+vim.api.nvim_create_autocmd('TextYankPost', {
+  desc = 'Save yanks to register a',
+  callback = function()
+    -- Only trigger if the user performed a genuine yank (not a delete/change)
+    if vim.v.event.operator == 'y' then
+      vim.fn.setreg('a', vim.fn.getreg('"'))
+      print("Yanked Lines")
+    end
+  end,
+})
+
 return M
