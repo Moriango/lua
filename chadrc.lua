@@ -7,14 +7,22 @@ local M = {}
 M.base46 = {
 	theme = "chocolate",
    transparency = false,
+  -- Status and git highlight overrides: file names, branch icons, and diff signs.
+  -- Example: St_file for main.cpp, GitSignsAdd for +new lines, GitSignsDelete for -old lines.
   hl_override = {
-    St_file = { bold = true, fg = "sun" },     -- for the file name
-    St_gitIcons = { fg = "orange", bold = true }, -- for the git branch
-    GitSignsAdd = { fg = "orange" },
-    GitSignsChange = { fg = "yellow" },
-    GitSignsDelete = { fg = "red" },
-
-    -- improve variable readability
+    St_file = { bold = true, fg = "#facc15" },
+    St_gitIcons = { fg = "#fb923c", bold = true },
+    GitSignsAdd = { fg = "#fbbf24" },
+    GitSignsChange = { fg = "#facc15" },
+    GitSignsDelete = { fg = "#f87171" },
+    -- Identifier: general variable names; example: count, name, result
+        -- @variable: Tree-sitter variable names; example: total, user_name, idx
+        -- @variable.builtin: built-in or special variables; example: self, this, super, nil
+        -- @property: object fields / member access; example: obj.value, user.name, p.age
+        -- @type: class/type names; example: Person, Vector, MyStruct
+        -- @type.builtin: built-in language types; example: int, string, list, float
+        -- @constant: constants; example: PI, MAX_VALUE, DEBUG
+        -- @namespace: namespace/module names; example: std, mylib, foo.bar
     Identifier = { fg = "#ffd166" },
     ["@variable"] = { fg = "#ffd166" },
     ["@variable.builtin"] = { fg = "#ff9f43" },

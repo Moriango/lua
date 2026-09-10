@@ -6,7 +6,7 @@ local opts = { noremap = false, silent = false}
 -- MAPPINGS --
 
 -- Window shortcuts: change layouts, create splits, close windows, and rotate buffers.
-map("n", "<leader>m", ":only<CR>", { desc = "Makes the current split screen fullscreen"})
+map("n", "<leader>m", ":only<CR>", { noremap = true, silent = true, desc = "Makes the current split screen fullscreen"})
 
 -- Appearance shortcuts: toggle transparency and word wrapping.
 map("n", "<leader>tp", ":lua require('base46').toggle_transparency()<CR>", { noremap = true, silent = true, desc = "Toggle Background Transparency" })
@@ -70,12 +70,12 @@ map("n", "cda", "<cmd>CdProjectAdd<CR>", { desc = "Cd Project, add current proje
 map("n", "cdm", "<cmd>CdProjectManualAdd<CR>", { desc = "Cd Project, Manually add project's directory to the databse(json file)"})
 
 -- Diagnostic jumps notify when the list wraps around.
-map("n", "[d", ":lua diagnostic_jump('next')<CR>", { desc = "Go to next diagnostic", noremap = true, silent = true })
-map("n", "]d", ":lua diagnostic_jump('prev')<CR>", { desc = "Go to previous diagnostic", noremap = true, silent = true })
+map("n", "d[", ":lua diagnostic_jump('next')<CR>", { desc = "Go to next diagnostic", noremap = true, silent = true })
+map("n", "d]", ":lua diagnostic_jump('prev')<CR>", { desc = "Go to previous diagnostic", noremap = true, silent = true })
 
 -- Marks shortcuts: jump to the next or previous mark.
 map("n", "m", "<cmd>lua require('marks').next()<CR>", { desc = "Jump to next mark", noremap = true, silent = true })
-map("n", "]m", "<cmd>lua require('marks').prev()<CR>", { desc = "Jump to previous mark", noremap = true, silent = true })
+map("n", "[m", "<cmd>lua require('marks').prev()<CR>", { desc = "Jump to previous mark", noremap = true, silent = true })
 map("n", "dm", ":lua delete_mark()<CR>", { desc = "Delete a mark" })
 map("n", "dM", ":lua delete_all_marks()<CR>", { desc = "Delete all marks in the current buffer" })
 
@@ -121,15 +121,15 @@ map("n", "<leader>qa", ":qa!<CR>",{ noremap = true, silent = true, desc = "Close
 
 -- Git shortcuts: toggle blame and inspect or navigate hunks.
 map("n", "gb", ":silent GitBlameToggle<CR>:echom 'Git Blame Toggle'<CR>", { desc = "Toggles GitBlame", noremap = true })
-map("n", "[g", ":lua gitsigns_preview()<CR>", { desc = "Opens git signs and jumps to next hunk", noremap = true})
-map("n", "]g", ":lua gitsigns_previous_hunk()<CR>", { desc = "Jump to previous hunk and center", noremap = true, silent = true })
+map("n", "g[", ":lua gitsigns_preview()<CR>", { desc = "Opens git signs and jumps to next hunk", noremap = true})
+map("n", "g]", ":lua gitsigns_previous_hunk()<CR>", { desc = "Jump to previous hunk and center", noremap = true, silent = true })
 
 -- Buffer and workspace utility shortcuts: select the whole buffer and count buffers.
 map("n", "<leader>h", "<cmd>HighlightPage<CR>", { noremap = true, silent = true, desc = "Highlight the entire buffer"})
 
 -- Quickfix shortcuts: navigate through and close the quickfix list.
-map("n", "]c", ":cnext<CR>", { noremap = true, silent = true, desc = "Go to next item in quickfix list"})
-map("n", "[c", ":cprev<CR>", { noremap = true, silent = true, desc = "Go to previous item in quickfix list"})
+map("n", "c[", ":cnext<CR>", { noremap = true, silent = true, desc = "Go to next item in quickfix list"})
+map("n", "c]", ":cprev<CR>", { noremap = true, silent = true, desc = "Go to previous item in quickfix list"})
 map("n", "CC", ":cclose<CR>", { noremap = true, silent = true, desc = "Close the quickfix list"})
 
 -- File information shortcuts: copy the current filename, full filename, or directory path.
@@ -220,9 +220,12 @@ end
 -- Move to the next or previous diagnostic and show it in a floating window.
 _G.diagnostic_jump = function(direction)
   local target = direction == "next" and vim.diagnostic.get_next({}) or vim.diagnostic.get_prev({})
+
   if not target then
-    vim.notify("No more " .. direction .. " diagnostic.", vim.log.levels.WARN)
+    vim.notify("No diagnostics errors", vim.log.levels.INFO)
+    return
   end
+
   if direction == "next" then
     vim.diagnostic.jump({ count = 1, float = true })
   else
