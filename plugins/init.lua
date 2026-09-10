@@ -76,6 +76,7 @@ local plugins = {
   {import = "plugins.configs.gitblame"},
   {import = "plugins.configs.gitsigns"},
   {import = "plugins.configs.hover"},
+  {import = "plugins.configs.lazydev"},
   {import = "plugins.configs.lazygit"},
   {import = "plugins.configs.live-server"},
   {import = "plugins.configs.marks"},

@@ -32,10 +32,10 @@ map("v", "K", ":m '<-2<CR>gv=gv", { desc = "Moves the current line up", noremap 
 map({"n","i"}, "<leader>lz", ":Lazy<CR>", { desc = "Opens Lazy"})
 
 -- Tmux Navigation
-map("n", "<C-h>", ":TmuxNavigateLeft<CR>", { noremap = true, silent = false, desc = "Move left" })
-map("n", "<C-j>", ":TmuxNavigateDown<CR>", { noremap = true, silent = false, desc = "Move down" })
-map("n", "<C-k>", ":TmuxNavigateUp<CR>", { noremap = true, silent = false, desc = "Move up" })
-map("n", "<C-l>", ":TmuxNavigateRight<CR>", { noremap = true, silent = false, desc = "Move right" })
+map("n", "<C-h>", ":TmuxNavigateLeft<CR>", { noremap = true, silent = true, desc = "Move left" })
+map("n", "<C-j>", ":TmuxNavigateDown<CR>", { noremap = true, silent = true, desc = "Move down" })
+map("n", "<C-k>", ":TmuxNavigateUp<CR>", { noremap = true, silent = true, desc = "Move up" })
+map("n", "<C-l>", ":TmuxNavigateRight<CR>", { noremap = true, silent = true, desc = "Move right" })
 
 -- Page movement shortcuts: move by pages or jump to the top and bottom of a buffer.
 map({"n"}, "D", "<C-d>zz", { desc = "Moves the cursor down half a page and centers it.", noremap = true, silent=true })
@@ -75,7 +75,7 @@ map("n", "]d", ":lua diagnostic_jump('prev')<CR>", { desc = "Go to previous diag
 
 -- Marks shortcuts: jump to the next or previous mark.
 map("n", "m", "<cmd>lua require('marks').next()<CR>", { desc = "Jump to next mark", noremap = true, silent = true })
-map("n", "M", "<cmd>lua require('marks').prev()<CR>", { desc = "Jump to previous mark", noremap = true, silent = true })
+map("n", "]m", "<cmd>lua require('marks').prev()<CR>", { desc = "Jump to previous mark", noremap = true, silent = true })
 map("n", "dm", ":lua delete_mark()<CR>", { desc = "Delete a mark" })
 map("n", "dM", ":lua delete_all_marks()<CR>", { desc = "Delete all marks in the current buffer" })
 
@@ -221,7 +221,7 @@ end
 _G.diagnostic_jump = function(direction)
   local target = direction == "next" and vim.diagnostic.get_next({}) or vim.diagnostic.get_prev({})
   if not target then
-    vim.notify("No more " .. direction .. " diagnostics, wrapping around", vim.log.levels.WARN)
+    vim.notify("No more " .. direction .. " diagnostic.", vim.log.levels.WARN)
   end
   if direction == "next" then
     vim.diagnostic.jump({ count = 1, float = true })
@@ -257,14 +257,6 @@ end
 _G.refresh_buffer = function()
   print("Refreshed Buffer")
   vim.cmd('edit')
-end
-
--- Copy a value to the system clipboards and report what was copied.
-local function copy_to_clipboard(value, label)
-  vim.fn.setreg('+', value)
-  vim.fn.setreg('*', value)
-  vim.fn.setreg('"', value)
-  print(label .. " '" .. value .. "' copied to clipboard")
 end
 
 -- Copy the current filename without its extension.
@@ -331,9 +323,9 @@ _G.toggle_visual_bg = function()
     print("Visual background: Restored")
     visual_bg_black = false
   else
-    local visual_hl = vim.api.nvim_get_hl_by_name('Visual', true)
-    if visual_hl.background then
-      original_visual_bg = string.format("#%06x", visual_hl.background)
+    local visual_hl = vim.api.nvim_get_hl(0, { name = "Visual", link = false })
+    if visual_hl.bg then
+      original_visual_bg = string.format("#%06x", visual_hl.bg)
     end
     vim.cmd("hi Visual guibg=Black")
     print("Visual background: Black")
@@ -367,7 +359,14 @@ end
 
 _G.gitsigns_preview = function()
   gitsigns_restore_main_win()
-  require("gitsigns").next_hunk({}, function()
+  require("gitsigns").nav_hunk("next", {
+    wrap = true,
+    foldopen = true,
+    navigation_message = true,
+    greedy = false,
+    count = 1,
+    target = "all",
+  }, function()
     vim.cmd("normal! zz")
     require("gitsigns").preview_hunk()
   end)
@@ -375,7 +374,14 @@ end
 
 _G.gitsigns_previous_hunk = function()
   gitsigns_restore_main_win()
-  require("gitsigns").prev_hunk({}, function()
+  require("gitsigns").nav_hunk("prev", {
+    wrap = true,
+    foldopen = true,
+    navigation_message = true,
+    greedy = false,
+    count = 1,
+    target = "all",
+  }, function()
     vim.cmd("normal! zz")
     require("gitsigns").preview_hunk()
   end)
