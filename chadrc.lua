@@ -8,11 +8,21 @@ M.base46 = {
 	theme = "chocolate",
    transparency = false,
   hl_override = {
-    St_file = { bold = true, fg = "sun"},     -- for the file name
+    St_file = { bold = true, fg = "sun" },     -- for the file name
     St_gitIcons = { fg = "orange", bold = true }, -- for the git branch
     GitSignsAdd = { fg = "orange" },
     GitSignsChange = { fg = "yellow" },
     GitSignsDelete = { fg = "red" },
+
+    -- improve variable readability
+    Identifier = { fg = "#ffd166" },
+    ["@variable"] = { fg = "#ffd166" },
+    ["@variable.builtin"] = { fg = "#ff9f43" },
+    ["@property"] = { fg = "#d6b7ff", italic = true },
+    ["@type"] = { fg = "#86efac", bold = true },
+    ["@type.builtin"] = { fg = "#4ade80" },
+    ["@constant"] = { fg = "#f9a8d4", bold = true },
+    ["@namespace"] = { fg = "#c4b5fd" },
   },
 	-- hl_override = {
 	-- 	Comment = { italic = true },

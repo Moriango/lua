@@ -65,6 +65,7 @@ local plugins = {
   -- {import = "plugins.configs.harpoon"},
   -- {import = "plugins.configs.lsp-signature"},
   -- {import = "plugins.configs.nvim-dap"},
+  -- {import = "plugins.configs.repl"},
   -- {import = "plugins.configs.textobject"},
   {import = "configs.custom.configs.nvim-tree"},
   {import = "plugins.configs.cd-project"},
