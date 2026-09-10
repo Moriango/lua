@@ -7,8 +7,8 @@ return {
     default_mappings = false,
     cyclic = true,
     mappings = {
-      -- Press <leader>m followed by a letter to set that mark.
-      set_next = "M",
+      -- Press "ma" to set the next available mark.
+      set_next = "ma",
     },
   },
 }

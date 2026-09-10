@@ -47,7 +47,7 @@ map("n", "gg", "ggzz", { desc = "Moves the cursor to the top of the page and cen
 map("n", "sv", ":split<Return>", { desc = "Splits tab Horizontally", noremap = true, silent=true })
 map("n", "sh", ":vsplit<CR>", { desc = "Splits tab Vertically", noremap = true, silent=true })
 map("n", "<leader>x", "<C-w>c", { desc =  "Closes the current split window", noremap=true, silent=true})
-map("n", "<leader>q", ":bd!<CR>", { noremap=true, silent=true})
+map("n", "<leader>q", ":CloseBufferKeepSplit<CR>", { noremap=true, silent=true})
 map("n", ",", "<cmd>RotateSplitScreens<CR>", { noremap = true, silent = true, desc = "Rotate all split screens" })
 
 -- Terminal shortcuts: open a shell in a vertical split.
@@ -70,12 +70,12 @@ map("n", "cda", "<cmd>CdProjectAdd<CR>", { desc = "Cd Project, add current proje
 map("n", "cdm", "<cmd>CdProjectManualAdd<CR>", { desc = "Cd Project, Manually add project's directory to the databse(json file)"})
 
 -- Diagnostic jumps notify when the list wraps around.
-map("n", "]d", ":lua diagnostic_jump('next')<CR>", { desc = "Go to next diagnostic", noremap = true, silent = true })
-map("n", "[d", ":lua diagnostic_jump('prev')<CR>", { desc = "Go to previous diagnostic", noremap = true, silent = true })
+map("n", "[d", ":lua diagnostic_jump('next')<CR>", { desc = "Go to next diagnostic", noremap = true, silent = true })
+map("n", "]d", ":lua diagnostic_jump('prev')<CR>", { desc = "Go to previous diagnostic", noremap = true, silent = true })
 
 -- Marks shortcuts: jump to the next or previous mark.
 map("n", "m", "<cmd>lua require('marks').next()<CR>", { desc = "Jump to next mark", noremap = true, silent = true })
-map("n", "m,", "<cmd>lua require('marks').prev()<CR>", { desc = "Jump to previous mark", noremap = true, silent = true })
+map("n", "M", "<cmd>lua require('marks').prev()<CR>", { desc = "Jump to previous mark", noremap = true, silent = true })
 map("n", "dm", ":lua delete_mark()<CR>", { desc = "Delete a mark" })
 map("n", "dM", ":lua delete_all_marks()<CR>", { desc = "Delete all marks in the current buffer" })
 
@@ -162,7 +162,7 @@ vim.keymap.set({'n','v','o'}, '<C-v>', 'V', { noremap = true, silent = true })
 -- Helper functions used by the shortcut declarations above.
 
 -- Prompt for and delete one mark.
-function delete_mark()
+_G.delete_mark = function()
   vim.ui.input({ prompt = "Delete mark: " }, function(mark)
     if not mark or mark == "" then
       return
@@ -178,14 +178,14 @@ function delete_mark()
 end
 
 -- Delete every mark in the current buffer.
-function delete_all_marks()
+_G.delete_all_marks = function()
   vim.cmd("delmarks!")
   vim.cmd("delmarks A-Z")
   require("marks").refresh(true)
 end
 
 -- Search for the word under the cursor and move to the next or previous match.
-function smart_search(direction)
+_G.smart_search = function(direction)
   local cursor_word = vim.fn.expand("<cword>")
   local search_register = vim.fn.getreg("/")
   local last_smart_search = vim.g.last_smart_search or ""
@@ -204,7 +204,7 @@ function smart_search(direction)
 end
 
 -- Clear the search state, notifications, highlights, and floating windows.
-function clear_search()
+_G.clear_search = function()
   vim.fn.setreg("/", "")
   vim.cmd("nohlsearch")
   local ok, notify = pcall(require, "notify")
@@ -218,7 +218,7 @@ function clear_search()
 end
 
 -- Move to the next or previous diagnostic and show it in a floating window.
-function diagnostic_jump(direction)
+_G.diagnostic_jump = function(direction)
   local target = direction == "next" and vim.diagnostic.get_next({}) or vim.diagnostic.get_prev({})
   if not target then
     vim.notify("No more " .. direction .. " diagnostics, wrapping around", vim.log.levels.WARN)
@@ -231,7 +231,7 @@ function diagnostic_jump(direction)
 end
 
 -- Enable or disable completion for the current buffer.
-function toggle_lsp()
+_G.toggle_lsp = function()
   local cmp = require('cmp')
   local current_state = cmp.get_config().enabled
   if current_state then
@@ -244,7 +244,7 @@ function toggle_lsp()
 end
 
 -- Close the file tree and delete the current buffer.
-function close_nvim_tree_and_buffer()
+_G.close_nvim_tree_and_buffer = function()
   local nvim_tree_api = require('nvim-tree.api')
   if nvim_tree_api.tree.is_visible() then
     vim.cmd('wincmd l')
@@ -254,7 +254,7 @@ function close_nvim_tree_and_buffer()
 end
 
 -- Reload the current buffer from disk.
-function refresh_buffer()
+_G.refresh_buffer = function()
   print("Refreshed Buffer")
   vim.cmd('edit')
 end
@@ -268,31 +268,31 @@ local function copy_to_clipboard(value, label)
 end
 
 -- Copy the current filename without its extension.
-function copy_filename_without_extension()
+_G.copy_filename_without_extension = function()
   vim.fn.setreg("a", vim.fn.expand("%:t:r"))
   print("Copied filename to \"a\" register")
 end
 
 -- Copy the current filename with its extension.
-function copy_filename()
+_G.copy_filename = function()
   vim.fn.setreg("a", vim.fn.expand("%:t"))
   print("Copied file to \"a\" register")
 end
 
 -- Copy the directory containing the current file.
-function copy_file_directory()
+_G.copy_file_directory = function()
   vim.fn.setreg("a", vim.fn.expand("%:p:h"))
   print("Copied filename to \"a\" register")
 
 end
 
 -- Print the number of listed buffers.
-function print_buffer_count()
+_G.print_buffer_count = function()
   print('Buffer count: ' .. #vim.fn.getbufinfo({buflisted=1}))
 end
 
 -- Count regular files in the current directory.
-function count_files_in_directory()
+_G.count_files_in_directory = function()
   local handle = io.popen('find . -maxdepth 1 -type f | wc -l')
   if handle then
     local result = tonumber(handle:read("*a"):match("^%s*(.-)%s*$"))
@@ -304,14 +304,14 @@ function count_files_in_directory()
 end
 
 -- Print the current working directory after refreshing autochdir.
-function change_current_directory()
+_G.change_current_directory = function()
   vim.cmd("set autochdir")
   vim.cmd("set noautochdir")
   print("Changed Directories: " .. vim.fn.getcwd())
 end
 
 -- Change to the parent of the current working directory.
-function move_to_parent_directory()
+_G.move_to_parent_directory = function()
   vim.cmd("cd ../")
   print("Current directory: " .. vim.fn.getcwd())
 end
@@ -321,7 +321,7 @@ local visual_bg_black = false
 local original_visual_bg = nil
 
 -- Toggle the background color of visual selections.
-function toggle_visual_bg()
+_G.toggle_visual_bg = function()
   if visual_bg_black then
     if original_visual_bg then
       vim.cmd("hi Visual guibg=" .. original_visual_bg)
@@ -342,7 +342,7 @@ function toggle_visual_bg()
 end
 
 -- Enable or disable diagnostics for the current Neovim session.
-function toggle_diagnostic()
+_G.toggle_diagnostic = function()
   if vim.diagnostic.is_enabled() then
     vim.diagnostic.enable(false)
     print("Diagnostics Disabled")
@@ -365,7 +365,7 @@ local function gitsigns_restore_main_win()
   end
 end
 
-function gitsigns_preview()
+_G.gitsigns_preview = function()
   gitsigns_restore_main_win()
   require("gitsigns").next_hunk({}, function()
     vim.cmd("normal! zz")
@@ -373,7 +373,7 @@ function gitsigns_preview()
   end)
 end
 
-function gitsigns_previous_hunk()
+_G.gitsigns_previous_hunk = function()
   gitsigns_restore_main_win()
   require("gitsigns").prev_hunk({}, function()
     vim.cmd("normal! zz")
@@ -381,13 +381,12 @@ function gitsigns_previous_hunk()
   end)
 end
 
-function change_surrounding_word()
+_G.change_surrounding_word = function()
   local keys = vim.api.nvim_replace_termcodes("viwsa", true, false, true)
   vim.api.nvim_feedkeys(keys, "m", false)
 end
 
 vim.schedule(function()
-  require("commands").setup()
   require "mappings"
   if type(_G.clear_search) == "function" then
     pcall(_G.clear_search)

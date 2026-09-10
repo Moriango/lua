@@ -2,10 +2,10 @@
 -- https://github.com/NvChad/ui/blob/v2.5/lua/nvconfig.lua
 -- Please read that file to know all available options :( 
 
----@type ChadrcConfig
+---@class M: ChadrcConfig
 local M = {}
 M.base46 = {
-	theme = "chadracula",
+	theme = "chocolate",
    transparency = false,
   hl_override = {
     St_file = { bold = true, fg = "sun"},     -- for the file name
@@ -181,7 +181,7 @@ M.ui = {
         page_percent = function()
         local current_line = vim.fn.line('.')
         local total_lines = vim.fn.line('$')
-        
+
         if current_line == 1 then
           return "△ Top"
         elseif current_line == total_lines then
