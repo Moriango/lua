@@ -75,7 +75,7 @@ map("n", "d]", ":lua diagnostic_jump('prev')<CR>", { desc = "Go to previous diag
 
 -- Marks shortcuts: jump to the next or previous mark.
 map("n", "m", "<cmd>lua require('marks').next()<CR>", { desc = "Jump to next mark", noremap = true, silent = true })
-map("n", "[m", "<cmd>lua require('marks').prev()<CR>", { desc = "Jump to previous mark", noremap = true, silent = true })
+map("n", "m,", "<cmd>lua require('marks').prev()<CR>", { desc = "Jump to previous mark", noremap = true, silent = true })
 map("n", "dm", ":lua delete_mark()<CR>", { desc = "Delete a mark" })
 map("n", "dM", ":lua delete_all_marks()<CR>", { desc = "Delete all marks in the current buffer" })
 
@@ -94,8 +94,8 @@ map("n", "db", "d0", opts)
 map("n", "ye", "y$", { noremap = true, silent = true, desc = "Yank to end of the line"} )
 
 -- History and register shortcuts: navigate the change list and inspect registers.
-map("n", ">>", "g;", { noremap = true, silent = true, desc = "Go to next edit"} )
-map("n", "<<", "g,", { noremap = true, silent = true, desc = "Go to previous edit"} )
+map("n", "g]", "g;", { noremap = true, silent = true, desc = "Go to next edit"} )
+map("n", "g[", "g,", { noremap = true, silent = true, desc = "Go to previous edit"} )
 
 -- Python shortcut: open an IPython terminal in a vertical split.
 map("n", "<leader>p", ":vsplit | terminal ipython<CR>", { desc = "Open a terminal with Ipython", noremap=true, silent=true})

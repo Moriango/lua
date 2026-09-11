@@ -1,5 +1,104 @@
 require "nvchad.autocmds"
 
+local function remove_compile_helper_files_from_oldfiles()
+  vim.v.oldfiles = vim.tbl_filter(function(path)
+    local filename = vim.fn.fnamemodify(path, ":t")
+    return filename ~= "input.txt" and filename ~= "output.txt"
+  end, vim.v.oldfiles)
+end
+
+remove_compile_helper_files_from_oldfiles()
+
+-- Compile and run the current C++ or C file.
+_G.Compile_and_run_cpp = function()
+  local filename = vim.fn.expand("%:p")
+  local executable = vim.fn.fnamemodify(filename, ":r")
+  local working_directory = vim.fn.getcwd()
+  local output_file = working_directory .. "/output.txt"
+  local input_file = working_directory .. "/input.txt"
+
+  local valid_extensions = { "cpp", "c" }
+  local valid_file = false
+  for _, ext in ipairs(valid_extensions) do
+    if filename:match("%." .. ext .. "$") then
+      valid_file = true
+      break
+    end
+  end
+
+  if not valid_file then
+    vim.notify("Not a valid C++ or C file.", vim.log.levels.WARN)
+    return
+  end
+
+  local input_fd = io.open(input_file, "a")
+  if input_fd == nil then
+    vim.notify("Failed to open or create input file: " .. input_file, vim.log.levels.ERROR)
+    return
+  end
+  input_fd:close()
+
+  local output_fd = io.open(output_file, "w")
+  if output_fd == nil then
+    vim.notify("Failed to open or create output file: " .. output_file, vim.log.levels.ERROR)
+    return
+  end
+  output_fd:close()
+
+  local input_bufnr = vim.fn.bufnr(input_file)
+  if input_bufnr == -1 then
+    vim.cmd("vsp " .. vim.fn.fnameescape(input_file))
+    input_bufnr = vim.api.nvim_get_current_buf()
+  else
+    vim.cmd(vim.fn.bufwinnr(input_bufnr) .. "wincmd w")
+  end
+
+  local output_bufnr = vim.fn.bufnr(output_file)
+  if output_bufnr == -1 then
+    vim.cmd("split " .. vim.fn.fnameescape(output_file))
+    output_bufnr = vim.api.nvim_get_current_buf()
+  else
+    vim.cmd(vim.fn.bufwinnr(output_bufnr) .. "wincmd w")
+  end
+
+  vim.cmd("vertical resize 70%")
+
+  local file = vim.fn.bufnr(filename)
+  vim.cmd(vim.fn.bufwinnr(file) .. "wincmd w")
+
+  local shellescape = vim.fn.shellescape
+  local compile_cmd = string.format(
+    "g++ %s -o %s && %s < %s > %s",
+    shellescape(filename),
+    shellescape(executable),
+    shellescape(executable),
+    shellescape(input_file),
+    shellescape(output_file)
+  )
+  vim.cmd("silent w")
+  vim.cmd("silent !clear")
+  local command_output = vim.fn.system(compile_cmd)
+  local exit_code = vim.v.shell_error
+
+  if vim.api.nvim_buf_is_valid(output_bufnr) then
+    vim.api.nvim_buf_call(output_bufnr, function()
+      vim.cmd("edit!")
+    end)
+  end
+
+  if exit_code ~= 0 then
+    vim.notify(command_output ~= "" and command_output or "Compilation or program execution failed.", vim.log.levels.ERROR)
+    return
+  end
+
+  vim.notify("Compiled and wrote output to " .. output_file, vim.log.levels.INFO)
+  remove_compile_helper_files_from_oldfiles()
+end
+
+vim.api.nvim_create_user_command("CompileCpp", Compile_and_run_cpp, {
+  desc = "Compile and run the current C++ or C file",
+})
+
 -- Show a notification when starting/stopping a macro recording
 -- (native "recording @q" message is suppressed since 'showmode' is off)
 local recording_group = vim.api.nvim_create_augroup("MacroRecordingNotify", { clear = true })
