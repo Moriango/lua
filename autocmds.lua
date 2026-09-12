@@ -160,21 +160,43 @@ vim.api.nvim_create_user_command("CloseBufferKeepSplit", function()
     visible_buffers[vim.api.nvim_win_get_buf(window)] = true
   end
 
+  local listed_buffers = vim.fn.getbufinfo({ buflisted = 1 })
   local replacement_buffer
-  for _, buffer in ipairs(vim.fn.getbufinfo({ buflisted = 1 })) do
+
+  -- 1. Try to find a listed buffer that is not visible in any window
+  for _, buffer in ipairs(listed_buffers) do
     if buffer.bufnr ~= current_buffer and not visible_buffers[buffer.bufnr] then
       replacement_buffer = buffer.bufnr
       break
     end
   end
 
+  -- 2. Fall back to any other listed buffer
   if not replacement_buffer then
-    vim.cmd("bdelete")
-    return
+    for _, buffer in ipairs(listed_buffers) do
+      if buffer.bufnr ~= current_buffer then
+        replacement_buffer = buffer.bufnr
+        break
+      end
+    end
   end
 
-  vim.api.nvim_set_current_buf(replacement_buffer)
-  vim.api.nvim_buf_delete(current_buffer, {})
+  -- 3. If no other listed buffer exists, create a new empty listed buffer
+  if not replacement_buffer then
+    replacement_buffer = vim.api.nvim_create_buf(true, false)
+  end
+
+  -- Replace the buffer across all windows that are currently displaying it
+  for _, window in ipairs(vim.api.nvim_list_wins()) do
+    if vim.api.nvim_win_is_valid(window) and vim.api.nvim_win_get_buf(window) == current_buffer then
+      vim.api.nvim_win_set_buf(window, replacement_buffer)
+    end
+  end
+
+  -- Safely delete the old buffer
+  if vim.api.nvim_buf_is_valid(current_buffer) then
+    pcall(vim.api.nvim_buf_delete, current_buffer, { force = true })
+  end
 end, { desc = "Close buffer and replace it with a hidden buffer" })
 
 -- Open a terminal in a horizontal split using the current working directory.
@@ -251,3 +273,15 @@ vim.api.nvim_create_autocmd('TextYankPost', {
     end
   end,
 })
+
+-- Prevent invalid buffer errors when async LSP colorify responses arrive after a buffer is closed/deleted
+local ok, colorify_utils = pcall(require, "nvchad.colorify.utils")
+if ok and type(colorify_utils) == "table" and colorify_utils.needs_hl then
+  local orig_needs_hl = colorify_utils.needs_hl
+  colorify_utils.needs_hl = function(buf, ...)
+    if not buf or not vim.api.nvim_buf_is_valid(buf) then
+      return false
+    end
+    return orig_needs_hl(buf, ...)
+  end
+end
