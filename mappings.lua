@@ -57,12 +57,6 @@ map("n", "<leader>st", ":SplitToTerminalVertically<CR>", { desc = "Opens a termi
 map("n", "n", ":lua smart_search('next')<CR>", {desc = "Smart search next", noremap = true, silent = true})
 map("n", "N", ":lua smart_search('prev')<CR>", {desc = "Smart search previous", noremap = true, silent = true})
 
--- LSP symbol navigation: jump directly to functions, classes, or any symbol.
-map("n", "<leader>gf", function() require("telescope.builtin").lsp_document_symbols({ symbols = { "function", "method" }, }) end, { desc = "Go to function or method" })
-map("n", "<leader>gc", function() require("telescope.builtin").lsp_document_symbols({ symbols = { "class", "struct", "interface", "namespace" }, }) end, { desc = "Go to class or type" })
-map("n", "<leader>gs", "<cmd>Telescope lsp_document_symbols<CR>", { desc = "Go to symbol in current file", })
-map("n", "<leader>gw", "<cmd>Telescope lsp_dynamic_workspace_symbols<CR>", { desc = "Go to workspace symbol", })
-
 -- Replace words
 map("n", "<leader>cw", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gc<Left><Left><Left>]], { desc = "Replace word under cursor globally and ask"})
 map("n", "<leader>ra", vim.lsp.buf.rename, { desc = "LSP: Rename"})

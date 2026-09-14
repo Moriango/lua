@@ -4,7 +4,11 @@ return {
     "folke/todo-comments.nvim",
     lazy = false,
     event = "BufEnter",
+    dependencies = {
+      "ibhagwan/fzf-lua",
+    },
     opts = {
+      picker = "fzf-lua",
       signs = true,      -- show icons in the signs column
       sign_priority = 8, -- sign priority
       -- keywords recognized as todo comments

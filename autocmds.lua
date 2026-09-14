@@ -181,19 +181,18 @@ vim.api.nvim_create_user_command("CloseBufferKeepSplit", function()
     end
   end
 
-  -- 2. Fall back to any other listed buffer
+  -- 2. If no hidden buffer exists, close the current window instead of
+  -- displaying a buffer that is already visible in another split.
   if not replacement_buffer then
-    for _, buffer in ipairs(listed_buffers) do
-      if buffer.bufnr ~= current_buffer then
-        replacement_buffer = buffer.bufnr
-        break
+    if #vim.api.nvim_tabpage_list_wins(0) > 1 then
+      vim.cmd("close")
+      if vim.api.nvim_buf_is_valid(current_buffer) then
+        pcall(vim.api.nvim_buf_delete, current_buffer, { force = true })
       end
+    else
+      vim.cmd("bdelete")
     end
-  end
-
-  -- 3. If no other listed buffer exists, create a new empty listed buffer
-  if not replacement_buffer then
-    replacement_buffer = vim.api.nvim_create_buf(true, false)
+    return
   end
 
   -- Replace the buffer across all windows that are currently displaying it
@@ -326,6 +325,14 @@ vim.api.nvim_create_user_command("ToggleLSP", function()
     print("LSP and Autocompletions Enabled")
   end
 end, { desc = "Toggle LSP on and off" })
+
+-- LSP symbol navigation: jump directly to functions, classes, or any symbol.
+vim.api.nvim_create_user_command("PreviewFunctions", function()
+    require("telescope.builtin").lsp_document_symbols({ symbols = { "function", "method" },}) end, { desc = "Go to function or method"}
+)
+vim.api.nvim_create_user_command("PreviewClass", function()
+    require("telescope.builtin").lsp_document_symbols({ symbols = { "class", "struct", "interface", "namespace" },}) end, { desc = "Go to function or method"}
+)
 
 -- Track the original Visual highlight while toggling its background.
 local visual_bg_black = false
