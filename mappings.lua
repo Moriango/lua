@@ -57,6 +57,12 @@ map("n", "<leader>st", ":SplitToTerminalVertically<CR>", { desc = "Opens a termi
 map("n", "n", ":lua smart_search('next')<CR>", {desc = "Smart search next", noremap = true, silent = true})
 map("n", "N", ":lua smart_search('prev')<CR>", {desc = "Smart search previous", noremap = true, silent = true})
 
+-- LSP symbol navigation: jump directly to functions, classes, or any symbol.
+map("n", "<leader>gf", function() require("telescope.builtin").lsp_document_symbols({ symbols = { "function", "method" }, }) end, { desc = "Go to function or method" })
+map("n", "<leader>gc", function() require("telescope.builtin").lsp_document_symbols({ symbols = { "class", "struct", "interface", "namespace" }, }) end, { desc = "Go to class or type" })
+map("n", "<leader>gs", "<cmd>Telescope lsp_document_symbols<CR>", { desc = "Go to symbol in current file", })
+map("n", "<leader>gw", "<cmd>Telescope lsp_dynamic_workspace_symbols<CR>", { desc = "Go to workspace symbol", })
+
 -- Replace words
 map("n", "<leader>cw", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gc<Left><Left><Left>]], { desc = "Replace word under cursor globally and ask"})
 map("n", "<leader>ra", vim.lsp.buf.rename, { desc = "LSP: Rename"})
@@ -87,9 +93,6 @@ map("n", "T", "<<", { noremap = true, silent=true })
 map("v", "t", ">gv", { noremap = true, silent=true })
 map("v", "T", "<gv", { noremap = true, silent=true })
 
--- Replace surrounding quotes
-map("n", "<leader>a", function() change_surrounding_word() end, { desc = "Surround word under cursor" })
-
 map("n", "de", "D", opts)
 map("n", "db", "d0", opts)
 
@@ -102,9 +105,6 @@ map("n", "g.", "g;", { noremap = true, silent = true, desc = "Go to next edit"} 
 map("n", "<leader>p", ":vsplit | terminal ipython<CR>", { desc = "Open a terminal with Ipython", noremap=true, silent=true})
 
 map("n", "rr", ":reg<CR>")
-
--- Completion and LSP shortcuts: toggle completion and rename the symbol under the cursor.
-vim.api.nvim_set_keymap('n', '<leader>tl', ':lua toggle_lsp()<CR>', { noremap = true, silent = true })
 
 -- Terminal input shortcuts: navigate command history and complete terminal input.
 map("t", "<C-k>", "<UP>", { noremap = true, silent=true, desc = "Scroll up through previous inputs/commands"})
@@ -147,8 +147,6 @@ map("n", "bc", ":lua print_buffer_count()<CR>")
 map("n", "fc", ":lua count_files_in_directory()<CR>", { desc = "Count files in current directory", noremap = true })
 map("n", "MM", ":lua change_current_directory()<CR>", { desc = "Autochdir setting", noremap = true })
 map("n", "_", ":lua move_to_parent_directory()<CR>", { desc = "Moving working directory up one level", noremap = true })
--- Visual selection shortcuts: toggle the visual selection background color.
-map({"n","v",}, "<leader>tv", ":lua toggle_visual_bg()<CR>", { noremap = true, silent = true, desc = "Toggle visual selection background" })
 
 -- Window resizing shortcuts: adjust split dimensions with Alt plus H, J, K, or L.
 vim.keymap.set("n", "<A-h>", ":vertical resize -5<CR>", { noremap = true, silent = true, desc = "Decrease window width" })
@@ -236,19 +234,6 @@ _G.diagnostic_jump = function(direction)
   end
 end
 
--- Enable or disable completion for the current buffer.
-_G.toggle_lsp = function()
-  local cmp = require('cmp')
-  local current_state = cmp.get_config().enabled
-  if current_state then
-    cmp.setup.buffer { enabled = false }
-    print("LSP and Autocompletions Disabled")
-  else
-    cmp.setup.buffer { enabled = true }
-    print("LSP and Autocompletions Enabled")
-  end
-end
-
 -- Close the file tree and delete the current buffer.
 _G.close_nvim_tree_and_buffer = function()
   local nvim_tree_api = require('nvim-tree.api')
@@ -314,31 +299,6 @@ _G.move_to_parent_directory = function()
   print("Current directory: " .. vim.fn.getcwd())
 end
 
--- Track the original Visual highlight while toggling its background.
-local visual_bg_black = false
-local original_visual_bg = nil
-
--- Toggle the background color of visual selections.
-_G.toggle_visual_bg = function()
-  if visual_bg_black then
-    if original_visual_bg then
-      vim.cmd("hi Visual guibg=" .. original_visual_bg)
-    else
-      vim.cmd("hi Visual guibg=NONE")
-    end
-    print("Visual background: Restored")
-    visual_bg_black = false
-  else
-    local visual_hl = vim.api.nvim_get_hl(0, { name = "Visual", link = false })
-    if visual_hl.bg then
-      original_visual_bg = string.format("#%06x", visual_hl.bg)
-    end
-    vim.cmd("hi Visual guibg=Black")
-    print("Visual background: Black")
-    visual_bg_black = true
-  end
-end
-
 -- Enable or disable diagnostics for the current Neovim session.
 _G.toggle_diagnostic = function()
   if vim.diagnostic.is_enabled() then
@@ -393,9 +353,10 @@ _G.gitsigns_previous_hunk = function()
   end)
 end
 
-_G.change_surrounding_word = function()
-  local keys = vim.api.nvim_replace_termcodes("viwsa", true, false, true)
-  vim.api.nvim_feedkeys(keys, "m", false)
+_G.sendYankToARegister = function()
+  if vim.v.event.operator == "y" then
+    vim.fn.setreg("a", vim.fn.getreg('"'), vim.fn.getregtype('"'))
+  end
 end
 
 vim.schedule(function()

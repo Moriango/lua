@@ -118,7 +118,7 @@ vim.api.nvim_create_autocmd("FileType", {
   callback = function()
     vim.lsp.start({
       name = "jdtls",
-      cmd = { '/opt/homebrew/bin/jdtls' },
+      cmd = { '/home/tstall/.local/share/nvim/mason/bin/jdtls' },
       root_dir = vim.fs.dirname(vim.fs.find({ ".git", "mvnw", "gradlew", "pom.xml", "build.gradle" }, { upward = true })[1]),
       on_attach = nvlsp.on_attach,
       on_init = nvlsp.on_init,
@@ -132,20 +132,6 @@ vim.api.nvim_create_autocmd("FileType", {
       completion = { enabled = true },
       format = { enabled = true },
       codeAction = { enabled = true },
-      -- Disable all errors
-      errors = {
-        incompleteClasspath = { severity = "ignore" },
-      },
-      -- Disable all diagnostics
-      settings = {
-        java = {
-          compile = {
-            nullAnalysis = {
-              mode = "disabled",
-            },
-          },
-        },
-      },
     },
   },
   flags = {
@@ -154,67 +140,71 @@ vim.api.nvim_create_autocmd("FileType", {
   init_options = {
     bundles = {},
     extendedClientCapabilities = {
-      progressReportProvider = false,
-      classFileContentsSupport = false,
-      overrideMethodsPromptSupport = false,
-      hashCodeEqualsPromptSupport = false,
-      advancedOrganizeImportsSupport = false,
-      generateToStringPromptSupport = false,
-      advancedGenerateAccessorsSupport = false,
-      generateConstructorsPromptSupport = false,
-      generateDelegateMethodsPromptSupport = false,
-      advancedExtractRefactoringSupport = false,
       inferSelectionSupport = { "extractMethod", "extractVariable", "extractConstant" },
     },
   },
-  -- Add this to completely disable diagnostics
-  handlers = {
-    ["textDocument/publishDiagnostics"] = function(_, result, ctx, config)
-      local filtered_diagnostics = {}
-      for _, diagnostic in ipairs(result.diagnostics) do
-        -- Only keep diagnostics with "syntax" in the message
-        local message = diagnostic.message:lower()
-        -- Keep syntax errors and filter common Java errors
-        local should_filter =
-            -- message:find("cannot be resolved") or        -- Unresolved symbols
-            -- message:find("cannot be resolved to a type") or -- Unknown types
-            -- message:find("the import .* cannot be resolved") or -- Import errors
-            message:find("null pointer access") or      -- Null pointer warnings
-            message:find("resource leak") or            -- Resource management
-            message:find("dead code") or                -- Unreachable code
-            message:find("unused import") or            -- Unused imports
-            message:find("unused variable") or          -- Unused variables
-            message:find("missing serial") or           -- Serialization warnings
-            message:find("raw type") or                 -- Generic type warnings
-            message:find("syntax") or                   -- Syntax Errors
-            message:find("illegal character") or                   -- Syntax Errors
-            message:find("unexpected type") or                   -- Syntax Errors
-            message:find("class") or                   -- Syntax Errors
-            message:find("interface") or                   -- Syntax Errors
-            message:find("enum") or                   -- Syntax Errors
-            message:find("record") or                   -- Syntax Errors
-            message:find("unchecked conversion")        -- Type casting warnings
-
-        -- Only keep diagnostics that are syntax errors or not in the filter list
-            if should_filter then
-                table.insert(filtered_diagnostics, diagnostic)
-            end
-        end
-      result.diagnostics = filtered_diagnostics
-      vim.lsp.diagnostic.on_publish_diagnostics(_, result, ctx, config)
-    end,
-      },
     })
   end,
 })
 
--- Set foldmethod to 'indent' for Python files
+local indentation_filetypes = {
+  "python",
+  "yaml",
+  "pug",
+  "haml",
+  "nim",
+  "coffee",
+  "rst",
+}
+
+local syntax_filetypes = {
+  "c",
+  "cpp",
+  "objc",
+  "objcpp",
+  "java",
+  "javascript",
+  "javascriptreact",
+  "typescript",
+  "typescriptreact",
+  "lua",
+  "rust",
+  "go",
+  "php",
+  "ruby",
+  "perl",
+  "sh",
+  "bash",
+  "zsh",
+  "fish",
+  "html",
+  "xml",
+  "css",
+  "scss",
+  "less",
+  "sql",
+  "cs",
+  "kotlin",
+  "swift",
+  "scala",
+  "groovy",
+  "zig",
+  "dart",
+}
+
+local fold_filetypes = vim.list_extend(vim.deepcopy(indentation_filetypes), syntax_filetypes)
+
 vim.api.nvim_create_autocmd("FileType", {
-  pattern = "python",
+  pattern = fold_filetypes,
   callback = function(args)
-    -- buffer-local fold settings for Python
-      vim.opt.foldmethod = "indent"
-      vim.opt.foldenable = true
+    if vim.tbl_contains(indentation_filetypes, args.match) then
+      vim.opt_local.foldmethod = "indent"
+    elseif vim.tbl_contains(syntax_filetypes, args.match) then
+      vim.opt_local.foldmethod = "expr"
+      vim.opt_local.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+    end
+
+    vim.opt_local.foldenable = true
   end,
 })
 --   -- Create commands to toggle diagnostics

@@ -52,15 +52,14 @@ local plugins = {
       require('telescope').setup(opts)
     end,
   },
-   -- {
-  -- 	"nvim-treesitter/nvim-treesitter",
-  -- 	opts = {
-  -- 		ensure_installed = {
-  -- 			"vim", "lua", "vimdoc", 
-  --      "html", "css"
-  -- 		},
-  -- 	},
-  -- },
+  {
+    "nvim-treesitter/nvim-treesitter",
+    build = ":TSUpdate",
+    opts = {
+      ensure_installed = { "cpp", "lua" },
+      highlight = { enable = true },
+    },
+  },
   -- {import = "plugins.configs.goto-preview"},
   -- {import = "plugins.configs.harpoon"},
   -- {import = "plugins.configs.lsp-signature"},
@@ -71,7 +70,7 @@ local plugins = {
   {import = "plugins.configs.cd-project"},
   {import = "plugins.configs.chat"},
   {import = "plugins.configs.comment"},
-  {import = "plugins.configs.copilot"},
+  -- {import = "plugins.configs.copilot"},
   {import = "plugins.configs.diffview"},
   {import = "plugins.configs.fugitive"},
   {import = "plugins.configs.gitblame"},

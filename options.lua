@@ -25,6 +25,7 @@ vim.opt.tabstop = 4
 vim.opt.wrap = true
 
 vim.opt.foldmethod = "manual"
+vim.opt.foldenable = true
 vim.opt.foldlevelstart = 99
 -- Highlights the screen line of the cursor 
 vim.opt.cursorline = true

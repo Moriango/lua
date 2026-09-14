@@ -13,7 +13,6 @@ return {
 
       -- Module mappings. Use `''` (empty string) to disable one.
       mappings = {
-        add = 'sa',  -- Add surrounding in Normal and Visual modes
         delete = 'ds', -- Delete surrounding
         replace = 'cs', -- Replace surrounding
         highlight = 'hs', -- disable default 'sh' mapping so it doesn't shadow your keymap

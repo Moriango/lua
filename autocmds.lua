@@ -9,6 +9,16 @@ end
 
 remove_compile_helper_files_from_oldfiles()
 
+local yank_group = vim.api.nvim_create_augroup("SendYankToARegister", { clear = true })
+
+vim.api.nvim_create_autocmd("TextYankPost", {
+  group = yank_group,
+  callback = function()
+    require("mappings")
+    sendYankToARegister()
+  end,
+})
+
 -- Compile and run the current C++ or C file.
 _G.Compile_and_run_cpp = function()
   local filename = vim.fn.expand("%:p")
@@ -199,6 +209,49 @@ vim.api.nvim_create_user_command("CloseBufferKeepSplit", function()
   end
 end, { desc = "Close buffer and replace it with a hidden buffer" })
 
+-- Toggle between Default and VSCode identifier highlights
+local identifier_presets = {
+  default = {
+    Identifier = { fg = "#ffd166" },
+    ["@variable"] = { fg = "#ffd166" },
+    ["@variable.builtin"] = { fg = "#ff9f43" },
+    ["@property"] = { fg = "#d6b7ff", italic = true },
+    ["@type"] = { fg = "#86efac", bold = true },
+    ["@type.builtin"] = { fg = "#4ade80" },
+    ["@constant"] = { fg = "#f9a8d4", bold = true },
+    ["@namespace"] = { fg = "#c4b5fd" },
+  },
+  vscode = {
+    Identifier = { fg = "#D4D4D4" },
+    ["@variable"] = { fg = "#9CDCFE" },
+    ["@variable.builtin"] = { fg = "#569CD6" },
+    ["@property"] = { fg = "#9CDCFE", italic = true },
+    ["@type"] = { fg = "#4EC9B0", bold = true },
+    ["@type.builtin"] = { fg = "#569CD6" },
+    ["@constant"] = { fg = "#4FC1FF", bold = true },
+    ["@namespace"] = { fg = "#4EC9B0" },
+  },
+}
+
+local current_identifier_theme = "default"
+
+vim.api.nvim_create_user_command("ToggleIdentifiers", function()
+  if current_identifier_theme == "default" then
+    current_identifier_theme = "vscode"
+  else
+    current_identifier_theme = "default"
+  end
+
+  local preset = identifier_presets[current_identifier_theme]
+  for group, hl in pairs(preset) do
+    vim.api.nvim_set_hl(0, group, hl)
+  end
+
+  local display_name = current_identifier_theme == "vscode" and "VSCode" or "Default"
+  vim.notify("Identifier highlights: " .. display_name, vim.log.levels.INFO)
+end, { desc = "Toggle between Default and VSCode identifier highlights" })
+
+
 -- Open a terminal in a horizontal split using the current working directory.
 vim.api.nvim_create_user_command("SplitToTerminalHorizontally", function()
   local cwd = vim.fn.getcwd()
@@ -262,18 +315,42 @@ vim.api.nvim_create_user_command("FoldAllOpen", function()
  vim.cmd("normal! zR")
 end, { desc = "Opens all folds"})
 
--- Separate yank from delete by sending all yanks to register 'a'
-vim.api.nvim_create_autocmd('TextYankPost', {
-  desc = 'Save yanks to register a',
-  callback = function()
-    -- Only trigger if the user performed a genuine yank (not a delete/change)
-    if vim.v.event.operator == 'y' then
-      vim.fn.setreg('a', vim.fn.getreg('"'))
-      print("Yanked Lines")
-    end
-  end,
-})
+vim.api.nvim_create_user_command("ToggleLSP", function()
+  local cmp = require('cmp')
+  local current_state = cmp.get_config().enabled
+  if current_state then
+    cmp.setup.buffer { enabled = false }
+    print("LSP and Autocompletions Disabled")
+  else
+    cmp.setup.buffer { enabled = true }
+    print("LSP and Autocompletions Enabled")
+  end
+end, { desc = "Toggle LSP on and off" })
 
+-- Track the original Visual highlight while toggling its background.
+local visual_bg_black = false
+local original_visual_bg = nil
+
+-- Toggle the background color of visual selections.
+vim.api.nvim_create_user_command("ToggleVisualHighlight", function()
+  if visual_bg_black then
+    if original_visual_bg then
+      vim.cmd("hi Visual guibg=" .. original_visual_bg)
+    else
+      vim.cmd("hi Visual guibg=NONE")
+    end
+    print("Visual background: Restored")
+    visual_bg_black = false
+  else
+    local visual_hl = vim.api.nvim_get_hl(0, { name = "Visual", link = false })
+    if visual_hl.bg then
+      original_visual_bg = string.format("#%06x", visual_hl.bg)
+    end
+    vim.cmd("hi Visual guibg=Black")
+    print("Visual background: Black")
+    visual_bg_black = true
+  end
+end, { desc = "Toggles the background in visual mode to black and default"})
 -- Prevent invalid buffer errors when async LSP colorify responses arrive after a buffer is closed/deleted
 local ok, colorify_utils = pcall(require, "nvchad.colorify.utils")
 if ok and type(colorify_utils) == "table" and colorify_utils.needs_hl then
