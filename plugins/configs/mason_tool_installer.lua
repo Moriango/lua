@@ -18,6 +18,7 @@ return {
         -- Common linters and formatters
         "lua-language-server",
         "stylua",
+        "pylsp",
         "prettier",
         "eslint-lsp",
         

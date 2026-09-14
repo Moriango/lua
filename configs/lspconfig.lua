@@ -2,6 +2,29 @@
 require("nvchad.configs.lspconfig").defaults()
 
 local nvlsp = require "nvchad.configs.lspconfig"
+
+-- Some servers (e.g. pylsp) send containerName as JSON null, which the LSP
+-- client decodes as vim.NIL (userdata). Telescope's lsp_document_symbols
+-- calls vim.lsp.util.symbols_to_items directly (bypassing client handlers),
+-- and it string-concats containerName, crashing on that userdata value.
+do
+  local orig_symbols_to_items = vim.lsp.util.symbols_to_items
+  local function strip_nil_container_name(symbols)
+    for _, symbol in ipairs(symbols) do
+      if symbol.containerName == vim.NIL then
+        symbol.containerName = nil
+      end
+      if symbol.children then
+        strip_nil_container_name(symbol.children)
+      end
+    end
+  end
+  vim.lsp.util.symbols_to_items = function(symbols, bufnr, ...)
+    strip_nil_container_name(symbols)
+    return orig_symbols_to_items(symbols, bufnr, ...)
+  end
+end
+
 -- Helper function to find root directory with caching
 local root_cache = {}
 local function find_root(patterns, bufnr)
