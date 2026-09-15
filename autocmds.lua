@@ -334,6 +334,30 @@ vim.api.nvim_create_user_command("PreviewClass", function()
     require("telescope.builtin").lsp_document_symbols({ symbols = { "class", "struct", "interface", "namespace" },}) end, { desc = "Go to function or method"}
 )
 
+vim.api.nvim_create_user_command("ClearSearch", function()
+  -- Clear the search state, notifications, highlights, and floating windows.
+  vim.fn.setreg("/", "")
+  vim.cmd("nohlsearch")
+  vim.fn.clearmatches()
+
+  local ok, notify = pcall(require, "notify")
+  if ok and type(notify) == "table" and notify.dismiss then
+    pcall(notify.dismiss)
+  end
+
+  for _, window in ipairs(vim.api.nvim_list_wins()) do
+    if vim.api.nvim_win_is_valid(window) then
+      local ok_config, config = pcall(vim.api.nvim_win_get_config, window)
+      if ok_config and config and config.relative ~= "" then
+        pcall(vim.api.nvim_win_close, window, true)
+      end
+    end
+  end
+
+  vim.cmd("redraw!")
+  vim.notify("Search Cleared", vim.log.levels.INFO)
+end, { desc = "Clear search state, notifications, and floating windows" })
+
 -- Track the original Visual highlight while toggling its background.
 local visual_bg_black = false
 local original_visual_bg = nil
