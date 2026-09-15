@@ -13,8 +13,11 @@ return {
 
       -- Module mappings. Use `''` (empty string) to disable one.
       mappings = {
+        add = '<leader>sa', -- Add surrounding
         delete = 'ds', -- Delete surrounding
         replace = 'cs', -- Replace surrounding
+        find = '<leader>sf', -- Find surrounding
+        find_left = '<leader>sF', -- Find surrounding to the left
         highlight = 'hs', -- disable default 'sh' mapping so it doesn't shadow your keymap
       },
 

@@ -44,8 +44,8 @@ map("n", "G", "Gzz", { desc = "Moves the cursor to the bottom of the page and ce
 map("n", "gg", "ggzz", { desc = "Moves the cursor to the top of the page and centers the screen", noremap = true, silent=true })
 
 -- Window and buffer shortcuts: create, close, rotate, and switch split windows or buffers.
-map("n", "sv", ":split<Return>", { desc = "Splits tab Horizontally", noremap = true, silent=true })
-map("n", "sh", ":vsplit<CR>", { desc = "Splits tab Vertically", noremap = true, silent=true })
+map("n", "vs", ":split<Return>", { desc = "Splits tab Horizontally", noremap = true, silent=true })
+map("n", "hs", ":vsplit<CR>", { desc = "Splits tab Vertically", noremap = true, silent=true })
 map("n", "<leader>x", "<C-w>c", { desc =  "Closes the current split window", noremap=true, silent=true})
 map("n", "<leader>q", ":CloseBufferKeepSplit<CR>", { noremap=true, silent=true})
 map("n", ",", "<cmd>RotateSplitScreens<CR>", { noremap = true, silent = true, desc = "Rotate all split screens" })
@@ -62,7 +62,7 @@ map("n", "<leader>cw", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gc<Left><Left><Left>]], {
 map("n", "<leader>ra", vim.lsp.buf.rename, { desc = "LSP: Rename"})
 
 -- Clear search results
-map("n", "ff", ":lua clear_search()<CR>", { desc = "Clear search pattern and highlight", silent=true})
+map("n", "<leader>cl", ":lua clear_search()<CR>", { desc = "Clear search pattern and highlight", silent=true})
 
 -- Project shortcuts: change to a project and add project directories to the project database.
 map("n", "cd", "<cmd>CdProject<CR>", { desc = "Cd Project, Change working directory"})
@@ -138,7 +138,7 @@ map("n", "yp", ":lua copy_file_directory()<CR>", { desc = "Copy full file path t
 map("n", "bc", ":lua print_buffer_count()<CR>")
 
 -- Directory shortcuts: count files, show the working directory, and move to its parent.
-map("n", "fc", ":lua count_files_in_directory()<CR>", { desc = "Count files in current directory", noremap = true })
+map("n", "<leader>fc", ":lua count_files_in_directory()<CR>", { desc = "Count files in current directory", noremap = true })
 map("n", "MM", ":lua change_current_directory()<CR>", { desc = "Autochdir setting", noremap = true })
 map("n", "_", ":lua move_to_parent_directory()<CR>", { desc = "Moving working directory up one level", noremap = true })
 
