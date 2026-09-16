@@ -232,7 +232,7 @@ local identifier_presets = {
   },
 }
 
-local current_identifier_theme = "default"
+local current_identifier_theme = "vscode"
 
 vim.api.nvim_create_user_command("ToggleIdentifiers", function()
   if current_identifier_theme == "default" then
@@ -250,6 +250,13 @@ vim.api.nvim_create_user_command("ToggleIdentifiers", function()
   vim.notify("Identifier highlights: " .. display_name, vim.log.levels.INFO)
 end, { desc = "Toggle between Default and VSCode identifier highlights" })
 
+vim.api.nvim_create_user_command("DisableIdentifierColors", function()
+  for group in pairs(identifier_presets.default) do
+    vim.api.nvim_set_hl(0, group, {})
+  end
+
+  vim.notify("Identifier colors disabled", vim.log.levels.INFO)
+end, { desc = "Disable custom identifier colors" })
 
 -- Open a terminal in a horizontal split using the current working directory.
 vim.api.nvim_create_user_command("SplitToTerminalHorizontally", function()

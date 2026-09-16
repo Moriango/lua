@@ -10,7 +10,7 @@ M.colorify = {
 }
 
 M.base46 = {
-	theme = "chocolate",
+	theme = "vscode_dark",
     transparency = false,
   -- Status and git highlight overrides: file names, branch icons, and diff signs.
   -- Example: St_file for main.cpp, GitSignsAdd for +new lines, GitSignsDelete for -old lines.
@@ -28,14 +28,14 @@ M.base46 = {
         -- @type.builtin: built-in language types; example: int, string, list, float
         -- @constant: constants; example: PI, MAX_VALUE, DEBUG
         -- @namespace: namespace/module names; example: std, mylib, foo.bar
-    Identifier = { fg = "#ffd166" },
-    ["@variable"] = { fg = "#ffd166" },
-    ["@variable.builtin"] = { fg = "#ff9f43" },
-    ["@property"] = { fg = "#d6b7ff", italic = true },
-    ["@type"] = { fg = "#86efac", bold = true },
-    ["@type.builtin"] = { fg = "#4ade80" },
-    ["@constant"] = { fg = "#f9a8d4", bold = true },
-    ["@namespace"] = { fg = "#c4b5fd" },
+    Identifier = { fg = "#D4D4D4" },
+    ["@variable"] = { fg = "#9CDCFE" },
+    ["@variable.builtin"] = { fg = "#569CD6" },
+    ["@property"] = { fg = "#9CDCFE", italic = true },
+    ["@type"] = { fg = "#4EC9B0", bold = true },
+    ["@type.builtin"] = { fg = "#569CD6" },
+    ["@constant"] = { fg = "#4FC1FF", bold = true },
+    ["@namespace"] = { fg = "#4EC9B0" },
   },
 	-- hl_override = {
 	-- 	Comment = { italic = true },
