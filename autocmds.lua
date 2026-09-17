@@ -1,5 +1,9 @@
 require "nvchad.autocmds"
 
+vim.api.nvim_create_user_command("OldFilesNormal", function()
+  open_telescope_in_normal "Telescope oldfiles"
+end, { desc = "Open Telescope oldfiles in normal mode" })
+
 local function remove_compile_helper_files_from_oldfiles()
   vim.v.oldfiles = vim.tbl_filter(function(path)
     local filename = vim.fn.fnamemodify(path, ":t")

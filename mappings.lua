@@ -65,7 +65,13 @@ map("n", "<leader>ra", vim.lsp.buf.rename, { desc = "LSP: Rename"})
 map("n", "FF", ":lua clear_search()<CR>", { desc = "Clear search pattern and highlight", silent=true})
 
 -- Project shortcuts: change to a project and add project directories to the project database.
-map("n", "cd", "<cmd>CdProject<CR>", { desc = "Cd Project, Change working directory"})
+map("n", "cd", function()
+  open_telescope_in_normal "CdProject"
+end, { desc = "Cd Project, Change working directory"})
+map("n", "fo", "<cmd>OldFilesNormal<CR>", { desc = "Telescope: old files"})
+map("n", "<leader>fo", function()
+  open_telescope_in_normal "Telescope oldfiles"
+end, { desc = "Telescope: old files"})
 map("n", "cda", "<cmd>CdProjectAdd<CR>", { desc = "Cd Project, add current project's directory to the databse(json file)"})
 map("n", "cdm", "<cmd>CdProjectManualAdd<CR>", { desc = "Cd Project, Manually add project's directory to the databse(json file)"})
 
@@ -156,6 +162,29 @@ vim.keymap.set({'n','v','o'}, '<C-v>', 'V', { noremap = true, silent = true })
 
 -- Helper functions used by the shortcut declarations above.
 
+_G.open_telescope_in_normal = function(command)
+  local telescope_config = require "telescope.config"
+  local previous_mode = telescope_config.values.initial_mode
+  local group = vim.api.nvim_create_augroup("CdProjectTelescopeMode", { clear = true })
+
+  telescope_config.values.initial_mode = "normal"
+  vim.api.nvim_create_autocmd("User", {
+    pattern = "TelescopeFindPre",
+    group = group,
+    once = true,
+    callback = function()
+      telescope_config.values.initial_mode = previous_mode
+    end,
+  })
+
+  vim.cmd(command)
+  vim.schedule(function()
+    if vim.fn.mode() == "i" then
+      vim.cmd "stopinsert"
+    end
+  end)
+end
+
 -- Prompt for and delete one mark.
 _G.delete_mark = function()
   vim.ui.input({ prompt = "Delete mark: " }, function(mark)
@@ -168,7 +197,7 @@ _G.delete_mark = function()
       return
     end
 
-    require("marks").mark_state:delete_mark(mark)
+    vim.cmd("delmarks " .. mark)
   end)
 end
 
@@ -176,6 +205,7 @@ end
 _G.delete_all_marks = function()
   vim.cmd("delmarks!")
   vim.cmd("delmarks A-Z")
+  ---@diagnostic disable-next-line: undefined-field
   require("marks").refresh(true)
 end
 
@@ -191,7 +221,9 @@ _G.smart_search = function(direction)
   local move_cmd = (direction == "next") and "normal! n" or "normal! N"
 
   if search_register ~= "" and search_register ~= last_smart_search then
-    local ok, err = pcall(vim.cmd, move_cmd)
+    local ok, err = pcall(function()
+      vim.cmd(move_cmd)
+    end)
     if not ok and err and err:match("E486") then
       return
     end
@@ -208,6 +240,7 @@ _G.smart_search = function(direction)
     return
   end
 
+    ---@diagnostic disable-next-line: param-type-mismatchj;
   local ok, err = pcall(vim.cmd, move_cmd)
   if not ok and err and err:match("E486") then
     return
@@ -335,7 +368,9 @@ end
 
 _G.gitsigns_preview = function()
   gitsigns_restore_main_win()
-  require("gitsigns").nav_hunk("next", {
+  local gitsigns = require("gitsigns")
+  ---@diagnostic disable-next-line: undefined-field
+  gitsigns.nav_hunk("next", {
     wrap = true,
     foldopen = true,
     navigation_message = true,
@@ -344,13 +379,16 @@ _G.gitsigns_preview = function()
     target = "all",
   }, function()
     vim.cmd("normal! zz")
-    require("gitsigns").preview_hunk()
+  ---@diagnostic disable-next-line: undefined-field
+    gitsigns.preview_hunk()
   end)
 end
 
 _G.gitsigns_previous_hunk = function()
   gitsigns_restore_main_win()
-  require("gitsigns").nav_hunk("prev", {
+  local gitsigns = require("gitsigns")
+  ---@diagnostic disable-next-line: undefined-field
+  gitsigns.nav_hunk("prev", {
     wrap = true,
     foldopen = true,
     navigation_message = true,
@@ -359,7 +397,8 @@ _G.gitsigns_previous_hunk = function()
     target = "all",
   }, function()
     vim.cmd("normal! zz")
-    require("gitsigns").preview_hunk()
+  ---@diagnostic disable-next-line: undefined-field
+    gitsigns.preview_hunk()
   end)
 end
 
