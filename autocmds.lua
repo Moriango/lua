@@ -373,6 +373,49 @@ end, { desc = "Clear search state, notifications, and floating windows" })
 local visual_bg_black = false
 local original_visual_bg = nil
 
+-- Diagnostics quicklist that auto-refreshes so solved items drop off the list
+local diagnostics_loclist_group = vim.api.nvim_create_augroup("DiagnosticsLoclistRefresh", { clear = true })
+
+-- Open the diagnostic loclist and keep it in sync until it's closed or empty.
+_G.open_diagnostics_loclist = function()
+  vim.diagnostic.setloclist({ open = true })
+
+  vim.api.nvim_clear_autocmds({ group = diagnostics_loclist_group })
+  vim.api.nvim_create_autocmd("DiagnosticChanged", {
+    group = diagnostics_loclist_group,
+    callback = function()
+      if vim.tbl_isempty(vim.diagnostic.get()) then
+        vim.cmd("lclose")
+        vim.api.nvim_clear_autocmds({ group = diagnostics_loclist_group })
+        return
+      end
+      -- Refresh without stealing focus/opening the window again
+      vim.diagnostic.setloclist({ open = false })
+    end,
+  })
+
+  vim.api.nvim_create_autocmd("FileType", {
+    group = diagnostics_loclist_group,
+    pattern = "qf",
+    callback = function(args)
+      vim.api.nvim_create_autocmd("BufWinLeave", {
+        buffer = args.buf,
+        once = true,
+        callback = function()
+          vim.api.nvim_clear_autocmds({ group = diagnostics_loclist_group })
+        end,
+      })
+    end,
+  })
+end
+
+vim.api.nvim_create_user_command(
+  "Diagnostics",
+  _G.open_diagnostics_loclist,
+  { desc = "Open diagnostic loclist that auto-refreshes as issues are resolved" }
+)
+
+
 -- Toggle the background color of visual selections.
 vim.api.nvim_create_user_command("ToggleVisualHighlight", function()
   if visual_bg_black then

@@ -76,10 +76,11 @@ map("n", "cda", "<cmd>CdProjectAdd<CR>", { desc = "Cd Project, add current proje
 map("n", "cdm", "<cmd>CdProjectManualAdd<CR>", { desc = "Cd Project, Manually add project's directory to the databse(json file)"})
 
 -- Diagnostic jumps notify when the list wraps around.
-map("n", "[d", ":lua diagnostic_jump('next')<CR>", { desc = "Go to next diagnostic", noremap = true, silent = true })
-map("n", "d[", ":lua diagnostic_jump('next')<CR>", { desc = "Go to next diagnostic", noremap = true, silent = true })
-map("n", "]d", ":lua diagnostic_jump('prev')<CR>", { desc = "Go to previous diagnostic", noremap = true, silent = true })
-map("n", "d]", ":lua diagnostic_jump('prev')<CR>", { desc = "Go to previous diagnostic", noremap = true, silent = true })
+-- d[ / d] jump the quickfix list when it's open, otherwise fall back to diagnostics.
+map("n", "d[", ":lua quickfix_or_diagnostic_jump('next')<CR>", { desc = "Go to next quickfix item (or diagnostic)", noremap = true, silent = true })
+map("n", "[d", ":lua quickfix_or_diagnostic_jump('next')<CR>", { desc = "Go to next quickfix item (or diagnostic)", noremap = true, silent = true })
+map("n", "d]", ":lua quickfix_or_diagnostic_jump('prev')<CR>", { desc = "Go to previous quickfix item (or diagnostic)", noremap = true, silent = true })
+map("n", "]d", ":lua quickfix_or_diagnostic_jump('prev')<CR>", { desc = "Go to previous quickfix item (or diagnostic)", noremap = true, silent = true })
 
 -- Marks shortcuts: jump to the next or previous mark.
 map("n", "m", "<cmd>lua require('marks').next()<CR>", { desc = "Jump to next mark", noremap = true, silent = true })
@@ -240,7 +241,7 @@ _G.smart_search = function(direction)
     return
   end
 
-    ---@diagnostic disable-next-line: param-type-mismatchj;
+    ---@diagnostic disable-next-line: param-type-mismatch;
   local ok, err = pcall(vim.cmd, move_cmd)
   if not ok and err and err:match("E486") then
     return
@@ -261,20 +262,19 @@ _G.clear_search = function()
   print("Search Cleared")
 end
 
--- Move to the next or previous diagnostic and show it in a floating window.
-_G.diagnostic_jump = function(direction)
-  local target = direction == "next" and vim.diagnostic.get_next({}) or vim.diagnostic.get_prev({})
-
-  if not target then
-    vim.notify("No diagnostics errors", vim.log.levels.INFO)
+-- Open the location list (populating it fresh) if needed, then jump within it.
+_G.quickfix_or_diagnostic_jump = function(direction)
+  if vim.tbl_isempty(vim.diagnostic.get()) then
+    vim.notify("No diagnostic errors", vim.log.levels.INFO)
     return
   end
 
-  if direction == "next" then
-    vim.diagnostic.jump({ count = 1, float = true })
-  else
-    vim.diagnostic.jump({ count = -1, float = true })
+  _G.open_diagnostics_loclist()
+  local ok = pcall(vim.cmd, direction == "next" and "lnext" or "lprev")
+  if not ok then
+    vim.cmd(direction == "next" and "lfirst" or "llast")
   end
+  vim.cmd("normal! zz")
 end
 
 -- Close the file tree and delete the current buffer.
