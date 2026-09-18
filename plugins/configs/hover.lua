@@ -7,14 +7,19 @@ return {
     require("hover").setup({
       init = function()
         require("hover.providers.lsp")
-        require("hover.providers.diagnostic")
+        -- require("hover.providers.diagnostic")
+        require("hover.providers.pydoc")
+        require("hover.providers.luahelp")
       end,
       providers = {
         "hover.providers.lsp",
-        "hover.providers.diagnostic",
-        "hover.providers.dictionary",
-        "hover.providers.dap",
-        "hover.providers.highlight",
+        -- "hover.providers.diagnostic",
+        -- "hover.providers.dap",
+        -- "hover.providers.highlight",
+        -- Fallback for python builtin/stdlib method docstrings jedi can't resolve (e.g. list.pop)
+        "hover.providers.pydoc",
+        -- Fallback that renders Neovim's :help pages for lua stdlib/vim.* API
+        "hover.providers.luahelp",
         -- "hover.providers.gh",
         -- "hover.providers.gh_user",
         -- "hover.providers.fold_preview",
@@ -44,7 +49,7 @@ return {
       for _, win in ipairs(vim.api.nvim_list_wins()) do
         local buf = vim.api.nvim_win_get_buf(win)
         local buf_name = vim.api.nvim_buf_get_name(buf)
-        if buf_name:match("hover://") or vim.api.nvim_buf_get_option(buf, 'filetype') == 'hover' then
+        if buf_name:match("hover://") or vim.bo[buf].filetype == 'hover' then
           return true, win
         end
       end
@@ -60,17 +65,31 @@ return {
         hover.open()
         vim.defer_fn(function()
           hover.switch(dir)
-        end, 150)  -- Increased delay to 150ms
+        end, 20)  -- Increased delay to 150ms
       else
         -- Window is already open, switch immediately
         hover.switch(dir)
       end
     end
 
+    -- Debounce guard: rapid re-opens race hover.nvim's floating-window teardown
+    -- and its own scheduled callback, throwing "Invalid window id" errors.
+    local last_action_time = 0
+    local function debounced(fn)
+      return function(...)
+        local now = vim.uv.now()
+        if now - last_action_time < 150 then
+          return
+        end
+        last_action_time = now
+        fn(...)
+      end
+    end
+
     -- Open hover window
-    vim.keymap.set("n", "K", function()
+    vim.keymap.set("n", "K", debounced(function()
       hover.open()
-    end, { desc = "hover.nvim (open)" })
+    end), { desc = "hover.nvim (open)" })
 
     -- Enter hover window (allows using j/k to navigate)
     -- vim.keymap.set("n", "KK", function()
@@ -78,12 +97,8 @@ return {
     -- end, { desc = "hover.nvim (enter)" })
 
     -- Primary keybindings for switching sources
-    vim.keymap.set("n", "KN", function()
+    vim.keymap.set("n", "<leader>k", debounced(function()
       ensure_open_and_switch("next")
-    end, { desc = "hover.nvim (next source)" })
-    vim.keymap.set("n", "KP", function()
-      ensure_open_and_switch("previous")
-    end, { desc = "hover.nvim (previous source)" })
-
+    end), { desc = "hover.nvim (next source)" })
   end,
 }

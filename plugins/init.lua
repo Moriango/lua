@@ -59,9 +59,9 @@ local plugins = {
       ensure_installed = { "cpp", "lua" },
       highlight = { enable = true },
     },
-  },
   -- {import = "plugins.configs.copilot"},
   -- {import = "plugins.configs.diffview"},
+  -- {import = "plugins.configs.gitsigns"}, -- disabled: stray duplicate hover.nvim spec conflicts with plugins.configs.hover
   -- {import = "plugins.configs.goto-preview"},
   -- {import = "plugins.configs.harpoon"},
   -- {import = "plugins.configs.lazydev"},
@@ -78,7 +78,6 @@ local plugins = {
   {import = "plugins.configs.comment"},
   {import = "plugins.configs.fugitive"},
   {import = "plugins.configs.gitblame"},
-  {import = "plugins.configs.gitsigns"},
   {import = "plugins.configs.hover"},
   {import = "plugins.configs.lazygit"},
   {import = "plugins.configs.live-server"},
@@ -96,5 +95,6 @@ local plugins = {
   {import = "plugins.configs.undotree"},
   {import = "plugins.configs.vim-illuminate"},
   {import = "plugins.configs.zen-mode"},
+  },
 }
 return plugins

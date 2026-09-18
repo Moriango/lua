@@ -392,10 +392,10 @@ _G.gitsigns_preview = function()
     count = 1,
     target = "all",
   }, function()
-    vim.cmd("normal! zz")
   ---@diagnostic disable-next-line: undefined-field
     gitsigns.preview_hunk()
   end)
+  vim.cmd("normal! zz")
 end
 
 _G.gitsigns_previous_hunk = function()
@@ -410,10 +410,10 @@ _G.gitsigns_previous_hunk = function()
     count = 1,
     target = "all",
   }, function()
-    vim.cmd("normal! zz")
   ---@diagnostic disable-next-line: undefined-field
     gitsigns.preview_hunk()
   end)
+  vim.cmd("normal! zz")
 end
 
 _G.sendYankToARegister = function()
