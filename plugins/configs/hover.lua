@@ -54,7 +54,7 @@ return {
     -- Improved function to switch between hover sources
     local function ensure_open_and_switch(dir)
       local is_open, _ = is_hover_window_open()
-      
+
       if not is_open then
         -- Open hover and wait longer for it to initialize
         hover.open()
@@ -71,7 +71,7 @@ return {
     vim.keymap.set("n", "K", function()
       hover.open()
     end, { desc = "hover.nvim (open)" })
-    
+
     -- Enter hover window (allows using j/k to navigate)
     -- vim.keymap.set("n", "KK", function()
     --   hover.enter()
@@ -84,6 +84,6 @@ return {
     vim.keymap.set("n", "KP", function()
       ensure_open_and_switch("previous")
     end, { desc = "hover.nvim (previous source)" })
-    
+
   end,
 }

@@ -62,7 +62,7 @@ map("n", "<leader>cw", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gc<Left><Left><Left>]], {
 map("n", "<leader>ra", vim.lsp.buf.rename, { desc = "LSP: Rename"})
 
 --- Clear search result
-map("n", "FF", ":lua clear_search()<CR>", { desc = "Clear search pattern and highlight", silent=true})
+map("n", "ff", ":lua clear_search()<CR>", { desc = "Clear search pattern and highlight", silent=true})
 
 -- Project shortcuts: change to a project and add project directories to the project database.
 map("n", "cd", function()
@@ -270,10 +270,24 @@ _G.quickfix_or_diagnostic_jump = function(direction)
   end
 
   _G.open_diagnostics_loclist()
+
+  local loclist = vim.fn.getloclist(0)
+  if vim.tbl_isempty(loclist) then
+    vim.notify("No location list entries", vim.log.levels.INFO)
+    return
+  end
+
   local ok = pcall(vim.cmd, direction == "next" and "lnext" or "lprev")
   if not ok then
-    vim.cmd(direction == "next" and "lfirst" or "llast")
+    local fallback = direction == "next" and "lfirst" or "llast"
+    local fallback_ok = pcall(vim.cmd, fallback)
+    if not fallback_ok then
+      vim.cmd("lclose")
+      vim.notify("No more diagnostics", vim.log.levels.INFO)
+      return
+    end
   end
+
   vim.cmd("normal! zz")
 end
 
