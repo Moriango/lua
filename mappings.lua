@@ -133,7 +133,9 @@ map("n", "<leader>h", "<cmd>HighlightPage<CR>", { noremap = true, silent = true,
 
 -- Quickfix shortcuts: navigate through and close the quickfix list.
 map("n", "[c", ":cnext<CR>", { noremap = true, silent = true, desc = "Go to next item in quickfix list"})
+map("n", "c[", ":cnext<CR>", { noremap = true, silent = true, desc = "Go to next item in quickfix list"})
 map("n", "]c", ":cprev<CR>", { noremap = true, silent = true, desc = "Go to previous item in quickfix list"})
+map("n", "c]", ":cprev<CR>", { noremap = true, silent = true, desc = "Go to previous item in quickfix list"})
 map("n", "CC", ":cclose<CR>", { noremap = true, silent = true, desc = "Close the quickfix list"})
 
 -- File information shortcuts: copy the current filename, full filename, or directory path.

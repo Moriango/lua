@@ -101,6 +101,12 @@ local servers = {
     filetypes = { "c", "cpp", "objc", "objcpp" },
     root_patterns = { ".git", "compile_commands.json", "compile_flags.txt" },
   },
+  {
+    name = "serve_d",
+    cmd = { "dub", "run", "serve-d", "--" },
+    filetypes = { "d" },
+    root_patterns = { "dub.json", "dub.sdl", ".git" },
+  },
 }
 
 -- Start LSP servers using vim.lsp.start

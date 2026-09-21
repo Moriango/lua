@@ -53,6 +53,9 @@ vim.opt.autochdir = false
 
 vim.opt.wildmenu = true
 
+vim.opt.grepprg = "rg --vimgrep"
+vim.opt.grepformat = "%f:%l:%c:%m"
+
 -- Use system clipboard
 local function no_paste()
   return function()
