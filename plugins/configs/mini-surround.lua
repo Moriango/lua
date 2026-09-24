@@ -13,7 +13,7 @@ return {
 
       -- Module mappings. Use `''` (empty string) to disable one.
       mappings = {
-        add = '<leader>sa', -- Add surrounding
+        add = '<leader>as', -- Add surrounding
         delete = 'ds', -- Delete surrounding
         replace = 'cs', -- Replace surrounding
         find = '<leader>sf', -- Find surrounding

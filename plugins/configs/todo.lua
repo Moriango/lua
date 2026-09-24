@@ -7,6 +7,12 @@ return {
     dependencies = {
       "ibhagwan/fzf-lua",
     },
+    config = function(_, opts)
+      require("todo-comments").setup(opts)
+      pcall(vim.api.nvim_del_user_command, "TodoLocList")
+      pcall(vim.api.nvim_del_user_command, "TodoFzfLua")
+      pcall(vim.api.nvim_del_user_command, "TodoTrouble")
+    end,
     opts = {
       picker = "fzf-lua",
       signs = true,      -- show icons in the signs column

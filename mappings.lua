@@ -152,14 +152,14 @@ map("n", "MM", ":lua change_current_directory()<CR>", { desc = "Autochdir settin
 map("n", "_", ":lua move_to_parent_directory()<CR>", { desc = "Moving working directory up one level", noremap = true })
 
 -- Window resizing shortcuts: adjust split dimensions with Alt plus H, J, K, or L.
-vim.keymap.set("n", "<A-h>", ":vertical resize -5<CR>", { noremap = true, silent = true, desc = "Decrease window width" })
-vim.keymap.set("n", "<A-j>", ":resize -5<CR>", { noremap = true, silent = true, desc = "Decrease window height" })
-vim.keymap.set("n", "<A-k>", ":resize +5<CR>", { noremap = true, silent = true, desc = "Increase window height" })
-vim.keymap.set("n", "<A-l>", ":vertical resize +5<CR>", { noremap = true, silent = true, desc = "Increase window width" })
+map("n", "<A-h>", ":vertical resize -5<CR>", { noremap = true, silent = true, desc = "Decrease window width" })
+map("n", "<A-j>", ":resize -5<CR>", { noremap = true, silent = true, desc = "Decrease window height" })
+map("n", "<A-k>", ":resize +5<CR>", { noremap = true, silent = true, desc = "Increase window height" })
+map("n", "<A-l>", ":vertical resize +5<CR>", { noremap = true, silent = true, desc = "Increase window width" })
 
 -- Swap the default visual-line and visual-block commands.
-vim.keymap.set({'n','v','o'}, 'V', '<C-q>', { noremap = true, silent = true })
-vim.keymap.set({'n','v','o'}, '<C-v>', 'V', { noremap = true, silent = true })
+map({'n','v','o'}, 'V', '<C-q>', { noremap = true, silent = true })
+map({'n','v','o'}, '<C-v>', 'V', { noremap = true, silent = true })
 
 -- FUNCTIONS -- 
 
