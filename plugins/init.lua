@@ -56,11 +56,11 @@ local plugins = {
     "nvim-treesitter/nvim-treesitter",
     build = ":TSUpdate",
     opts = {
-      ensure_installed = { "cpp", "lua" },
+      ensure_installed = { "cpp", "lua"},
       highlight = { enable = true },
     },
   -- {import = "plugins.configs.copilot"},
-  -- {import = "plugins.configs.diffview"},
+  -- {import = "plugins.configs.diff"},
   -- {import = "plugins.configs.goto-preview"},
   -- {import = "plugins.configs.grep"},
   -- {import = "plugins.configs.harpoon"},

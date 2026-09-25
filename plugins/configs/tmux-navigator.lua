@@ -16,7 +16,7 @@ return {
     vim.keymap.del("n", "<C-j>", { silent = true })
     vim.keymap.del("n", "<C-k>", { silent = true })
     vim.keymap.del("n", "<C-l>", { silent = true })
-    
+
     -- Set up keymaps for navigation (Ctrl + hjkl)
     vim.keymap.set("n", "<C-h>", ":TmuxNavigateLeft<CR>", { noremap = true, silent = false, desc = "Move left" })
     vim.keymap.set("n", "<C-j>", ":TmuxNavigateDown<CR>", { noremap = true, silent = false, desc = "Move down" })

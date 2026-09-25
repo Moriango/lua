@@ -13,12 +13,12 @@ return {
 
       -- Module mappings. Use `''` (empty string) to disable one.
       mappings = {
-        add = '<leader>as', -- Add surrounding
+        add = '<leader>a', -- Add surrounding
         delete = 'ds', -- Delete surrounding
         replace = 'cs', -- Replace surrounding
         find = '<leader>sf', -- Find surrounding
         find_left = '<leader>sF', -- Find surrounding to the left
-        highlight = 'hs', -- disable default 'sh' mapping so it doesn't shadow your keymap
+        highlight = '<leader>hs', -- disable default 'sh' mapping so it doesn't shadow your keymap
       },
 
       -- Number of lines within which surrounding is searched

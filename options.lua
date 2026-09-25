@@ -56,6 +56,9 @@ vim.opt.wildmenu = true
 vim.opt.grepprg = "rg --vimgrep"
 vim.opt.grepformat = "%f:%l:%c:%m"
 
+-- Allow switching away from / closing modified buffers without prompting (e.g. diffview.nvim's E445 on :tabclose)
+vim.opt.hidden = true
+
 -- Use system clipboard
 local function no_paste()
   return function()
