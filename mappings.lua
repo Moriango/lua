@@ -309,23 +309,26 @@ _G.refresh_buffer = function()
   vim.cmd('edit')
 end
 
+-- Save text to the "a" register and the system clipboard.
+local function copy_to_a_and_clipboard(text, label)
+  vim.fn.setreg("a", text)
+  vim.fn.setreg("+", text)
+  print("Copied " .. label .. " to \"a\" register and system clipboard")
+end
+
 -- Copy the current filename without its extension.
 _G.copy_filename_without_extension = function()
-  vim.fn.setreg("a", vim.fn.expand("%:t:r"))
-  print("Copied filename to \"a\" register")
+  copy_to_a_and_clipboard(vim.fn.expand("%:t:r"), "filename")
 end
 
 -- Copy the current filename with its extension.
 _G.copy_filename = function()
-  vim.fn.setreg("a", vim.fn.expand("%:t"))
-  print("Copied file to \"a\" register")
+  copy_to_a_and_clipboard(vim.fn.expand("%:t"), "filename")
 end
 
 -- Copy the directory containing the current file.
 _G.copy_file_directory = function()
-  vim.fn.setreg("a", vim.fn.expand("%:p:h"))
-  print("Copied filename to \"a\" register")
-
+  copy_to_a_and_clipboard(vim.fn.expand("%:p:h"), "directory")
 end
 
 -- Print the number of listed buffers.
