@@ -32,10 +32,10 @@ map("v", "K", ":m '<-2<CR>gv=gv", { desc = "Moves the current line up", noremap 
 map({"n","i"}, "<leader>lz", ":Lazy<CR>", { desc = "Opens Lazy"})
 
 -- Tmux Navigation
-map("n", "<C-h>", ":TmuxNavigateLeft<CR>", { noremap = true, silent = true, desc = "Move left" })
-map("n", "<C-j>", ":TmuxNavigateDown<CR>", { noremap = true, silent = true, desc = "Move down" })
-map("n", "<C-k>", ":TmuxNavigateUp<CR>", { noremap = true, silent = true, desc = "Move up" })
-map("n", "<C-l>", ":TmuxNavigateRight<CR>", { noremap = true, silent = true, desc = "Move right" })
+map({"v","n"}, "<C-h>", ":TmuxNavigateLeft<CR>", { noremap = true, silent = true, desc = "Move left" })
+map({"v","n"}, "<C-j>", ":TmuxNavigateDown<CR>", { noremap = true, silent = true, desc = "Move down" })
+map({"v","n"}, "<C-k>", ":TmuxNavigateUp<CR>", { noremap = true, silent = true, desc = "Move up" })
+map({"v","n"}, "<C-l>", ":TmuxNavigateRight<CR>", { noremap = true, silent = true, desc = "Move right" })
 
 -- Page movement shortcuts: move by pages or jump to the top and bottom of a buffer.
 map({"n"}, "D", "<C-d>zz", { desc = "Moves the cursor down half a page and centers it.", noremap = true, silent=true })

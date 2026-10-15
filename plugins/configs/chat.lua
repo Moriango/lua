@@ -34,12 +34,11 @@ return {
       end, { desc = "Add context to CopilotChat (static message)" })
     end,
     keys = {
-      { "<leader>ae", "<cmd>CopilotChatExplain<cr>", desc = "CopilotChat - Explain code" },
-      { "<leader>cct", "<cmd>CopilotChatTests<cr>",   desc = "CopilotChat - Generate tests" },
-      { "<leader>cp", ":CopilotChatToggle<CR>", mode = { "n", "x" }, desc = "CopilotChat", },
-      { "<leader>ccf", "<cmd>CopilotChatFixDiagnostic<cr>", -- Get a fix for the diagnostic message under the cursor.
-        desc = "CopilotChat Fix Diagnostic",
-      },
+      -- { "<leader>ae", "<cmd>CopilotChatExplain<cr>", desc = "CopilotChat - Explain code" },
+      -- { "<leader>cct", "<cmd>CopilotChatTests<cr>",   desc = "CopilotChat - Generate tests" },
+      -- { "<leader>ccf", "<cmd>CopilotChatFixDiagnostic<cr>", -- Get a fix for the diagnostic message under the cursor.
+        -- desc = "CopilotChat Fix Diagnostic",
+      -- },
     }
   },
 }

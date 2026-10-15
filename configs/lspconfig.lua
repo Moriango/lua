@@ -102,6 +102,12 @@ local servers = {
     root_patterns = { ".git", "compile_commands.json", "compile_flags.txt" },
   },
   {
+    name = "html",
+    cmd = { "vscode-html-language-server", "--stdio" },
+    filetypes = { "html", "htm" },
+    root_patterns = { ".git", "package.json" },
+  },
+  {
     name = "serve_d",
     cmd = { "dub", "run", "serve-d", "--" },
     filetypes = { "d" },
