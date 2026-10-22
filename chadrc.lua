@@ -10,7 +10,7 @@ M.colorify = {
 }
 
 M.base46 = {
-	theme = "vscode_dark",
+	theme = "chadtain",
     transparency = false,
   -- Status and git highlight overrides: file names, branch icons, and diff signs.
   -- Example: St_file for main.cpp, GitSignsAdd for +new lines, GitSignsDelete for -old lines.

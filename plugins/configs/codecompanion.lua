@@ -31,6 +31,7 @@ return {
   },
   keys = {
     { "<leader>cp", "<cmd>CodeCompanionChat Toggle<cr>", mode = { "n", "x" }, desc = "Toggle CodeCompanion Chat" },
+    { "<leader>ci", ":CodeCompanion<CR>", mode = { "n", "x" }, desc = "CodeCompanion Inline" },
     { "<leader>aa", "<cmd>CodeCompanionActions<cr>", desc = "CodeCompanion Actions" },
   },
 }

@@ -65,13 +65,9 @@ map("n", "<leader>ra", vim.lsp.buf.rename, { desc = "LSP: Rename"})
 map("n", "ff", ":lua clear_search()<CR>", { desc = "Clear search pattern and highlight", silent=true})
 
 -- Project shortcuts: change to a project and add project directories to the project database.
-map("n", "cd", function()
-  open_telescope_in_normal "CdProject"
-end, { desc = "Cd Project, Change working directory"})
+map("n", "cd", function() open_telescope_in_normal "CdProject" end, { desc = "Cd Project, Change working directory"})
 map("n", "fo", "<cmd>OldFilesNormal<CR>", { desc = "Telescope: old files"})
-map("n", "<leader>fo", function()
-  open_telescope_in_normal "Telescope oldfiles"
-end, { desc = "Telescope: old files"})
+map("n", "<leader>fo", function() open_telescope_in_normal "Telescope oldfiles" end, { desc = "Telescope: old files"})
 map("n", "cda", "<cmd>CdProjectAdd<CR>", { desc = "Cd Project, add current project's directory to the databse(json file)"})
 map("n", "cdm", "<cmd>CdProjectManualAdd<CR>", { desc = "Cd Project, Manually add project's directory to the databse(json file)"})
 

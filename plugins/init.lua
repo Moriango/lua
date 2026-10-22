@@ -32,6 +32,7 @@ local plugins = {
     opts = {
       defaults = {
         path_display={"absolute"},
+        file_ignore_patterns = { "^%.git/", "/%.git/" },
         layout_strategy="vertical",
         layout_config = {
           vertical = {
@@ -56,8 +57,10 @@ local plugins = {
     "nvim-treesitter/nvim-treesitter",
     build = ":TSUpdate",
     opts = {
-      ensure_installed = { "cpp", "lua"},
-      highlight = { enable = true },
+      ensure_installed = {"all"},
+      highlight = {
+          enable = true,
+      },
     },
   -- {import = "plugins.configs.copilot"},
   -- {import = "plugins.configs.diff"},
