@@ -1,5 +1,11 @@
 require "nvchad.autocmds"
 
+-- Redraw when a tmux pane regains focus or is resized to avoid stale, offset rendering
+vim.api.nvim_create_autocmd({ "FocusGained", "VimResized" }, {
+  group = vim.api.nvim_create_augroup("RedrawOnFocus", { clear = true }),
+  command = "redraw!",
+})
+
 vim.api.nvim_create_user_command("OldFilesNormal", function()
   open_telescope_in_normal "Telescope oldfiles"
 end, { desc = "Open Telescope oldfiles in normal mode" })
