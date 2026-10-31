@@ -38,7 +38,40 @@ return {
       },
       preview_window = false,
       title = true,
-      mouse_providers = {},
+      mouse_providers = {
+        "hover.providers.lsp",
+        "hover.providers.pydoc",
+        "hover.providers.luahelp",
+      },
+      mouse_delay = 500,
+    })
+
+    local mouse_hover_enabled = true
+    vim.o.mousemoveevent = true
+    vim.keymap.set("n", "<MouseMove>", function()
+      if mouse_hover_enabled then
+        require("hover").hover_mouse()
+      end
+    end, { desc = "hover.nvim (mouse)" })
+
+    -- :MouseHover [on|off|toggle]
+    vim.api.nvim_create_user_command("MouseHover", function(opts)
+      local arg = opts.args
+      if arg == "on" then
+        mouse_hover_enabled = true
+      elseif arg == "off" then
+        mouse_hover_enabled = false
+      else
+        mouse_hover_enabled = not mouse_hover_enabled
+      end
+      vim.o.mousemoveevent = mouse_hover_enabled
+      vim.notify("Mouse hover " .. (mouse_hover_enabled and "enabled" or "disabled"))
+    end, {
+      nargs = "?",
+      complete = function()
+        return { "on", "off", "toggle" }
+      end,
+      desc = "Toggle hover.nvim mouse hover",
     })
 
     -- Keymaps
