@@ -2,6 +2,9 @@ local wezterm = require 'wezterm'
 
 local config = wezterm.config_builder()
 
+-- Use this line for Linux/MacOs autoload tmux
+config.default_prog = { 'tmux', 'new-session', '-A', '-s', 'Main'}
+
 config.leader = { key = 'w', mods = 'CTRL'}
 
 config.color_scheme = 'LiquidCarbon'
