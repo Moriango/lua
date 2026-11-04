@@ -453,3 +453,30 @@ if ok and type(colorify_utils) == "table" and colorify_utils.needs_hl then
     return orig_needs_hl(buf, ...)
   end
 end
+
+-- Close all buffers ending with ...
+local function close_buffers_ending_with(suffix)
+  local current_buf = vim.api.nvim_get_current_buf()
+  local pattern = suffix ~= "" and (suffix:gsub("[%(%)%.%%%+%-%*%?%[%^%$]", "%%%1") .. "$") or nil
+
+  for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+    if buf ~= current_buf and vim.api.nvim_buf_is_valid(buf) then
+      local name = vim.api.nvim_buf_get_name(buf)
+      if not pattern or name:match(pattern) then
+        vim.api.nvim_buf_delete(buf, { force = false })
+      end
+    end
+  end
+end
+
+local function register_close_buffers_command(name)
+  vim.api.nvim_create_user_command(name, function(opts)
+    close_buffers_ending_with(opts.args)
+  end, {
+    nargs = "?",
+    desc = "Close buffers ending with a suffix, or all other buffers if omitted",
+  })
+end
+
+register_close_buffers_command("CloseBuffersEndingWith")
+register_close_buffers_command("BufferCloseEndingWith")

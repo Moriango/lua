@@ -81,6 +81,8 @@ map("n", "]d", ":lua quickfix_or_diagnostic_jump('prev')<CR>", { desc = "Go to p
 -- Marks shortcuts: jump to the next or previous mark.
 map("n", "m", "<cmd>lua require('marks').next()<CR>", { desc = "Jump to next mark", noremap = true, silent = true })
 map("n", "m,", "<cmd>lua require('marks').prev()<CR>", { desc = "Jump to previous mark", noremap = true, silent = true })
+map("n", "m[", "<cmd>lua require('marks').prev()<CR>", { desc = "Jump to previous mark", noremap = true, silent = true })
+map("n", "m]", "<cmd>lua require('marks').prev()<CR>", { desc = "Jump to previous mark", noremap = true, silent = true })
 map("n", "dm", ":lua delete_mark()<CR>", { desc = "Delete a mark" })
 map("n", "dM", ":lua delete_all_marks()<CR>", { desc = "Delete all marks in the current buffer" })
 

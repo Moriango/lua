@@ -19,6 +19,7 @@ do
       end
     end
   end
+  ---@diagnostic disable-next-line
   vim.lsp.util.symbols_to_items = function(symbols, bufnr, ...)
     strip_nil_container_name(symbols)
     return orig_symbols_to_items(symbols, bufnr, ...)
