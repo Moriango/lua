@@ -229,6 +229,12 @@ local identifier_presets = {
     ["@type.builtin"] = { fg = "#4ade80" },
     ["@constant"] = { fg = "#f9a8d4", bold = true },
     ["@namespace"] = { fg = "#c4b5fd" },
+    ["@tag"] = { fg = "#569CD6" },
+    ["@tag.builtin"] = { fg = "#569CD6" },
+    ["@tag.attribute"] = { fg = "#9CDCFE" },
+    htmlTagName = { fg = "#569CD6" },
+    htmlSpecialTagName = { fg = "#569CD6" },
+    htmlArg = { fg = "#9CDCFE" },
   },
   vscode = {
     Identifier = { fg = "#D4D4D4" },
@@ -239,10 +245,26 @@ local identifier_presets = {
     ["@type.builtin"] = { fg = "#569CD6" },
     ["@constant"] = { fg = "#4FC1FF", bold = true },
     ["@namespace"] = { fg = "#4EC9B0" },
+    ["@tag"] = { fg = "#569CD6" },
+    ["@tag.builtin"] = { fg = "#569CD6" },
+    ["@tag.attribute"] = { fg = "#9CDCFE" },
+    htmlTagName = { fg = "#569CD6" },
+    htmlSpecialTagName = { fg = "#569CD6" },
+    htmlArg = { fg = "#9CDCFE" },
   },
 }
 
 local current_identifier_theme = "vscode"
+
+-- local function apply_identifier_theme()
+--   for group, hl in pairs(identifier_presets[current_identifier_theme]) do
+--     vim.api.nvim_set_hl(0, group, hl)
+--   end
+-- end
+--
+-- -- Apply at startup and re-apply after any colorscheme change (which clears highlights)
+-- apply_identifier_theme()
+-- vim.api.nvim_create_autocmd("ColorScheme", { callback = apply_identifier_theme })
 
 vim.api.nvim_create_user_command("ToggleIdentifiers", function()
   if current_identifier_theme == "default" then

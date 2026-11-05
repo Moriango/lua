@@ -79,10 +79,10 @@ map("n", "d]", ":lua quickfix_or_diagnostic_jump('prev')<CR>", { desc = "Go to p
 map("n", "]d", ":lua quickfix_or_diagnostic_jump('prev')<CR>", { desc = "Go to previous quickfix item (or diagnostic)", noremap = true, silent = true })
 
 -- Marks shortcuts: jump to the next or previous mark.
-map("n", "m", "<cmd>lua require('marks').next()<CR>", { desc = "Jump to next mark", noremap = true, silent = true })
-map("n", "m,", "<cmd>lua require('marks').prev()<CR>", { desc = "Jump to previous mark", noremap = true, silent = true })
-map("n", "m[", "<cmd>lua require('marks').prev()<CR>", { desc = "Jump to previous mark", noremap = true, silent = true })
-map("n", "m]", "<cmd>lua require('marks').prev()<CR>", { desc = "Jump to previous mark", noremap = true, silent = true })
+map("n", "m", ":lua jump_to_next_mark()<CR>", { desc = "Jump to next mark", noremap = true, silent = true })
+map("n", "m,", ":lua jump_to_prev_mark()<CR>", { desc = "Jump to previous mark", noremap = true, silent = true })
+map("n", "m[", ":lua jump_to_prev_mark()<CR>", { desc = "Jump to previous mark", noremap = true, silent = true })
+map("n", "m]", ":lua jump_to_prev_mark()<CR>", { desc = "Jump to previous mark", noremap = true, silent = true })
 map("n", "dm", ":lua delete_mark()<CR>", { desc = "Delete a mark" })
 map("n", "dM", ":lua delete_all_marks()<CR>", { desc = "Delete all marks in the current buffer" })
 
@@ -206,10 +206,22 @@ end
 _G.delete_all_marks = function()
   vim.cmd("delmarks!")
   vim.cmd("delmarks A-Z")
+  vim.notify("Deleted all Marks")
   ---@diagnostic disable-next-line: undefined-field
   require("marks").refresh(true)
 end
 
+_G.jump_to_next_mark = function()
+  ---@diagnostic disable-next-line: undefined-field
+  require('marks').next()  -- Jump to next mark
+  vim.cmd("normal! zz")    -- Center the cursor
+end
+
+_G.jump_to_prev_mark = function()
+  ---@diagnostic disable-next-line: undefined-field
+  require('marks').prev()  -- Jump to next mark
+  vim.cmd("normal! zz")    -- Center the cursor
+end
 -- Search for the word under the cursor and move to the next or previous match.
 _G.smart_search = function(direction)
   local cursor_word = vim.fn.expand("<cword>")

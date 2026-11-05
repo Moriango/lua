@@ -6,7 +6,7 @@ return {
     local map = vim.keymap.set
     local api = require "Comment.api"
 
-    map("n", "<leader>_", function()
+    map("v", "<leader>/", function()
       api.toggle.blockwise.current()
     end, { desc = "Comment toggle (block) in single line" })
 
@@ -25,7 +25,20 @@ return {
   config = function(_, opts)
     local comment = require "Comment"
     local ts_addon = require "ts_context_commentstring.integrations.comment_nvim"
-    opts.pre_hook = ts_addon.create_pre_hook()
+    local ts_pre_hook = ts_addon.create_pre_hook()
+    local comment_ft = require "Comment.ft"
+    local comment_utils = require "Comment.utils"
+
+    opts.pre_hook = function(ctx)
+      local commentstring = ts_pre_hook(ctx)
+      if commentstring then
+        return commentstring
+      end
+
+      return comment_ft.get(vim.bo.filetype, ctx.ctype)
+        or comment_ft.get(vim.bo.filetype, comment_utils.ctype.linewise)
+    end
+
     comment.setup(opts)
   end,
 }
