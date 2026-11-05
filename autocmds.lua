@@ -480,14 +480,25 @@ end
 local function close_buffers_ending_with(suffix)
   local current_buf = vim.api.nvim_get_current_buf()
   local pattern = suffix ~= "" and (suffix:gsub("[%(%)%.%%%+%-%*%?%[%^%$]", "%%%1") .. "$") or nil
+  local skipped = {}
 
   for _, buf in ipairs(vim.api.nvim_list_bufs()) do
     if buf ~= current_buf and vim.api.nvim_buf_is_valid(buf) then
       local name = vim.api.nvim_buf_get_name(buf)
       if not pattern or name:match(pattern) then
-        vim.api.nvim_buf_delete(buf, { force = false })
+        if vim.bo[buf].buftype == "terminal" then
+          pcall(vim.api.nvim_buf_delete, buf, { force = true })
+        elseif vim.bo[buf].modified then
+          table.insert(skipped, name ~= "" and name or ("buffer " .. buf))
+        elseif not pcall(vim.api.nvim_buf_delete, buf, { force = false }) then
+          table.insert(skipped, name ~= "" and name or ("buffer " .. buf))
+        end
       end
     end
+  end
+
+  if #skipped > 0 then
+    vim.notify("Skipped (unsaved or could not close):\n" .. table.concat(skipped, "\n"), vim.log.levels.WARN)
   end
 end
 
