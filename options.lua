@@ -1,17 +1,9 @@
 require "nvchad.options"
 
--- add yours here!
-
-local o = vim.o
-o.cursorlineopt ='both' -- to enable cursorline!
 vim.scriptencoding = "utf-8"
-vim.opt.encoding = "utf-8"
--- vim.opt.fileencoding = "utf-8"
-
 vim.opt.number = true
 vim.opt.relativenumber = true
 vim.opt.signcolumn = "yes"
-
 vim.opt.title = true
 vim.opt.autoindent = true
 vim.opt.smartindent = false
@@ -23,10 +15,16 @@ vim.opt.shiftwidth = 4
 vim.opt.softtabstop = 4
 vim.opt.tabstop = 4
 vim.opt.wrap = true
-
 vim.opt.foldmethod = "manual"
 vim.opt.foldenable = true
 vim.opt.foldlevelstart = 99
+vim.opt.hidden = true
+
+-- to enable cursorline!
+vim.o.cursorlineopt = 'both'
+
+-- vim.opt.fileencoding = "utf-8"
+vim.opt.encoding = "utf-8"
 -- Highlights the screen line of the cursor 
 vim.opt.cursorline = true
 
@@ -51,13 +49,14 @@ vim.o.listchars = "tab:▸ ,trail:·,extends:»,precedes:«,eol:↵"
 -- Set Aut Change Dir
 vim.opt.autochdir = false
 
+-- Enable wildmenu for command-line completion
 vim.opt.wildmenu = true
 
+-- Set grep program to ripgrep
 vim.opt.grepprg = "rg --vimgrep"
-vim.opt.grepformat = "%f:%l:%c:%m"
 
--- Allow switching away from / closing modified buffers without prompting (e.g. diffview.nvim's E445 on :tabclose)
-vim.opt.hidden = true
+-- Set grep format to match ripgrep output
+vim.opt.grepformat = "%f:%l:%c:%m"
 
 -- Use system clipboard
 local function no_paste()

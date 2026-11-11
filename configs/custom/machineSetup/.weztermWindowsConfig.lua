@@ -21,6 +21,9 @@ config.wsl_domains = {
 -- Tells WezTerm to boot into this specific WSL domain by default
 config.default_domain = 'WSL:Ubuntu'
 
+config.font_dirs = { wezterm.config_dir .. '/fonts' }
+config.font = wezterm.font('JetBrainsMono Nerd Font')
+
 config.automatically_reload_config = true
 
 config.leader = { key = 'w', mods = 'CTRL'}
@@ -46,7 +49,6 @@ config.window_frame = {
   border_right_width = '0cell',
   border_bottom_height = '0cell',
   border_top_height = '0cell',
-  font_size = 14
 }
 
 config.keys = {

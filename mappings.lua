@@ -6,7 +6,19 @@ local opts = { noremap = false, silent = false}
 -- MAPPINGS --
 
 -- Window shortcuts: change layouts, create splits, close windows, and rotate buffers.
-map("n", "<leader>m", ":only<CR>", { noremap = true, silent = true, desc = "Makes the current split screen fullscreen"})
+local split_layouts = {}
+map("n", "<leader>m", function()
+  local tabpage = vim.api.nvim_get_current_tabpage()
+
+  if split_layouts[tabpage] then
+    vim.cmd(split_layouts[tabpage])
+    split_layouts[tabpage] = nil
+  elseif #vim.api.nvim_tabpage_list_wins(tabpage) > 1 then
+    split_layouts[tabpage] = vim.fn.winrestcmd()
+    vim.cmd("wincmd _")
+    vim.cmd("wincmd |")
+  end
+end, { noremap = true, silent = true, desc = "Toggle fullscreen for the current split" })
 
 -- Appearance shortcuts: toggle transparency and word wrapping.
 map("n", "<leader>tp", ":lua require('base46').toggle_transparency()<CR>", { noremap = true, silent = true, desc = "Toggle Background Transparency" })
@@ -44,8 +56,8 @@ map("n", "G", "Gzz", { desc = "Moves the cursor to the bottom of the page and ce
 map("n", "gg", "ggzz", { desc = "Moves the cursor to the top of the page and centers the screen", noremap = true, silent=true })
 
 -- Window and buffer shortcuts: create, close, rotate, and switch split windows or buffers.
-map("n", "hs", ":split<Return>", { desc = "Splits tab Horizontally", noremap = true, silent=true })
-map("n", "vs", ":vsplit<CR>", { desc = "Splits tab Vertically", noremap = true, silent=true })
+map("n", "vs", ":split<Return>", { desc = "Splits tab Horizontally", noremap = true, silent=true })
+map("n", "hs", ":vsplit<CR>", { desc = "Splits tab Vertically", noremap = true, silent=true })
 map("n", "<leader>x", "<C-w>c", { desc =  "Closes the current split window", noremap=true, silent=true})
 map("n", "<leader>q", ":CloseBufferKeepSplit<CR>", { noremap=true, silent=true})
 map("n", ",", "<cmd>RotateSplitScreens<CR>", { noremap = true, silent = true, desc = "Rotate all split screens" })

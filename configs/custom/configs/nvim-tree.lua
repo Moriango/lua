@@ -15,7 +15,8 @@ return {
         update_root = false,       -- Update root directory to current file's directory
       },
       filters = {
-        dotfiles = false, -- Show hidden files by default
+        dotfiles = false, -- Show dotfiles (.env, etc.)
+        git_ignored = false, -- Show git-ignored files (.env is often ignored)
       },
       renderer = {
         indent_markers = {
