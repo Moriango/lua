@@ -513,3 +513,39 @@ end
 
 register_close_buffers_command("CloseBuffersEndingWith")
 register_close_buffers_command("BufferCloseEndingWith")
+
+-- Mirror selected dotfiles into the nvim repo on save (async, non-blocking)
+local sync_group = vim.api.nvim_create_augroup("SyncDotfiles", { clear = true })
+local setup_dir = "~/.config/nvim/lua/configs/custom/machineSetup/"
+
+local sync_map = {
+  ["~/.wezterm.lua"] = setup_dir .. ".weztermWindowsConfig.lua",
+  ["~/.tmux.conf"] = setup_dir .. ".tmux.conf",
+}
+
+local function real_path(p)
+  local expanded = vim.fn.expand(p)
+  return vim.uv.fs_realpath(expanded) or expanded
+end
+
+vim.api.nvim_create_autocmd("BufWritePost", {
+  group = sync_group,
+  callback = function(args)
+    local saved = real_path(args.file)
+    for src, dest in pairs(sync_map) do
+      if saved == real_path(src) then
+        dest = vim.fn.expand(dest)
+        vim.fn.mkdir(vim.fs.dirname(dest), "p")
+        vim.uv.fs_copyfile(saved, dest, function(err)
+          vim.schedule(function()
+            if err then
+              vim.notify("Sync failed: " .. err, vim.log.levels.ERROR)
+            else
+              vim.notify("Synced " .. vim.fs.basename(src) .. " → " .. dest)
+            end
+          end)
+        end)
+      end
+    end
+  end,
+})
