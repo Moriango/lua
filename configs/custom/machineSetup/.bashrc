@@ -91,7 +91,7 @@ fi
 alias ll='ls -alF'
 alias la='ls -A'
 alias l='ls -CF'
-alias tmux="tmux attach || tmux"
+# alias tmux="tmux attach || tmux"
 alias keynav="keynav daemonize"
 
 
@@ -121,3 +121,22 @@ fi
 
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 export PATH="$HOME/.local/bin:$PATH"
+
+# Linux-specific configuration
+if [ "$(uname)" = "Linux" ]; then
+  export VIRTUALENVWRAPPER_SH=/home/linuxbrew/.linuxbrew/bin/virtualenvwrapper.sh
+  export VIRTUALENVWRAPPER_LAZY_SH=/home/linuxbrew/.linuxbrew/bin/virtualenvwrapper_lazy.sh
+  eval export POSH_SESSION_ID="0dc22cc7-d1f5-4477-85ae-0ef9208e0c93";source $'/home/nealkin/.cache/oh-my-posh/init.14695981039346656037.sh'
+  eval "$(oh-my-posh init bash --config ~/Themes/peru.omp.json)"
+
+  source "$VIRTUALENVWRAPPER_SH"
+  source "$VIRTUALENVWRAPPER_LAZY_SH"
+
+  # opencode
+  export PATH=/home/nealkin/.opencode/bin:$PATH
+
+  # Auto-attach to tmux Main session only in WezTerm
+  if [ "$TERM_PROGRAM" = "WezTerm" ] && [ -z "$TMUX" ]; then
+    tmux new-session -A -s Main
+  fi
+fi

@@ -21,13 +21,12 @@ if is_windows then
   config.front_end = 'OpenGL'
   config.window_background_opacity = 0.75
   config.win32_system_backdrop = 'Disable'
+  config.default_prog = { 'tmux', 'new-session', '-A', '-s', 'Main' }
 end
 
 -- ============================================================================
 -- Common configuration
 -- ============================================================================
-
-config.default_prog = { 'tmux', 'new-session', '-A', '-s', 'Main' }
 
 config.automatically_reload_config = true
 

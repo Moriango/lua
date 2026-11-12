@@ -521,6 +521,7 @@ local setup_dir = "~/.config/nvim/lua/configs/custom/machineSetup/"
 local sync_map = {
   ["~/.wezterm.lua"] = setup_dir .. ".wezterm.lua",
   ["~/.tmux.conf"] = setup_dir .. ".tmux.conf",
+  ["~/.bashrc"] = setup_dir .. ".bashrc",
 }
 
 local function real_path(p)
