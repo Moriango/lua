@@ -519,7 +519,7 @@ local sync_group = vim.api.nvim_create_augroup("SyncDotfiles", { clear = true })
 local setup_dir = "~/.config/nvim/lua/configs/custom/machineSetup/"
 
 local sync_map = {
-  ["~/.wezterm.lua"] = setup_dir .. ".weztermWindowsConfig.lua",
+  ["~/.wezterm.lua"] = setup_dir .. ".wezterm.lua",
   ["~/.tmux.conf"] = setup_dir .. ".tmux.conf",
 }
 
