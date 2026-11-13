@@ -21,7 +21,10 @@ if is_windows then
   config.front_end = 'OpenGL'
   config.window_background_opacity = 0.75
   config.win32_system_backdrop = 'Disable'
-  -- config.default_prog = { 'tmux', 'new-session', '-A', '-s', 'Main' }
+  config.font_size = 12.0
+else
+  -- Linux/macOS: use default bash
+  config.font_size = 13.0
 end
 
 -- ============================================================================
@@ -30,7 +33,6 @@ end
 
 config.automatically_reload_config = true
 
-config.font_size = 12.0
 config.font_dirs = { wezterm.config_dir .. '/fonts' }
 config.font = wezterm.font('JetBrainsMono Nerd Font')
 

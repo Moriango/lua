@@ -119,10 +119,6 @@ if ! shopt -oq posix; then
   fi
 fi
 
-# Auto-attach to tmux Main session only in WezTerm
-if [ "$TERM_PROGRAM" = "WezTerm" ] && [ -z "$TMUX" ]; then
-    tmux new-session -A -s Main
-fi
 
 # Linux-specific configuration
 if [ "$(uname)" = "Linux" ] && [ -z "$WSL_DISTRO_NAME" ]; then
@@ -138,8 +134,13 @@ if [ "$(uname)" = "Linux" ] && [ -z "$WSL_DISTRO_NAME" ]; then
 
   # opencode
   export PATH=/home/nealkin/.opencode/bin:$PATH
-
+# Windows wsl configurations
 else
   eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv bash)"
   alias wezterm='/mnt/c/Program\ Files/WezTerm/wezterm-gui.exe'
+fi
+
+# Auto-attach to tmux Main session only in WezTerm
+if [ "$TERM_PROGRAM" = "WezTerm" ] && [ -z "$TMUX" ]; then
+    tmux new-session -A -s Main
 fi
