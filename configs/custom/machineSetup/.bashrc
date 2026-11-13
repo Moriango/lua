@@ -119,12 +119,16 @@ if ! shopt -oq posix; then
   fi
 fi
 
-eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-export PATH="$HOME/.local/bin:$PATH"
+# Auto-attach to tmux Main session only in WezTerm
+if [ "$TERM_PROGRAM" = "WezTerm" ] && [ -z "$TMUX" ]; then
+    tmux new-session -A -s Main
+fi
 
 # Linux-specific configuration
-if [ "$(uname)" = "Linux" ]; then
+if [ "$(uname)" = "Linux" ] && [ -z "$WSL_DISTRO_NAME" ]; then
   export VIRTUALENVWRAPPER_SH=/home/linuxbrew/.linuxbrew/bin/virtualenvwrapper.sh
+  eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+  export PATH="$HOME/.local/bin:$PATH"
   export VIRTUALENVWRAPPER_LAZY_SH=/home/linuxbrew/.linuxbrew/bin/virtualenvwrapper_lazy.sh
   eval export POSH_SESSION_ID="0dc22cc7-d1f5-4477-85ae-0ef9208e0c93";source $'/home/nealkin/.cache/oh-my-posh/init.14695981039346656037.sh'
   eval "$(oh-my-posh init bash --config ~/Themes/peru.omp.json)"
@@ -135,8 +139,7 @@ if [ "$(uname)" = "Linux" ]; then
   # opencode
   export PATH=/home/nealkin/.opencode/bin:$PATH
 
-  # Auto-attach to tmux Main session only in WezTerm
-  if [ "$TERM_PROGRAM" = "WezTerm" ] && [ -z "$TMUX" ]; then
-    tmux new-session -A -s Main
-  fi
+else
+  eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv bash)"
+  alias wezterm='/mnt/c/Program\ Files/WezTerm/wezterm-gui.exe'
 fi
