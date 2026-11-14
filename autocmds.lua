@@ -550,3 +550,40 @@ vim.api.nvim_create_autocmd("BufWritePost", {
     end
   end,
 })
+
+-- Copy bashrc, .wezterm.lua, and .tmux.conf to home directory
+vim.api.nvim_create_user_command("CopyDotfilesToHome", function()
+  local dotFilesDir = vim.fn.expand("~/.config/nvim/lua/configs/custom/machineSetup/")
+  local files = {
+    { src = dotFilesDir .. ".bashrc", name = ".bashrc" },
+    { src = dotFilesDir .. ".wezterm.lua", name = ".wezterm.lua" },
+    { src = dotFilesDir .. ".tmux.conf", name = ".tmux.conf" },
+  }
+
+  local copied = {}
+  local failed = {}
+
+  for _, file in ipairs(files) do
+    local src = vim.fn.expand(file.src)
+    local dest = vim.fn.expand("~") .. "/" .. file.name
+
+    local src_exists = vim.fn.filereadable(src) == 1
+    if not src_exists then
+      table.insert(failed, file.name .. " (source not found)")
+    else
+      vim.fn.system("cp " .. vim.fn.shellescape(src) .. " " .. vim.fn.shellescape(dest))
+      if vim.v.shell_error == 0 then
+        table.insert(copied, file.name)
+      else
+        table.insert(failed, file.name .. " (copy failed)")
+      end
+    end
+  end
+
+  if #copied > 0 then
+    vim.notify("Copied to home: " .. table.concat(copied, ", "), vim.log.levels.INFO)
+  end
+  if #failed > 0 then
+    vim.notify("Failed: " .. table.concat(failed, ", "), vim.log.levels.WARN)
+  end
+end, { desc = "Copy bashrc, .wezterm.lua, and .tmux.conf to home directory" })

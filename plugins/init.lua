@@ -41,7 +41,7 @@ local plugins = {
             mirror = true,
             preview_height = 0.6
           }
-        }
+        },
       },
       pickers = {
         find_files = {
@@ -50,6 +50,83 @@ local plugins = {
       },
     },
     config = function(PluginSpec,opts)
+      local actions = require("telescope.actions")
+      local action_state = require("telescope.actions.state")
+      
+      local function open_all_selected(prompt_bufnr)
+        local picker = action_state.get_current_picker(prompt_bufnr)
+        local selections = picker:get_multi_selection()
+        
+        actions.close(prompt_bufnr)
+        
+        if #selections > 0 then
+          for _, selection in ipairs(selections) do
+            vim.cmd("edit " .. selection.value)
+          end
+        else
+          local entry = action_state.get_selected_entry()
+          if entry then
+            vim.cmd("edit " .. entry.value)
+          end
+        end
+      end
+      
+      local function send_to_quickfix(prompt_bufnr)
+        local picker = action_state.get_current_picker(prompt_bufnr)
+        local selections = picker:get_multi_selection()
+        
+        if #selections > 0 then
+          actions.send_selected_to_qflist(prompt_bufnr)
+        else
+          actions.send_to_qflist(prompt_bufnr)
+        end
+        actions.open_qflist(prompt_bufnr)
+      end
+      
+      opts.pickers.oldfiles = opts.pickers.oldfiles or {}
+      opts.pickers.oldfiles.mappings = {
+        i = {
+          ["<CR>"] = open_all_selected,
+          ["<C-q>"] = send_to_quickfix,
+        },
+        n = {
+          ["<CR>"] = open_all_selected,
+          ["<C-q>"] = send_to_quickfix,
+        },
+      }
+      
+      opts.pickers.find_files = opts.pickers.find_files or {}
+      opts.pickers.find_files.mappings = {
+        i = {
+          ["<CR>"] = open_all_selected,
+          ["<C-q>"] = send_to_quickfix,
+        },
+        n = {
+          ["<CR>"] = open_all_selected,
+          ["<C-q>"] = send_to_quickfix,
+        },
+      }
+      
+      opts.pickers.live_grep = opts.pickers.live_grep or {}
+      opts.pickers.live_grep.mappings = {
+        i = {
+          ["<C-q>"] = send_to_quickfix,
+        },
+        n = {
+          ["<C-q>"] = send_to_quickfix,
+        },
+      }
+      
+      opts.pickers.grep_string = opts.pickers.grep_string or {}
+      opts.pickers.grep_string.mappings = {
+        i = {
+          ["<C-q>"] = send_to_quickfix,
+        },
+        n = {
+          ["<C-q>"] = send_to_quickfix,
+        },
+      }
+      
       require('telescope').setup(opts)
     end,
   },
