@@ -512,7 +512,7 @@ local function register_close_buffers_command(name)
 end
 
 register_close_buffers_command("CloseBuffersEndingWith")
-register_close_buffers_command("BufferCloseEndingWith")
+register_close_buffers_command("CloseAllOtherBuffers")
 
 -- Mirror selected dotfiles into the nvim repo on save (async, non-blocking)
 local sync_group = vim.api.nvim_create_augroup("SyncDotfiles", { clear = true })
