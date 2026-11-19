@@ -52,13 +52,13 @@ local plugins = {
     config = function(PluginSpec,opts)
       local actions = require("telescope.actions")
       local action_state = require("telescope.actions.state")
-      
+
       local function open_all_selected(prompt_bufnr)
         local picker = action_state.get_current_picker(prompt_bufnr)
         local selections = picker:get_multi_selection()
-        
+
         actions.close(prompt_bufnr)
-        
+
         if #selections > 0 then
           for _, selection in ipairs(selections) do
             vim.cmd("edit " .. selection.value)
@@ -70,11 +70,11 @@ local plugins = {
           end
         end
       end
-      
+
       local function send_to_quickfix(prompt_bufnr)
         local picker = action_state.get_current_picker(prompt_bufnr)
         local selections = picker:get_multi_selection()
-        
+
         if #selections > 0 then
           actions.send_selected_to_qflist(prompt_bufnr)
         else
@@ -82,7 +82,7 @@ local plugins = {
         end
         actions.open_qflist(prompt_bufnr)
       end
-      
+
       opts.pickers.oldfiles = opts.pickers.oldfiles or {}
       opts.pickers.oldfiles.mappings = {
         i = {
@@ -94,7 +94,7 @@ local plugins = {
           ["<C-q>"] = send_to_quickfix,
         },
       }
-      
+
       opts.pickers.find_files = opts.pickers.find_files or {}
       opts.pickers.find_files.mappings = {
         i = {
@@ -106,7 +106,7 @@ local plugins = {
           ["<C-q>"] = send_to_quickfix,
         },
       }
-      
+
       opts.pickers.live_grep = opts.pickers.live_grep or {}
       opts.pickers.live_grep.mappings = {
         i = {
@@ -116,7 +116,7 @@ local plugins = {
           ["<C-q>"] = send_to_quickfix,
         },
       }
-      
+
       opts.pickers.grep_string = opts.pickers.grep_string or {}
       opts.pickers.grep_string.mappings = {
         i = {
@@ -126,7 +126,7 @@ local plugins = {
           ["<C-q>"] = send_to_quickfix,
         },
       }
-      
+
       require('telescope').setup(opts)
     end,
   },
@@ -139,13 +139,13 @@ local plugins = {
           enable = true,
       },
     },
-  {import = "plugins.configs.copilot"},
+  -- {import = "plugins.configs.chat"},
+  -- {import = "plugins.configs.codecompanion"},
   -- {import = "plugins.configs.diff"},
   -- {import = "plugins.configs.grep"},
   -- {import = "plugins.configs.harpoon"},
   -- {import = "plugins.configs.lazydev"},
   -- {import = "plugins.configs.lsp-signature"},
-  {import = "plugins.configs.nvim-cmp"},
   -- {import = "plugins.configs.nvim-dap"},
   -- {import = "plugins.configs.quickfix"},
   -- {import = "plugins.configs.rainbow"},
@@ -154,10 +154,9 @@ local plugins = {
   -- {import = "plugins.configs.textobject"},
   {import = "configs.custom.configs.nvim-tree"},
   {import = "plugins.configs.cd-project"},
-  {import = "plugins.configs.chat"},
   {import = "plugins.configs.codeDiff"},
-  {import = "plugins.configs.codecompanion"},
   {import = "plugins.configs.comment"},
+  {import = "plugins.configs.copilot"},
   {import = "plugins.configs.dadbod"},
   {import = "plugins.configs.fugitive"},
   {import = "plugins.configs.gitblame"},
@@ -171,6 +170,7 @@ local plugins = {
   {import = "plugins.configs.md-preview"},
   {import = "plugins.configs.mini-surround"},
   {import = "plugins.configs.noice"},
+  {import = "plugins.configs.nvim-cmp"},
   {import = "plugins.configs.obsidian"},
   {import = "plugins.configs.render-markdown"},
   {import = "plugins.configs.tmux-navigator"},
