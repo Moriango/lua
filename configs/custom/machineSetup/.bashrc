@@ -140,7 +140,7 @@ else
   alias wezterm='/mnt/c/Program\ Files/WezTerm/wezterm-gui.exe'
 fi
 
-# Auto-attach to tmux Main session only in WezTerm
-if [ "$TERM_PROGRAM" = "WezTerm" ] && [ -z "$TMUX" ]; then
-    tmux new-session -A -s Main
-fi
+# # Auto-attach to tmux Main session only in WezTerm
+# if [ "$TERM_PROGRAM" = "WezTerm" ] && [ -z "$TMUX" ]; then
+#     tmux new-session -A -s Main
+# fi

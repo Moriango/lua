@@ -1,6 +1,7 @@
 local wezterm = require 'wezterm'
 
 local config = wezterm.config_builder()
+local mux = wezterm.mux
 
 -- Detect operating system
 local is_windows = string.find(wezterm.target_triple, 'windows') ~= nil
@@ -15,6 +16,7 @@ if is_windows then
     {
       name = 'WSL:Ubuntu',
       distribution = 'Ubuntu',
+      default_prog = { 'tmux', 'new-session', '-A', '-s', 'Main' }
     },
   }
   config.default_domain = 'WSL:Ubuntu'
@@ -23,8 +25,12 @@ if is_windows then
   config.win32_system_backdrop = 'Disable'
   config.font_size = 12.0
 else
-  -- Linux/macOS: use default bash
-  config.font_size = 13.0
+  config.font_size = 14.0
+  wezterm.on('gui-startup', function(cmd)
+    local tab, pane, window = mux.spawn_window(cmd or {})
+    window:gui_window():maximize()
+    pane:send_text('tmux new-session -A -s Main\n')
+  end)
 end
 
 -- ============================================================================
