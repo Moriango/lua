@@ -5,29 +5,8 @@
 ---@class M: ChadrcConfig
 local M = {}
 
-M.colorify = {
-  enabled = false,
-}
-
-M.base46 = {
-	theme = "vscode_dark",
-    transparency = false,
-  -- Status and git highlight overrides: file names, branch icons, and diff signs.
-  -- Example: St_file for main.cpp, GitSignsAdd for +new lines, GitSignsDelete for -old lines.
-  hl_override = {
-    St_file = { bold = true, fg = "#facc15" },
-    St_gitIcons = { fg = "#fb923c", bold = true },
-    GitSignsAdd = { fg = "#fbbf24" },
-    GitSignsChange = { fg = "#facc15" },
-    GitSignsDelete = { fg = "#f87171" },
-    -- Identifier: general variable names; example: count, name, result
-        -- @variable: Tree-sitter variable names; example: total, user_name, idx
-        -- @variable.builtin: built-in or special variables; example: self, this, super, nil
-        -- @property: object fields / member access; example: obj.value, user.name, p.age
-        -- @type: class/type names; example: Person, Vector, MyStruct
-        -- @type.builtin: built-in language types; example: int, string, list, float
-        -- @constant: constants; example: PI, MAX_VALUE, DEBUG
-        -- @namespace: namespace/module names; example: std, mylib, foo.bar
+local identifier_palettes = {
+  vscode = {
     Identifier = { fg = "#D4D4D4" },
     ["@variable"] = { fg = "#9CDCFE" },
     ["@variable.builtin"] = { fg = "#569CD6" },
@@ -37,11 +16,93 @@ M.base46 = {
     ["@constant"] = { fg = "#4FC1FF", bold = true },
     ["@namespace"] = { fg = "#4EC9B0" },
   },
+  default = {
+    Identifier = { fg = "#d3c6aa" },
+    ["@variable"] = { fg = "#a7c080" },
+    ["@variable.builtin"] = { fg = "#7fbbb3" },
+    ["@property"] = { fg = "#a7c080", italic = true },
+    ["@type"] = { fg = "#e69875", bold = true },
+    ["@type.builtin"] = { fg = "#7fbbb3" },
+    ["@constant"] = { fg = "#dbbc7f", bold = true },
+    ["@namespace"] = { fg = "#83c092" },
+  },
+}
+
+local function apply_identifier_palette(style)
+  local palette = identifier_palettes[style] or identifier_palettes.vscode
+  for group, opts in pairs(palette) do
+    vim.api.nvim_set_hl(0, group, opts)
+  end
+end
+
+M.colorify = {
+  enabled = false,
+}
+
+M.base46 = {
+	theme = "darcula-dark",
+    transparency = false,
+  -- Status and git highlight overrides: file names, branch icons, and diff signs.
+  -- Example: St_file for main.cpp, GitSignsAdd for +new lines, GitSignsDelete for -old lines.
+  hl_override = {
+    St_file = { bold = true, fg = "#facc15" },
+    St_gitIcons = { fg = "#fb923c", bold = true },
+    GitSignsAdd = { fg = "#fbbf24" },
+    GitSignsChange = { fg = "#facc15" },
+    GitSignsDelete = { fg = "#f87171" },
+  },
 	-- hl_override = {
 	-- 	Comment = { italic = true },
 	-- 	["@comment"] = { italic = true },
 	-- },
 }
+
+local function apply_custom_statusline_hl()
+  vim.api.nvim_set_hl(0, "St_diag_icon_sep", { fg = "#fbbf24", bg = "NONE" })
+  vim.api.nvim_set_hl(0, "St_diag_icon", { fg = "#1f2937", bg = "#fbbf24", bold = true })
+  vim.api.nvim_set_hl(0, "St_diag_icon_off", { fg = "#fbbf24", bg = "NONE", bold = true })
+  vim.api.nvim_set_hl(0, "St_copilot_icon_sep", { fg = "#2563eb", bg = "NONE" })
+  vim.api.nvim_set_hl(0, "St_copilot_icon", { fg = "#e6edf3", bg = "#2563eb", bold = true })
+  vim.api.nvim_set_hl(0, "St_copilot_icon_off", { fg = "#2563eb", bg = "NONE", bold = true })
+  vim.api.nvim_set_hl(0, "St_mousehover_icon_sep", { fg = "#ec4899", bg = "NONE" })
+  vim.api.nvim_set_hl(0, "St_mousehover_icon", { fg = "#fce7f3", bg = "#ec4899", bold = true })
+  vim.api.nvim_set_hl(0, "St_mousehover_icon_off", { fg = "#ec4899", bg = "NONE", bold = true })
+  vim.api.nvim_set_hl(0, "St_identifier_icon_sep", { fg = "#14b8a6", bg = "NONE" })
+  vim.api.nvim_set_hl(0, "St_identifier_icon", { fg = "#042f2e", bg = "#14b8a6", bold = true })
+  vim.api.nvim_set_hl(0, "St_identifier_icon_off", { fg = "#14b8a6", bg = "NONE", bold = true })
+  vim.api.nvim_set_hl(0, "St_page_tab_sep", { fg = "#93c5fd", bg = "NONE" })
+  vim.api.nvim_set_hl(0, "St_page_tab", { fg = "#0f172a", bg = "#93c5fd", bold = true })
+  vim.g.identifier_style = vim.g.identifier_style or "vscode"
+  apply_identifier_palette(vim.g.identifier_style)
+end
+
+vim.api.nvim_create_autocmd({ "VimEnter", "ColorScheme" }, {
+  callback = function()
+    apply_custom_statusline_hl()
+    vim.cmd "redrawstatus"
+  end,
+})
+
+apply_custom_statusline_hl()
+
+vim.api.nvim_create_user_command("ToggleIdentifierStyle", function(opts)
+  local arg = opts.args
+  if arg == "default" or arg == "vscode" then
+    vim.g.identifier_style = arg
+  else
+    vim.g.identifier_style = (vim.g.identifier_style == "vscode") and "default" or "vscode"
+  end
+
+  apply_identifier_palette(vim.g.identifier_style)
+  vim.cmd "redrawstatus"
+  vim.notify("Identifier style: " .. vim.g.identifier_style)
+end, {
+  nargs = "?",
+  complete = function()
+    return { "default", "vscode", "toggle" }
+  end,
+  desc = "Toggle identifier style (default/vscode)",
+})
 
 local quotes = {
     "Can a weak person be good? Does it take strength to prove kindness?",
@@ -229,23 +290,57 @@ M.cheatsheet = {
   theme = "grid"
 }
 
+local function status_indicator(icon, is_active, sep_hl, icon_hl, icon_hl_off)
+  if is_active then
+    return string.format("%%#%s#%%#%s# %s %%#%s#%%* ", sep_hl, icon_hl, icon, sep_hl)
+  end
+
+  return string.format("%%#%s#%s%%*  ", icon_hl_off, icon)
+end
+
 M.ui = {
   statusline = {
     theme = "default",
-    order = { "mode", "file", "git", "%=", "diagnostics", "lsp", "cwd", "cursor", "page_percent"},
+    order = { "mode", "file", "git", "%=", "diagnostics", "diagnostics_indicator", "copilot_indicator", "mousehover_indicator", "identifier_indicator", "cwd", "cursor", "page_percent_tab"},
     modules = {
-        page_percent = function()
+      diagnostics_indicator = function()
+        local ok, enabled = pcall(vim.diagnostic.is_enabled)
+        return status_indicator("󰒡", ok and enabled, "St_diag_icon_sep", "St_diag_icon", "St_diag_icon_off")
+      end,
+
+      copilot_indicator = function()
+        local copilot_loaded = package.loaded["copilot"] ~= nil
+        local enabled = vim.g.copilot_suggestions_enabled == true
+        return status_indicator("", copilot_loaded and enabled, "St_copilot_icon_sep", "St_copilot_icon", "St_copilot_icon_off")
+      end,
+
+      mousehover_indicator = function()
+        local enabled = vim.g.mouse_hover_enabled ~= false
+        local hover_loaded = package.loaded["hover"] ~= nil
+        return status_indicator("󰍽", hover_loaded and enabled, "St_mousehover_icon_sep", "St_mousehover_icon", "St_mousehover_icon_off")
+      end,
+
+      identifier_indicator = function()
+        local ok_parser = pcall(vim.treesitter.get_parser, vim.api.nvim_get_current_buf())
+        local enabled = vim.g.identifier_style == "vscode"
+        return status_indicator("󰈙", ok_parser and enabled, "St_identifier_icon_sep", "St_identifier_icon", "St_identifier_icon_off")
+      end,
+
+      page_percent_tab = function()
         local current_line = vim.fn.line('.')
         local total_lines = vim.fn.line('$')
+        local text
 
         if current_line == 1 then
-          return "△ Top"
+          text = "Top"
         elseif current_line == total_lines then
-          return "▽ Bottom"
+          text = "Bottom"
         else
           local percentage = math.floor((current_line / total_lines) * 100)
-          return string.format("◆ %d%%%%", percentage)
+          text = string.format("%d%%%%", percentage)
         end
+
+        return string.format(" %%#St_page_tab_sep#%%#St_page_tab# %s %%#St_page_tab_sep#%%*", text)
       end,
     }
   }

@@ -46,8 +46,9 @@ return {
       mouse_delay = 500,
     })
 
-    local mouse_hover_enabled = true
-    vim.o.mousemoveevent = true
+    local mouse_hover_enabled = vim.g.mouse_hover_enabled ~= false
+    vim.g.mouse_hover_enabled = mouse_hover_enabled
+    vim.o.mousemoveevent = mouse_hover_enabled
     vim.keymap.set("n", "<MouseMove>", function()
       if mouse_hover_enabled then
         require("hover").hover_mouse()
@@ -64,7 +65,9 @@ return {
       else
         mouse_hover_enabled = not mouse_hover_enabled
       end
+      vim.g.mouse_hover_enabled = mouse_hover_enabled
       vim.o.mousemoveevent = mouse_hover_enabled
+      vim.cmd("redrawstatus")
       vim.notify("Mouse hover " .. (mouse_hover_enabled and "enabled" or "disabled"))
     end, {
       nargs = "?",

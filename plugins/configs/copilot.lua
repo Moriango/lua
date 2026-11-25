@@ -16,6 +16,8 @@ return {
     })
 
     local suggestions_enabled = true
+    vim.g.copilot_suggestions_enabled = suggestions_enabled
+
     local function set_suggestions_hidden(bufnr)
       vim.api.nvim_buf_set_var(bufnr, "copilot_suggestion_hidden", not suggestions_enabled)
     end
@@ -30,11 +32,13 @@ return {
 
     vim.api.nvim_create_user_command("ToggleCopilotSuggestions", function()
       suggestions_enabled = not suggestions_enabled
+      vim.g.copilot_suggestions_enabled = suggestions_enabled
       for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
         if vim.api.nvim_buf_is_valid(bufnr) then
           set_suggestions_hidden(bufnr)
         end
       end
+      vim.cmd("redrawstatus")
       vim.notify("Copilot suggestions " .. (suggestions_enabled and "enabled" or "disabled"))
     end, { desc = "Toggle Copilot suggestions" })
   end,

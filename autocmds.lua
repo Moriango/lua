@@ -341,6 +341,7 @@ vim.api.nvim_create_user_command("ToggleDiagnostic", function()
      vim.diagnostic.enable()
      print("Diagnostics Enabled")
    end
+   vim.cmd("redrawstatus")
 end, { desc = "Toggles the diagnostic"})
 
 -- Close all folds in the current buffer.
